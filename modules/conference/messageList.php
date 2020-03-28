@@ -114,6 +114,14 @@ $fileReverse = array_reverse($fileContent);
 
 foreach ($fileReverse as $thisLine) {
 	$newline = preg_replace('/ : /', '</span> : ', $thisLine);
+	// $input = "<script>alert(\"hi\")</script> lalalala"
+	// $str = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $input);
+	// $str = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $str);
+	// echo $str;
+	$newline = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $newline);
+	$newline = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $newline);
+	
+	// $newline = htmlspecialchars($newline, ENT_QUOTES);
 	if (strpos($newline, '</span>') === false) {
 		$newline .= '</span>';
 	}
