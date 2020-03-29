@@ -63,9 +63,9 @@ $tool_content = $head_content = "";
 
 if ($is_adminOfCourse and
     (isset($_GET['addAnnouce']) or isset($_GET['modify']))) {
-	$lang_editor = langname_to_code($language);
+    $lang_editor = langname_to_code($language);
 
-        $head_content = <<<hContent
+    $head_content = <<<hContent
 <script type="text/javascript">
         _editor_url  = "$urlAppend/include/xinha/";
         _editor_lang = "$lang_editor";
@@ -79,7 +79,7 @@ hContent;
  * TEACHER ONLY
  */
 if ($is_adminOfCourse) { // check teacher status
-        $head_content .= '
+    $head_content .= '
 <script type="text/javascript">
 function confirmation (name)
 {
@@ -99,7 +99,7 @@ function confirmation (name)
 </script>
 ';
 
-$head_content .= <<<hContent
+    $head_content .= <<<hContent
 <script type="text/javascript">
 function checkrequired(which, entry) {
 	var pass=true;
@@ -195,7 +195,7 @@ hContent;
 
         if ($myrow) {
             $AnnouncementToModify = $myrow['id'];
-	    $contentToModify = unescapeSimple($myrow['contenu']);
+            $contentToModify = unescapeSimple($myrow['contenu']);
             $titleToModify = q($myrow['title']);
             $displayAnnouncementList = true;
         }
@@ -214,9 +214,7 @@ hContent;
 			title = $antitle, temps = NOW()
 			WHERE id = $id", $mysqlMainDb);
             $message = "<p class='success_small'>$langAnnModify</p>";
-        }
-
-        // add new announcement
+        } // add new announcement
         else {
             // DETERMINE THE ORDER OF THE NEW ANNOUNCEMENT
             $result = db_query("SELECT MAX(ordre) FROM annonces
@@ -232,8 +230,8 @@ hContent;
         // SEND EMAIL (OPTIONAL)
         if (isset($_POST['emailOption']) and $_POST['emailOption']) {
             $emailContent = autounquote($_POST['antitle']) .
-                            "<br><br>" .
-                            autounquote($_POST['newContent']);
+                "<br><br>" .
+                autounquote($_POST['newContent']);
             $emailSubject = "$professorMessage ($currentCourseID - $intitule)";
             // Select students email list
             $sqlUserOfCourse = "SELECT user.email FROM cours_user, user
@@ -243,30 +241,30 @@ hContent;
             $countEmail = mysql_num_rows($result); // number of mail recipients
 
             $invalid = 0;
-	    $recipients = array();
+            $recipients = array();
             $emailBody = html2text($emailContent);
             $general_to = 'Members of course ' . $currentCourseID;
             while ($myrow = mysql_fetch_array($result)) {
-                    $emailTo = $myrow["email"]; 
-                    // check email syntax validity
-                    if (!email_seems_valid($emailTo)) {
-                            $invalid++;
-                    } else {
-                            array_push($recipients, $emailTo);
-                    }
-                    // send mail message per 50 recipients
-                    if (count($recipients) >= 50) {
-                            send_mail_multipart("$prenom $nom", $email,
-                                                $general_to,
-                                            $recipients, $emailSubject,
-                                            $emailBody, $emailContent, $charset);
-                            $recipients = array();
-                    }
+                $emailTo = $myrow["email"];
+                // check email syntax validity
+                if (!email_seems_valid($emailTo)) {
+                    $invalid++;
+                } else {
+                    array_push($recipients, $emailTo);
+                }
+                // send mail message per 50 recipients
+                if (count($recipients) >= 50) {
+                    send_mail_multipart("$prenom $nom", $email,
+                        $general_to,
+                        $recipients, $emailSubject,
+                        $emailBody, $emailContent, $charset);
+                    $recipients = array();
+                }
             }
-            if (count($recipients) > 0)  {
-                    send_mail_multipart("$prenom $nom", $email, $general_to,
-                                    $recipients, $emailSubject,
-                                    $emailBody, $emailContent, $charset);
+            if (count($recipients) > 0) {
+                send_mail_multipart("$prenom $nom", $email, $general_to,
+                    $recipients, $emailSubject,
+                    $emailBody, $emailContent, $charset);
             }
             $messageUnvalid = " $langOn $countEmail $langRegUser, $invalid $langUnvalid";
             $message = "<p class='success_small'>$langAnnAdd $langEmailSent<br />$messageUnvalid</p>";
@@ -323,16 +321,16 @@ hContent;
       </tr>";
             $langAdd = $nameTools = $langModifAnn;
         } else {
-		$tool_content .= "
+            $tool_content .= "
       <table width='99%' class='FormData' align='center'>
       <tbody>
       <tr>
         <th width='220'>&nbsp;</th>
-        <td><b>".$langAddAnn."</b></td>
+        <td><b>" . $langAddAnn . "</b></td>
       </tr>";
-		$nameTools = $langAddAnn;
+            $nameTools = $langAddAnn;
         }
-	$navigation[] = array("url" => "announcements.php", "name" => $langAnnouncements);
+        $navigation[] = array("url" => "announcements.php", "name" => $langAnnouncements);
         if (!isset($AnnouncementToModify)) $AnnouncementToModify = "";
         if (!isset($contentToModify)) $contentToModify = "";
         if (!isset($titleToModify)) $titleToModify = "";
@@ -375,41 +373,47 @@ hContent;
         $iterator = 1;
         $bottomAnnouncement = $announcementNumber = mysql_num_rows($result);
 
-	$tool_content .= "<table width='99%' align='left' class='announcements'>";
-	if ($announcementNumber > 0) {
-		$tool_content .= "<thead><tr><th class='left' colspan='2'><b>$langAnnouncement</b></th>";
-		$tool_content .= "<th width='70' class='right'><b>$langActions</b></th>";
-		if ($announcementNumber > 1) {
-			$tool_content .= "<th width='70'><b>$langMove</b></th>";
-		}
-		$tool_content .= "</tr></thead>";
-	}
-	$tool_content .= "<tbody>";
-	$k = 0;
-	while ($myrow = mysql_fetch_array($result)) {
+        $tool_content .= "<table width='99%' align='left' class='announcements'>";
+        if ($announcementNumber > 0) {
+            $tool_content .= "<thead><tr><th class='left' colspan='2'><b>$langAnnouncement</b></th>";
+            $tool_content .= "<th width='70' class='right'><b>$langActions</b></th>";
+            if ($announcementNumber > 1) {
+                $tool_content .= "<th width='70'><b>$langMove</b></th>";
+            }
+            $tool_content .= "</tr></thead>";
+        }
+        $tool_content .= "<tbody>";
+        $k = 0;
+        while ($myrow = mysql_fetch_array($result)) {
             // FORMAT CONTENT
-            $content = make_clickable($myrow['contenu']);
+
+            $contenu = $myrow['contenu'];
+            $contenu = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $contenu);
+            $contenu = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $contenu);
+
+            $content = make_clickable($contenu);
             $content = nl2br($content);
+
             // display math symbols (if there are)
             $content = mathfilter($content, 12, "../../courses/mathimg/");
             $myrow['temps'] = nice_format($myrow['temps']);
-            if ($k%2==0) {
-	           $tool_content .= "\n      <tr>";
-	        } else {
-	           $tool_content .= "\n      <tr class='odd'>";
+            if ($k % 2 == 0) {
+                $tool_content .= "\n      <tr>";
+            } else {
+                $tool_content .= "\n      <tr class='odd'>";
             }
             $tool_content .= "
         <td width='1'><img style='padding-top:3px;' src='${urlServer}/template/classic/img/arrow_grey.gif' title='bullet' /></td>
         <td><b>";
 
-            if ($myrow["title"]=="") {
-                $tool_content .= "".$langAnnouncementNoTille."";
+            if ($myrow["title"] == "") {
+                $tool_content .= "" . $langAnnouncementNoTille . "";
             } else {
-                $tool_content .= "".$myrow["title"]."";
+                $tool_content .= "" . htmlspecialchars($myrow["title"], ENT_QUOTES) . "";
             }
 
             $tool_content .= "</b>&nbsp;<small>(" . $myrow['temps'] . ")</small>
-            <br />".$content."</td>
+            <br />" . $content . "</td>
         <td width='70' class='right'>
         <a href='$_SERVER[PHP_SELF]?modify=" . $myrow['id'] . "'>
         <img src='../../template/classic/img/edit.gif' title='" . $langModify . "' /></a>
@@ -417,24 +421,24 @@ hContent;
         <img src='../../template/classic/img/delete.gif' title='" . $langDelete . "' /></a>
         </td>";
 
-	if ($announcementNumber > 1)  {
-		$tool_content .= "<td align='center' width='70' class='right'>";
-	}
-           // DISPLAY MOVE UP COMMAND
+            if ($announcementNumber > 1) {
+                $tool_content .= "<td align='center' width='70' class='right'>";
+            }
+            // DISPLAY MOVE UP COMMAND
             // condition: only if it is not the top announcement
-	if ($iterator != 1)  {
-		$tool_content .= "<a href='$_SERVER[PHP_SELF]?up=" . $myrow["id"] . "'><img class='displayed' src='../../template/classic/img/up.gif' title='" . $langUp . "' /></a>";
-	}
-        // DISPLAY MOVE DOWN COMMAND
-	if ($iterator < $bottomAnnouncement) {
-		$tool_content .= "<a href='$_SERVER[PHP_SELF]?down=" . $myrow["id"] . "'><img class='displayed' src='../../template/classic/img/down.gif' title='" . $langDown . "' /></a>";
-	}
-	if ($announcementNumber > 1) {
-		$tool_content .= "</td>";
-	}
+            if ($iterator != 1) {
+                $tool_content .= "<a href='$_SERVER[PHP_SELF]?up=" . $myrow["id"] . "'><img class='displayed' src='../../template/classic/img/up.gif' title='" . $langUp . "' /></a>";
+            }
+            // DISPLAY MOVE DOWN COMMAND
+            if ($iterator < $bottomAnnouncement) {
+                $tool_content .= "<a href='$_SERVER[PHP_SELF]?down=" . $myrow["id"] . "'><img class='displayed' src='../../template/classic/img/down.gif' title='" . $langDown . "' /></a>";
+            }
+            if ($announcementNumber > 1) {
+                $tool_content .= "</td>";
+            }
 // DISPLAY ANNOUNCEMENT CONTENT
-	$tool_content .= "\n      </tr>";
-            $iterator ++;
+            $tool_content .= "\n      </tr>";
+            $iterator++;
             $k++;
         } // end while ($myrow = mysql_fetch_array($result))
         $tool_content .= "
@@ -456,33 +460,37 @@ hContent;
 } // end: teacher only
 // student view
 else {
-	$result = db_query("SELECT * FROM annonces WHERE cours_id = $cours_id
+    $result = db_query("SELECT * FROM annonces WHERE cours_id = $cours_id
 		ORDER BY ordre DESC", $mysqlMainDb) OR die("DB problem");
-	if (mysql_num_rows($result) > 0) {
-		$tool_content .= "<table width='99%' align='left' class='announcements'>
+    if (mysql_num_rows($result) > 0) {
+        $tool_content .= "<table width='99%' align='left' class='announcements'>
 		<thead>
 		<tr><th class='left' colspan='2'><b>$langAnnouncement</b></th>
 		</tr></thead><tbody>";
-		$k = 0;
-		while ($myrow = mysql_fetch_array($result)) {
-			$content = $myrow['contenu'];
-			$content = make_clickable($content);
-			$content = nl2br($content);
-			if ($k%2==0) {
-				$tool_content .= "\n      <tr>";
-			} else {
-				$tool_content .= "\n      <tr class='odd'>";
-			}
-			$tool_content .= "
+        $k = 0;
+        while ($myrow = mysql_fetch_array($result)) {
+            $title = $myrow['title'];
+            $title = htmlspecialchars($title, ENT_QUOTES);
+            $content = $myrow['contenu'];
+            $content = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $content);
+            $content = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $content);
+            $content = make_clickable($content);
+            $content = nl2br($content);
+            if ($k % 2 == 0) {
+                $tool_content .= "\n      <tr>";
+            } else {
+                $tool_content .= "\n      <tr class='odd'>";
+            }
+            $tool_content .= "
 			<td width='1'><img style='padding-top:3px;' src='${urlServer}/template/classic/img/arrow_grey.gif' title='bullet' /></td>
-			<td><b>$myrow[title]</b>&nbsp;<small>(" . nice_format($myrow["temps"]) . ")</small><br/>".unescapeSimple($content)."</td></tr>";
-			$k++;
-		} // while loop
-		$tool_content .= "
+			<td><b>$title</b>&nbsp;<small>(" . nice_format($myrow["temps"]) . ")</small><br/>" . unescapeSimple($content) . "</td></tr>";
+            $k++;
+        } // while loop
+        $tool_content .= "
 	</tbody></table>";
-	} else {
-		$tool_content .= "<p class='alert1'>$langNoAnnounce</p>";
-	}
+    } else {
+        $tool_content .= "<p class='alert1'>$langNoAnnounce</p>";
+    }
 }
 add_units_navigation(TRUE);
 if ($is_adminOfCourse) {
