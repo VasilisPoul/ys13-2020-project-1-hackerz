@@ -190,7 +190,6 @@ if(empty($or_search_terms) && empty($not_search_terms)) {
 		mysql_select_db("$mysqlMainDb");
 		$myquery = "SELECT * FROM annonces WHERE cours_id = $cours_id AND MATCH (contenu)".$query;
 		$result = db_query($myquery);
-
 		$c = 0;
 		if(mysql_num_rows($result) > 0)
 		{
@@ -199,8 +198,10 @@ if(empty($or_search_terms) && empty($not_search_terms)) {
 				//emfanish apotelesmatos mono gia to yparxon mathima
 				if($res['cours_id'] == $cours_id)
 				{
+					$content = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $res['contenu']);
+					$content = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $res['contenu']);
 					$c++;
-					$tmp_result .= "\n<li>".$res['contenu'].": ".$res['temps']."<br>";
+					$tmp_result .= "\n<li>".$content.": ".$res['temps']."<br>";
 				}
 			}
 		}
