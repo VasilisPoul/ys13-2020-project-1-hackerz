@@ -71,7 +71,7 @@ $head_content = <<<hContent
 <script type="text/javascript" src="$urlAppend/include/xinha/my_config.js"></script>
 hContent;
 
-
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include_once("./config.php");
 include("functions.php"); // application logic for phpBB
 
@@ -156,6 +156,8 @@ if (isset($submit) && $submit) {
 		draw($tool_content, 2, 'phpbb', $head_content);
 		exit();
 	} else {
+		$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+		$message = $purifier->purify( $message );
 		$post_id = mysql_insert_id();
 		if ($post_id) {
 			$sql = "INSERT INTO posts_text (post_id, post_text)

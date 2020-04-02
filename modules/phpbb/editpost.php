@@ -59,6 +59,7 @@
 $require_current_course = TRUE;
 $require_login = TRUE;
 $require_help = FALSE;
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 $tool_content = "";
 $lang_editor = langname_to_code($language);
@@ -120,6 +121,8 @@ if ($is_adminOfCourse) { // course admin
 			$message = format_message($message);
 		}
 		if (!isset($delete) || !$delete) {
+            $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+            $message = $purifier->purify( $message );
 			$forward = 1;
 			$topic = $topic_id;
 			$forum = $forum_id;

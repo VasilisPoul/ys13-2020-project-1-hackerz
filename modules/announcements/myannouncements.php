@@ -67,14 +67,17 @@ $result = db_query("SELECT annonces.id, annonces.title, annonces.contenu,
         if (mysql_num_rows($result) > 0)  {    // found announcements ?
         while ($myrow = mysql_fetch_array($result)) {
                 $content = $myrow['contenu'];
+                $content = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $content);
+                $content = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $content);
                 $content = make_clickable($content);
                 $content = nl2br($content);
-		$content = mathfilter($content, 12, "../../include/phpmathpublisher/img/");
-                $row = mysql_fetch_array(db_query("SELECT intitule,titulaires FROM cours
+		        $content = mathfilter($content, 12, "../../include/phpmathpublisher/img/");
+                $title = htmlspecialchars($myrow["title"], ENT_QUOTES);
+		        $row = mysql_fetch_array(db_query("SELECT intitule,titulaires FROM cours
 			WHERE code='$myrow[fake_code]'"));
                 $tool_content .= "
       <tr>
-        <td width='3'><img class=\"displayed\" src=../../template/classic/img/announcements_on.gif border=0 title=\"" . $myrow["title"] . "\"></td>
+        <td width='3'><img class=\"displayed\" src=../../template/classic/img/announcements_on.gif border=0 title=\"" . $title . "\"></td>
         <td>$m[name]: <b>$row[intitule]</b><br />$content</td>
         <td align='right' width='300'><small><i>($langAnn: ".$myrow['temps'].")</i></small><br /><br />$langTutor: <b>$row[titulaires]</b></td>
       </tr>";

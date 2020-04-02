@@ -160,16 +160,19 @@ if (count($status) > 0) {
                         $la = 0;
                         while ($ann = mysql_fetch_array($result)) {
                                         $content = $ann['contenu'];
+                                        $content = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $content);
+                                        $content = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $content);
                                         $content = make_clickable($content);
                                         $content = nl2br($content);
                                         $content = mathfilter($content, 12, "courses/mathimg/");
+                                        $title = htmlspecialchars($ann[title], ENT_QUOTES);
                                         if ($la%2 == 0) {
                                                 $tool_content .= "\n<tr>";
                                         } else {
                                                 $tool_content .= "\n<tr class='odd'>";
                                         }
                                         $tool_content .= "<td width='1' class='square_bullet2'>&nbsp;</td>" .
-                                                         "<td class='announce_pos'><b>$ann[title]</b> " .
+                                                         "<td class='announce_pos'><b>$title</b> " .
                                                          nice_format($ann['temps']) .
                                                          "&nbsp;&nbsp;&nbsp;&nbsp;($langCourse: <b>{$titles[$code]}</b> | $langTutor: <b>{$profs[$code]}</b>)<br />$content</td>\n</tr>";
                                         $la++;

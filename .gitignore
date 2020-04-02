@@ -1,0 +1,117 @@
+
+
+# Created by https://www.gitignore.io/api/phpstorm
+# Edit at https://www.gitignore.io/?templates=phpstorm
+
+### PhpStorm ###
+# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
+# Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
+
+# User-specific stuff
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
+
+# Generated files
+.idea/**/contentModel.xml
+
+# Sensitive or high-churn files
+.idea/**/dataSources/
+.idea/**/dataSources.ids
+.idea/**/dataSources.local.xml
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/uiDesigner.xml
+.idea/**/dbnavigator.xml
+
+# Gradle
+.idea/**/gradle.xml
+.idea/**/libraries
+
+# Gradle and Maven with auto-import
+# When using Gradle or Maven with auto-import, you should exclude module files,
+# since they will be recreated, and may cause churn.  Uncomment if using
+# auto-import.
+# .idea/modules.xml
+# .idea/*.iml
+# .idea/modules
+# *.iml
+# *.ipr
+
+# CMake
+cmake-build-*/
+
+# Mongo Explorer plugin
+.idea/**/mongoSettings.xml
+
+# File-based project format
+*.iws
+
+# IntelliJ
+out/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Cursive Clojure plugin
+.idea/replstate.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+# Editor-based Rest Client
+.idea/httpRequests
+
+# Android studio 3.1+ serialized cache file
+.idea/caches/build_file_checksums.ser
+
+### PhpStorm Patch ###
+# Comment Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721
+
+# *.iml
+# modules.xml
+# .idea/misc.xml
+# *.ipr
+
+# Sonarlint plugin
+.idea/**/sonarlint/
+
+# SonarQube Plugin
+.idea/**/sonarIssues.xml
+
+# Markdown Navigator plugin
+.idea/**/markdown-navigator.xml
+.idea/**/markdown-navigator/
+
+# End of https://www.gitignore.io/api/phpstorm
+# Δημιουργήθηκε από το https://www.gitignore.io/api/phpstorm # Επεξεργασία στη διεύθυνση https://www.gitignore.io/?templates=phpstorm ### PhpStorm ### # Καλύπτει IDE του JetBrains: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio και WebStorm # Αναφορά: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839 # Ειδικά για τον χρήστη πράγματα .idea / ** / workspace.xml .idea / ** / tasks.xml .idea / ** / use.statistics.xml .idea / ** / λεξικά .idea / ** / ράφι # Δημιουργία αρχείων .idea / ** / contentModel.xml # Ευαίσθητα αρχεία ή αρχεία υψηλής ευκρίνειας .idea / ** / dataSources / .idea / ** / dataSources.ids .idea / ** / dataSources.local.xml .idea / ** / sqlDataSources.xml .idea / ** / dynamic.xml .idea / ** / uiDesigner.xml .idea / ** / dbnavigator.xml # Gradle .idea / ** / gradle.xml .idea / ** / βιβλιοθήκες # Gradle και Maven με αυτόματη εισαγωγή # Όταν χρησιμοποιείτε το Gradle ή το Maven με αυτόματη εισαγωγή, θα πρέπει να αποκλείσετε αρχεία μονάδων, # δεδομένου ότι θα αναδημιουργηθούν και μπορεί να προκαλέσουν προβλήματα. Αποσύνδεση αν χρησιμοποιείτε # αυτόματη εισαγωγή. # .idea / modules.xml # .idea / * .iml # .idea / modules # * .iml # * .ipr # CMake cmake-build - * / # Plugin Mongo Explorer .idea / ** / mongoSettings.xml # Μορφή έργου που βασίζεται σε αρχεία * .ws # IntelliJ έξω/ # mpeltonen / sbt-idea plugin .idea_modules / # Plugin JIRA atlassian-ide-plugin.xml # Διασκεδαστικό plugin Clojure .idea / replstate.xml # Crashlytics plugin (για το Android Studio και IntelliJ) com_crashlytics_export_strings.xml crashlytics.properties crashlytics-build.properties fabric.properties # Βασισμένο στον επεξεργαστή Rest Client .idea / httpRequests # Αρχείο στούντιο 3.1+ σειριακού περιεχομένου cache .idea / caches / build_file_checksums.ser ### Patch PhpStorm ### # Αιτιολογία σχολίου: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721 # * .iml # modules.xml # .idea / misc.xml # * .ipr # Plugin Sonarlint .idea / ** / sonarlint / # Plugin SonarQube .idea / ** / sonarIssues.xml # Plugin plugin πλοήγησης .idea / ** / markdown-navigator.xml .idea / ** / markdown-πλοηγός / # Τέλος https://www.gitignore.io/api/phpstorm
+translated from: English
+
+courses/TMA100/dropbox/
+courses/TMA102/document/
+courses/TMA102/dropbox/
+courses/TMA102/group/
+courses/TMA102/image/
+courses/TMA102/page/
+courses/TMA102/scormPackages/
+courses/TMA102/temp/
+courses/TMA102/work/
+courses/garbage/TMA103/document/
+courses/garbage/TMA103/dropbox/
+courses/garbage/TMA103/group/
+courses/garbage/TMA103/image/
+courses/garbage/TMA103/page/
+courses/garbage/TMA103/scormPackages/
+courses/garbage/TMA103/temp/
+courses/garbage/TMA103/work/
+courses/mathimg/
+video/
+/config/config.php
