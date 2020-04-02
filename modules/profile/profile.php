@@ -24,7 +24,7 @@
 *  			eMail: info@openeclass.org
 * =========================================================================*/
 
-include_once('../../SqlFormatter.php');
+include_once('../../modules/SqlFormatter.php');
 
 $require_help = TRUE;
 $require_login = true;

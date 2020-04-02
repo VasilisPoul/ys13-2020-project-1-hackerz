@@ -70,7 +70,7 @@ $head_content = <<<hContent
 <script type="text/javascript" src="$urlAppend/include/xinha/my_config.js"></script>
 hContent;
 
-
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include_once("./config.php");
 include("functions.php");
 
@@ -157,6 +157,9 @@ if (isset($submit) && $submit) {
 	if ( (isset($allow_bbcode) && $allow_bbcode == 1) && !isset($bbcode)) {
 		$message = bbencode($message, $is_html_disabled);
 	}
+
+
+
 	$message = format_message($message);
 	$time = date("Y-m-d H:i");
 	$nom = addslashes($nom);
@@ -171,6 +174,10 @@ if (isset($submit) && $submit) {
 	$result = db_query($sql, $currentCourseID);
 	$this_post = mysql_insert_id();
 	if ($this_post) {
+
+	    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $message = $purifier->purify( $message );
+
 		$sql = "INSERT INTO posts_text (post_id, post_text) VALUES ($this_post, " .
                         autoquote($message) . ")";
 		$result = db_query($sql, $currentCourseID); 
