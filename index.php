@@ -157,8 +157,24 @@ if (isset($_SESSION['shib_uname'])) { // authenticate via shibboleth
             $_SESSION['statut'] = $statut;
             $_SESSION['is_admin'] = $is_admin;
             $_SESSION['uid'] = $uid;
-            mysql_query("INSERT INTO loginout (loginout.idLog, loginout.id_user, loginout.ip, loginout.when, loginout.action)
-			VALUES ('', '$uid', '$_SERVER[REMOTE_ADDR]', NOW(), 'LOGIN')");
+
+            // Create connection
+            $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            /* change character set to utf8 */
+            if (!$conn->set_charset("utf8")) {
+                printf("Error loading character set utf8: %s\n", $conn->error);
+                exit();
+            }
+            // prepare and bind
+            $stmt = $conn->prepare("INSERT INTO loginout (loginout.idLog, loginout.id_user, loginout.ip, loginout.when, loginout.action) VALUES ('', ?, ?, NOW(), 'LOGIN')");
+            $stmt->bind_param("is", $uid, $_SERVER['REMOTE_ADDR']);
+            $stmt->execute();
+            $stmt->close();
+            $conn->close();
         }
 
         ##[BEGIN personalisation modification]############
