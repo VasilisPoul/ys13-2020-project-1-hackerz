@@ -40,7 +40,7 @@
 
 $require_current_course = TRUE;
 require_once("../../../config/config.php");
-require_once ('../../../include/init.php');
+require_once('../../../include/init.php');
 
 require_once('../../../include/lib/textLib.inc.php');
 
@@ -49,33 +49,30 @@ $nameTools = $langCourseProgram;
 ?>
 <html>
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset?>">
-  <link href="../../../template/classic/tool_content.css" rel="stylesheet" type="text/css" />
-  <link href="../tool.css" rel="stylesheet" type="text/css" />
-  <title><?php echo $langCourseProgram ?></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset ?>">
+    <link href="../../../template/classic/tool_content.css" rel="stylesheet" type="text/css"/>
+    <link href="../tool.css" rel="stylesheet" type="text/css"/>
+    <title><?php echo $langCourseProgram ?></title>
 </head>
 <body style="margin: 2px;">
 
 <?php
-	mysql_select_db("$currentCourseID",$db);
-	$sql = "SELECT `id`,`title`,`content` FROM `course_description` order by id";
-	$res = db_query($sql);
-	if (mysql_num_rows($res) >0 )
-	{
-		//echo "
-		//	<hr noshade size=\"1\">";
-		while ($bloc = mysql_fetch_array($res))
-		{
-			echo "<p><div id='course_topic_title_id'>".$bloc["title"]."</div></p>
-			<p>".make_clickable(nl2br($bloc["content"]))."</p>";
-		}
-	}
-	else
-	{
-		echo "<p>$langThisCourseDescriptionIsEmpty</p>";
-	}
+mysql_select_db("$currentCourseID", $db);
+$sql = "SELECT `id`,`title`,`content` FROM `course_description` order by id";
+$res = db_query($sql);
+if (mysql_num_rows($res) > 0) {
+    //echo "
+    //	<hr noshade size=\"1\">";
+    while ($bloc = mysql_fetch_array($res)) {
+        echo "<p><div id='course_topic_title_id'>" . $bloc["title"] . "</div></p>
+			<p>" . make_clickable(nl2br($bloc["content"])) . "</p>";
+    }
+} else {
+    echo "<p>$langThisCourseDescriptionIsEmpty</p>";
+}
 
 
 ?>
-    </body></html>
+</body>
+</html>
 

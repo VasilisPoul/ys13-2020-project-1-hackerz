@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System
@@ -29,7 +29,7 @@ include('exercise.class.php');
 include('question.class.php');
 include('answer.class.php');
 include('exercise.lib.php');
- 
+
 $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'Exercise';
@@ -40,43 +40,42 @@ $tool_content = "";
 $nameTools = $langExercicesView;
 include('../../include/lib/textLib.inc.php');
 
-$picturePath='../../courses/'.$currentCourseID.'/image';
-$is_allowedToEdit=$is_adminOfCourse;
-$dbNameGlu=$currentCourseID;
+$picturePath = '../../courses/' . $currentCourseID . '/image';
+$is_allowedToEdit = $is_adminOfCourse;
+$dbNameGlu = $currentCourseID;
 
-$TBL_EXERCICE_QUESTION='exercice_question';
-$TBL_EXERCICES='exercices';
-$TBL_QUESTIONS='questions';
-$TBL_REPONSES='reponses';
+$TBL_EXERCICE_QUESTION = 'exercice_question';
+$TBL_EXERCICES = 'exercices';
+$TBL_QUESTIONS = 'questions';
+$TBL_REPONSES = 'reponses';
 
-$navigation[]=array("url" => "exercice.php","name" => $langExercices);
+$navigation[] = array("url" => "exercice.php", "name" => $langExercices);
 
 // if the object is not in the session
-if(!session_is_registered('objExercise')) {
-	// construction of Exercise
-	$objExercise=new Exercise();
+if (!session_is_registered('objExercise')) {
+    // construction of Exercise
+    $objExercise = new Exercise();
 
-	// if the specified exercise doesn't exist or is disabled
-	if(@(!$objExercise->read($exerciseId) && (!$is_allowedToEdit)))
-		{
-		$tool_content .= $langExerciseNotFound;
-		draw($tool_content, 2);
-		exit();
-	}
-	// saves the object into the session
-	session_register('objExercise');
+    // if the specified exercise doesn't exist or is disabled
+    if (@(!$objExercise->read($exerciseId) && (!$is_allowedToEdit))) {
+        $tool_content .= $langExerciseNotFound;
+        draw($tool_content, 2);
+        exit();
+    }
+    // saves the object into the session
+    session_register('objExercise');
 }
 
-$exerciseTitle=$objExercise->selectTitle();
-$exerciseDescription=$objExercise->selectDescription();
+$exerciseTitle = $objExercise->selectTitle();
+$exerciseDescription = $objExercise->selectDescription();
 $exerciseDescription_temp = nl2br(make_clickable($exerciseDescription));
 
 $tool_content .= "<table class='Exercise' width='99%'>
       <thead><tr>
         <td colspan='2'>
-        <b>".stripslashes($exerciseTitle)."</b>
+        <b>" . stripslashes($exerciseTitle) . "</b>
         <br/><br/>
-        ".stripslashes($exerciseDescription_temp)."
+        " . stripslashes($exerciseDescription_temp) . "
         </td>
       </tr>
       </thead></table>";
@@ -88,7 +87,7 @@ $tool_content .= "<br/><table width='99%' class='Question'>
       <tr>
       <td><br/><br/><br/><div align='center'><a href='exercice.php'>$langBack</a></div></td>
       </tr>
-      </thead></table>"; 
+      </thead></table>";
 
 draw($tool_content, 2, 'exercice');
 ?>

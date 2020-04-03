@@ -44,7 +44,7 @@
  * @version $Id: footer.inc.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -53,8 +53,8 @@ if (! defined('PHPMYADMIN')) {
  */
 require_once './libraries/relation.lib.php';
 
-if (! PMA_isValid($_REQUEST['no_history']) && empty($GLOBALS['error_message'])
- && ! empty($GLOBALS['sql_query'])) {
+if (!PMA_isValid($_REQUEST['no_history']) && empty($GLOBALS['error_message'])
+    && !empty($GLOBALS['sql_query'])) {
     PMA_setHistory(PMA_ifSetOr($GLOBALS['db'], ''),
         PMA_ifSetOr($GLOBALS['table'], ''),
         $GLOBALS['cfg']['Server']['user'],
@@ -76,7 +76,7 @@ if (count($GLOBALS['footnotes'])) {
     echo '</div>';
 }
 
-if (! empty($_SESSION['debug'])) {
+if (!empty($_SESSION['debug'])) {
     $sum_time = 0;
     $sum_exec = 0;
     foreach ($_SESSION['debug']['queries'] as $query) {
@@ -96,65 +96,65 @@ if (! empty($_SESSION['debug'])) {
 
 ?>
 <script type="text/javascript">
-//<![CDATA[
-<?php
-if (empty($GLOBALS['error_message'])) {
-    ?>
-// updates current settings
-if (window.parent.setAll) {
-    window.parent.setAll('<?php
-        echo PMA_escapeJsString($GLOBALS['lang']) . "', '";
-        echo PMA_escapeJsString($GLOBALS['collation_connection']) . "', '";
-        echo PMA_escapeJsString($GLOBALS['server']) . "', '";
-        echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['db'], '')) . "', '";
-        echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['table'], '')) . "', '";
-        echo PMA_escapeJsString($_SESSION[' PMA_token ']);?>');
-}
+    //<![CDATA[
     <?php
-    if (! empty($GLOBALS['reload'])) {
-        ?>
-// refresh navigation frame content
-if (window.parent.refreshNavigation) {
-    window.parent.refreshNavigation();
-}
-        <?php
+    if (empty($GLOBALS['error_message'])) {
+    ?>
+    // updates current settings
+    if (window.parent.setAll) {
+        window.parent.setAll('<?php
+            echo PMA_escapeJsString($GLOBALS['lang']) . "', '";
+            echo PMA_escapeJsString($GLOBALS['collation_connection']) . "', '";
+            echo PMA_escapeJsString($GLOBALS['server']) . "', '";
+            echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['db'], '')) . "', '";
+            echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['table'], '')) . "', '";
+            echo PMA_escapeJsString($_SESSION[' PMA_token ']);?>');
+    }
+    <?php
+    if (!empty($GLOBALS['reload'])) {
+    ?>
+    // refresh navigation frame content
+    if (window.parent.refreshNavigation) {
+        window.parent.refreshNavigation();
+    }
+    <?php
     }
     ?>
-// set current db, table and sql query in the querywindow
-if (window.parent.reload_querywindow) {
-    window.parent.reload_querywindow(
-        '<?php echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['db'], '')) ?>',
-        '<?php echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['table'], '')) ?>',
-        '<?php echo strlen($GLOBALS['sql_query']) > $GLOBALS['cfg']['MaxCharactersInDisplayedSQL'] ? PMA_escapeJsString($GLOBALS['sql_query']) : ''; ?>');
-}
+    // set current db, table and sql query in the querywindow
+    if (window.parent.reload_querywindow) {
+        window.parent.reload_querywindow(
+            '<?php echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['db'], '')) ?>',
+            '<?php echo PMA_escapeJsString(PMA_ifSetOr($GLOBALS['table'], '')) ?>',
+            '<?php echo strlen($GLOBALS['sql_query']) > $GLOBALS['cfg']['MaxCharactersInDisplayedSQL'] ? PMA_escapeJsString($GLOBALS['sql_query']) : ''; ?>');
+    }
     <?php
-}
+    }
 
-if (! empty($GLOBALS['focus_querywindow'])) {
+    if (!empty($GLOBALS['focus_querywindow'])) {
     ?>
-// set focus to the querywindow
-if (parent.querywindow && !parent.querywindow.closed && parent.querywindow.location) {
-    self.focus();
-}
+    // set focus to the querywindow
+    if (parent.querywindow && !parent.querywindow.closed && parent.querywindow.location) {
+        self.focus();
+    }
     <?php
-}
-?>
+    }
+    ?>
 
-if (window.parent.frame_content) {
-    // reset content frame name, as querywindow needs to set a unique name
-    // before submitting form data, and navigation frame needs the original name
-    if (typeof(window.parent.frame_content.name) != 'undefined'
-     && window.parent.frame_content.name != 'frame_content') {
-        window.parent.frame_content.name = 'frame_content';
+    if (window.parent.frame_content) {
+        // reset content frame name, as querywindow needs to set a unique name
+        // before submitting form data, and navigation frame needs the original name
+        if (typeof (window.parent.frame_content.name) != 'undefined'
+            && window.parent.frame_content.name != 'frame_content') {
+            window.parent.frame_content.name = 'frame_content';
+        }
+        if (typeof (window.parent.frame_content.id) != 'undefined'
+            && window.parent.frame_content.id != 'frame_content') {
+            window.parent.frame_content.id = 'frame_content';
+        }
+        //window.parent.frame_content.setAttribute('name', 'frame_content');
+        //window.parent.frame_content.setAttribute('id', 'frame_content');
     }
-    if (typeof(window.parent.frame_content.id) != 'undefined'
-     && window.parent.frame_content.id != 'frame_content') {
-        window.parent.frame_content.id = 'frame_content';
-    }
-    //window.parent.frame_content.setAttribute('name', 'frame_content');
-    //window.parent.frame_content.setAttribute('id', 'frame_content');
-}
-//]]>
+    //]]>
 </script>
 <?php
 
@@ -177,7 +177,7 @@ if (PMA_getenv('SCRIPT_NAME') && empty($_POST) && !$GLOBALS['checked_special']) 
     echo '" target="_blank">';
     */
     if ($GLOBALS['cfg']['NavigationBarIconic']) {
-        echo '<img class="icon" src="'. $GLOBALS['pmaThemeImage'] . 'window-new.png"'
+        echo '<img class="icon" src="' . $GLOBALS['pmaThemeImage'] . 'window-new.png"'
             . ' alt="' . $GLOBALS['strOpenNewWindow'] . '" />';
     }
     if ($GLOBALS['cfg']['NavigationBarIconic'] !== true) {
@@ -198,8 +198,8 @@ if (file_exists('./config.footer.inc.php')) {
  */
 
 // profiling deactivated due to licensing issues
-if (! empty($GLOBALS['cfg']['DBG']['php'])
- && ! empty($GLOBALS['cfg']['DBG']['profile']['enable'])) {
+if (!empty($GLOBALS['cfg']['DBG']['php'])
+    && !empty($GLOBALS['cfg']['DBG']['profile']['enable'])) {
     //run the basic setup code first
     require_once './libraries/dbg/setup.php';
     //if the setup ran fine, then do the profiling

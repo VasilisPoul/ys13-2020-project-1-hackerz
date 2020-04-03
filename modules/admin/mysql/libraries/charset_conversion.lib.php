@@ -6,7 +6,7 @@
  * @version $Id: charset_conversion.lib.php 11982 2008-11-24 10:32:56Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -21,18 +21,18 @@ if (isset($cfg['AllowAnywhereRecoding'])
             echo $strCantLoadRecodeIconv;
             exit;
         }
-        $PMA_recoding_engine             = 'recode';
+        $PMA_recoding_engine = 'recode';
     } elseif ($cfg['RecodingEngine'] == 'iconv') {
         if (!@extension_loaded('iconv')) {
             echo $strCantLoadRecodeIconv;
             exit;
         }
-        $PMA_recoding_engine             = 'iconv';
+        $PMA_recoding_engine = 'iconv';
     } else {
         if (@extension_loaded('iconv')) {
-            $PMA_recoding_engine         = 'iconv';
+            $PMA_recoding_engine = 'iconv';
         } elseif (@extension_loaded('recode')) {
-            $PMA_recoding_engine         = 'recode';
+            $PMA_recoding_engine = 'recode';
         } else {
             echo $strCantLoadRecodeIconv;
             exit;
@@ -108,7 +108,7 @@ if (isset($cfg['AllowAnywhereRecoding'])
         }
     }
 } else {
-    $PMA_recoding_engine         = PMA_CHARSET_NONE;
+    $PMA_recoding_engine = PMA_CHARSET_NONE;
 }
 
 /* Load AIX iconv wrapper if needed */
@@ -119,7 +119,7 @@ if ($PMA_recoding_engine == PMA_CHARSET_ICONV_AIX) {
 /**
  * Converts encoding of text according to current settings.
  *
- * @param   string   what to convert
+ * @param string   what to convert
  *
  * @return  string   converted text
  *
@@ -132,16 +132,17 @@ if ($PMA_recoding_engine == PMA_CHARSET_ICONV_AIX) {
  *
  * @author  nijel
  */
-function PMA_convert_charset($what) {
+function PMA_convert_charset($what)
+{
     global $cfg, $charset, $convcharset;
 
-    if (!(isset($cfg['AllowAnywhereRecoding']) && $cfg['AllowAnywhereRecoding'] )
+    if (!(isset($cfg['AllowAnywhereRecoding']) && $cfg['AllowAnywhereRecoding'])
         || $convcharset == $charset) { // rabus: if input and output charset are the same, we don't have to do anything...
         return $what;
     } else {
         switch ($GLOBALS['PMA_recoding_engine']) {
             case PMA_CHARSET_RECODE:
-                return recode_string($charset . '..'  . $convcharset, $what);
+                return recode_string($charset . '..' . $convcharset, $what);
             case PMA_CHARSET_ICONV:
                 return iconv($charset, $convcharset . $cfg['IconvExtraParams'], $what);
             case PMA_CHARSET_ICONV_AIX:
@@ -158,9 +159,9 @@ function PMA_convert_charset($what) {
  * Converts encoding of text according to parameters with detected
  * conversion function.
  *
- * @param   string   source charset
- * @param   string   target charset
- * @param   string   what to convert
+ * @param string   source charset
+ * @param string   target charset
+ * @param string   what to convert
  *
  * @return  string   converted text
  *
@@ -168,13 +169,14 @@ function PMA_convert_charset($what) {
  *
  * @author  nijel
  */
-function PMA_convert_string($src_charset, $dest_charset, $what) {
+function PMA_convert_string($src_charset, $dest_charset, $what)
+{
     if ($src_charset == $dest_charset) {
         return $what;
     }
     switch ($GLOBALS['PMA_recoding_engine']) {
         case PMA_CHARSET_RECODE:
-            return recode_string($src_charset . '..'  . $dest_charset, $what);
+            return recode_string($src_charset . '..' . $dest_charset, $what);
         case PMA_CHARSET_ICONV:
             return iconv($src_charset, $dest_charset . $GLOBALS['cfg']['IconvExtraParams'], $what);
         case PMA_CHARSET_ICONV_AIX:
@@ -192,9 +194,9 @@ function PMA_convert_string($src_charset, $dest_charset, $what) {
  * conversion function. The old file will be unlinked and new created and
  * its file name is returned.
  *
- * @param   string   source charset
- * @param   string   target charset
- * @param   string   file to convert
+ * @param string   source charset
+ * @param string   target charset
+ * @param string   file to convert
  *
  * @return  string   new temporay file
  *
@@ -202,16 +204,17 @@ function PMA_convert_string($src_charset, $dest_charset, $what) {
  *
  * @author  nijel
  */
-function PMA_convert_file($src_charset, $dest_charset, $file) {
+function PMA_convert_file($src_charset, $dest_charset, $file)
+{
     switch ($GLOBALS['PMA_recoding_engine']) {
         case PMA_CHARSET_RECODE:
         case PMA_CHARSET_ICONV:
         case PMA_CHARSET_LIBICONV:
             $tmpfname = tempnam('', 'PMA_convert_file');
-            $fin      = fopen($file, 'r');
-            $fout     = fopen($tmpfname, 'w');
+            $fin = fopen($file, 'r');
+            $fout = fopen($tmpfname, 'w');
             if ($GLOBALS['PMA_recoding_engine'] == PMA_CHARSET_RECODE) {
-                recode_file($src_charset . '..'  . $dest_charset, $fin, $fout);
+                recode_file($src_charset . '..' . $dest_charset, $fin, $fout);
             } else {
                 while (!feof($fin)) {
                     $line = fgets($fin, 4096);

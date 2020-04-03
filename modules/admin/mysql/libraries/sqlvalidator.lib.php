@@ -30,7 +30,7 @@
  * @version $Id: sqlvalidator.lib.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -39,7 +39,7 @@ if (! defined('PHPMYADMIN')) {
  * I'm not sure if PEAR was available before this point
  * For now we actually use a configuration flag
  */
-if ($cfg['SQLValidator']['use'] == TRUE)  {
+if ($cfg['SQLValidator']['use'] == TRUE) {
     require_once './libraries/sqlvalidator.class.php';
 } // if ($cfg['SQLValidator']['use'] == TRUE)
 
@@ -50,7 +50,7 @@ if ($cfg['SQLValidator']['use'] == TRUE)  {
  *
  * <http://developer.mimer.com/validator/index.htm>
  *
- * @param   string   SQL query to validate
+ * @param string   SQL query to validate
  *
  * @return  string   Validator result string
  *

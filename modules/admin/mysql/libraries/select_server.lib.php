@@ -10,6 +10,8 @@
 /**
  * display server selection in list or selectbox form, or option tags only
  *
+ * @param boolean $not_only_options whether to include form tags or not
+ * @param boolean $ommit_fieldset whether to ommit fieldset tag or not
  * @uses    $GLOBALS['cfg']['DisplayServersList']
  * @uses    $GLOBALS['strServer']
  * @uses    $GLOBALS['cfg']['Servers']
@@ -18,15 +20,13 @@
  * @uses    htmlspecialchars()
  * @uses    PMA_generate_common_hidden_inputs()
  * @uses    PMA_generate_common_url()
- * @param   boolean $not_only_options   whether to include form tags or not
- * @param   boolean $ommit_fieldset     whether to ommit fieldset tag or not
  */
 function PMA_select_server($not_only_options, $ommit_fieldset)
 {
     // Show as list?
     if ($not_only_options) {
         $list = $GLOBALS['cfg']['DisplayServersList'];
-        $not_only_options =! $list;
+        $not_only_options = !$list;
     } else {
         $list = false;
     }
@@ -35,7 +35,7 @@ function PMA_select_server($not_only_options, $ommit_fieldset)
         echo '<form method="post" action="index.php" target="_parent">';
         echo PMA_generate_common_hidden_inputs();
 
-        if (! $ommit_fieldset) {
+        if (!$ommit_fieldset) {
             echo '<fieldset>';
         }
         echo '<label for="select_server">' . $GLOBALS['strServer'] . ':</label> ';
@@ -53,7 +53,7 @@ function PMA_select_server($not_only_options, $ommit_fieldset)
             continue;
         }
 
-        if (!empty($GLOBALS['server']) && (int) $GLOBALS['server'] === (int) $key) {
+        if (!empty($GLOBALS['server']) && (int)$GLOBALS['server'] === (int)$key) {
             $selected = 1;
         } else {
             $selected = 0;
@@ -67,10 +67,10 @@ function PMA_select_server($not_only_options, $ommit_fieldset)
                 $label .= ':' . $server['port'];
             }
         }
-        if (! empty($server['only_db'])) {
-            if (! is_array($server['only_db'])) {
+        if (!empty($server['only_db'])) {
+            if (!is_array($server['only_db'])) {
                 $label .= ' - ' . $server['only_db'];
-            // try to avoid displaying a too wide selector
+                // try to avoid displaying a too wide selector
             } elseif (count($server['only_db']) < 4) {
                 $label .= ' - ' . implode(', ', $server['only_db']);
             }
@@ -103,7 +103,7 @@ function PMA_select_server($not_only_options, $ommit_fieldset)
         echo '<noscript>';
         echo '<input type="submit" value="' . $GLOBALS['strGo'] . '" />';
         echo '</noscript>';
-        if (! $ommit_fieldset) {
+        if (!$ommit_fieldset) {
             echo '</fieldset>';
         }
         echo '</form>';
@@ -111,4 +111,5 @@ function PMA_select_server($not_only_options, $ommit_fieldset)
         echo '</ul>';
     }
 }
+
 ?>

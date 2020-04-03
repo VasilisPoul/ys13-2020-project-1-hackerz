@@ -52,10 +52,10 @@ $tool_content = "";
 $tool_content .= "
   <div id=\"operations_container\">
     <ul id=\"opslist\">
-      <li><a href='stateclass.php'>".$langPlatformGenStats."</a></li>
-      <li><a href='platformStats.php?first='>".$langVisitsStats."</a></li>
-      <li><a href='visitsCourseStats.php?first='>".$langVisitsCourseStats."</a></li>
-      <li><a href='monthlyReport.php'>".$langMonthlyReport."</a></li>
+      <li><a href='stateclass.php'>" . $langPlatformGenStats . "</a></li>
+      <li><a href='platformStats.php?first='>" . $langVisitsStats . "</a></li>
+      <li><a href='visitsCourseStats.php?first='>" . $langVisitsCourseStats . "</a></li>
+      <li><a href='monthlyReport.php'>" . $langMonthlyReport . "</a></li>
     </ul>
   </div>";
 
@@ -64,7 +64,7 @@ $tool_content .= "
 require_once "summarizeLogins.php";
 
 #see if chart has content
-$chart_content=0;
+$chart_content = 0;
 
 include('../../include/jscalendar/calendar.php');
 if ($language == 'greek') {
@@ -73,9 +73,8 @@ if ($language == 'greek') {
     $lang = 'en';
 }
 
-$jscalendar = new DHTML_Calendar($urlServer.'include/jscalendar/', $lang, 'calendar-blue2', false);
+$jscalendar = new DHTML_Calendar($urlServer . 'include/jscalendar/', $lang, 'calendar-blue2', false);
 $local_head = $jscalendar->get_load_files_code();
-
 
 
 //$min_w is the min date in 'loginout'. Statistics older than $min_w will be shown.
@@ -91,39 +90,39 @@ if (!extension_loaded('gd')) {
     $tool_content .= "<p>$langGDRequired</p>";
 } else {
     $made_chart = true;
-  $tool_content .= '
+    $tool_content .= '
   <table class="FormData" width="99%" align="left">
   <tbody>
   <tr>
     <th width="220"  class="left">&nbsp;</th>
-    <td valign="top">'.$langOldStatsLoginsExpl.'</td>
+    <td valign="top">' . $langOldStatsLoginsExpl . '</td>
   </tr>
   </tbody>
   </table>';
 
     /*****************************************
-      start making chart
+     * start making chart
      *******************************************/
-     require_once '../../include/libchart/libchart.php';
+    require_once '../../include/libchart/libchart.php';
 
-     //default values for chart
-     $usage_defaults = array (
-            'u_date_start' => strftime('%Y-%m-%d', strtotime('now -4 month')),
-            'u_date_end' => strftime('%Y-%m-%d', strtotime('now -1 month')),
-      );
+    //default values for chart
+    $usage_defaults = array(
+        'u_date_start' => strftime('%Y-%m-%d', strtotime('now -4 month')),
+        'u_date_end' => strftime('%Y-%m-%d', strtotime('now -1 month')),
+    );
 
-     foreach ($usage_defaults as $key => $val) {
-         if (!isset($_POST[$key])) {
-             $$key = $val;
-         } else {
-             $$key = $_POST[$key];
-         }
-     }
+    foreach ($usage_defaults as $key => $val) {
+        if (!isset($_POST[$key])) {
+            $$key = $val;
+        } else {
+            $$key = $_POST[$key];
+        }
+    }
 
     $date_fmt = '%Y-%m-%d';
     $date_where = " (start_date BETWEEN '$u_date_start 00:00:00' AND '$u_date_end 23:59:59') ";
-    $query = "SELECT MONTH(start_date) AS month, YEAR(start_date) AS year, SUM(login_sum) AS visits FROM loginout_summary ".
-            " WHERE $date_where GROUP BY MONTH(start_date)";
+    $query = "SELECT MONTH(start_date) AS month, YEAR(start_date) AS year, SUM(login_sum) AS visits FROM loginout_summary " .
+        " WHERE $date_where GROUP BY MONTH(start_date)";
 
     $result = db_query($query, $mysqlMainDb);
 
@@ -132,9 +131,9 @@ if (!extension_loaded('gd')) {
     //add points to chart
     while ($row = mysql_fetch_assoc($result)) {
         $mont = $langMonths[$row['month']];
-        $chart->addPoint(new Point($mont." - ".$row['year'], $row['visits']));
+        $chart->addPoint(new Point($mont . " - " . $row['year'], $row['visits']));
         $chart->width += 25;
-        $chart_content=1;
+        $chart_content = 1;
     }
 
     $chart->setTitle("$langOldStats");
@@ -144,29 +143,29 @@ if (!extension_loaded('gd')) {
     if (!file_exists("../../courses/temp")) {
         mkdir("../../courses/temp", 0777);
     }
-    $chart_path = 'courses/temp/chart_'.md5(serialize($chart)).'.png';
+    $chart_path = 'courses/temp/chart_' . md5(serialize($chart)) . '.png';
 
-    $chart->render($webDir.$chart_path);
+    $chart->render($webDir . $chart_path);
 
 
 //check if there are statistics to show
     if ($chart_content) {
-  $tool_content .= '
+        $tool_content .= '
   <table class="FormData" width="99%" align="left">
   <tbody>
   <tr>
-    <th width="220"  class="left">'.$langVisits.' :</th>
-    <td valign="top"><img src="'.$urlServer.$chart_path.'" /></td>
+    <th width="220"  class="left">' . $langVisits . ' :</th>
+    <td valign="top"><img src="' . $urlServer . $chart_path . '" /></td>
   </tr>
   </tbody>
   </table>';
-} elseif (isset($btnUsage) and $chart_content == 0) {
-  $tool_content .= '
+    } elseif (isset($btnUsage) and $chart_content == 0) {
+        $tool_content .= '
   <table class="FormData" width="99%" align="left">
   <tbody>
   <tr>
-    <th width="220"  class="left">'.$langVisits.' :</th>
-    <td valign="top">'.$langNoStatistics.'</td>
+    <th width="220"  class="left">' . $langVisits . ' :</th>
+    <td valign="top">' . $langNoStatistics . '</td>
   </tr>
   </tbody>
   </table>';
@@ -176,25 +175,25 @@ if (!extension_loaded('gd')) {
 
 
     /********************************************************
-       Start making the form for choosing start and end date
-    ********************************************************/
+     * Start making the form for choosing start and end date
+     ********************************************************/
     $start_cal = $jscalendar->make_input_field(
-           array('showsTime'      => false,
-                 'showOthers'     => true,
-                 'ifFormat'       => '%Y-%m-%d',
-                 'timeFormat'     => '24'),
-           array('style'       => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
-                 'name'        => 'u_date_start',
-                 'value'       => $u_date_start));
+        array('showsTime' => false,
+            'showOthers' => true,
+            'ifFormat' => '%Y-%m-%d',
+            'timeFormat' => '24'),
+        array('style' => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
+            'name' => 'u_date_start',
+            'value' => $u_date_start));
 
     $end_cal = $jscalendar->make_input_field(
-           array('showsTime'      => false,
-                 'showOthers'     => true,
-                 'ifFormat'       => '%Y-%m-%d',
-                 'timeFormat'     => '24'),
-           array('style'       => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
-                 'name'        => 'u_date_end',
-                 'value'       => $u_date_end));
+        array('showsTime' => false,
+            'showOthers' => true,
+            'ifFormat' => '%Y-%m-%d',
+            'timeFormat' => '24'),
+        array('style' => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
+            'name' => 'u_date_end',
+            'value' => $u_date_end));
 
 
     $tool_content .= '
@@ -202,16 +201,16 @@ if (!extension_loaded('gd')) {
   <table class="FormData" width="99%" align="left">
   <tbody>
   <tr>
-    <th width="220" class="left">'.$langStartDate.'</th>
-    <td>'."$start_cal".'</td>
+    <th width="220" class="left">' . $langStartDate . '</th>
+    <td>' . "$start_cal" . '</td>
   </tr>
   <tr>
-    <th class="left">'.$langEndDate.'</th>
-    <td>'."$end_cal".'</td>
+    <th class="left">' . $langEndDate . '</th>
+    <td>' . "$end_cal" . '</td>
   </tr>
   <tr>
     <th>&nbsp;</th>
-    <td><input type="submit" name="btnUsage" value="'.$langSubmit.'"></td>
+    <td><input type="submit" name="btnUsage" value="' . $langSubmit . '"></td>
   </tr>
   </table>
   </form>';

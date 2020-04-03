@@ -143,7 +143,7 @@ form {
     font-family: Tahoma, sans-serif;
     font-size: 9px;
     font-weight: normal;
-/*    background-color: #ffffff;*/
+    /*    background-color: #ffffff;*/
     color: #888888;
 }
 
@@ -276,7 +276,7 @@ input, select, textarea {
 }
 
 .header {
-/*    width: 350px; */
+    /*    width: 350px; */
     background-color: #EAEEF0;
     color: #000000;
     text-align: center;
@@ -291,7 +291,7 @@ input, select, textarea {
     background-position: top;
     background-repeat: repeat-x;
     border-right: #999999 solid 1px;
-/*    border-bottom:#999999 solid 1px;*/
+    /*    border-bottom:#999999 solid 1px;*/
     border-left: #999999 solid 1px;
     height: 28px;
 }

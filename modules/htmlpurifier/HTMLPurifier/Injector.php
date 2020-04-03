@@ -105,8 +105,8 @@ abstract class HTMLPurifier_Injector
             return $result;
         }
         $this->currentNesting =& $context->get('CurrentNesting');
-        $this->currentToken   =& $context->get('CurrentToken');
-        $this->inputZipper    =& $context->get('InputZipper');
+        $this->currentToken =& $context->get('CurrentToken');
+        $this->inputZipper =& $context->get('InputZipper');
         return false;
     }
 
@@ -160,7 +160,7 @@ abstract class HTMLPurifier_Injector
         if (!empty($this->currentNesting)) {
             for ($i = count($this->currentNesting) - 2; $i >= 0; $i--) {
                 $node = $this->currentNesting[$i];
-                $def  = $this->htmlDefinition->info[$node->name];
+                $def = $this->htmlDefinition->info[$node->name];
                 if (isset($def->excludes[$name])) {
                     return false;
                 }

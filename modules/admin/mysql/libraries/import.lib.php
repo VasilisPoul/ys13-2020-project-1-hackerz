@@ -6,7 +6,7 @@
  * @version $Id: import.lib.php 12178 2009-01-08 17:50:54Z lem9 $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -23,8 +23,8 @@ define('PMA_CHK_DROP', 1);
 /**
  *  Check whether timeout is getting close
  *
- *  @return boolean true if timeout is close
- *  @access public
+ * @return boolean true if timeout is close
+ * @access public
  */
 function PMA_checkTimeout()
 {
@@ -33,7 +33,7 @@ function PMA_checkTimeout()
         return FALSE;
     } elseif ($timeout_passed) {
         return TRUE;
-    /* 5 in next row might be too much */
+        /* 5 in next row might be too much */
     } elseif ((time() - $timestamp) > ($maximum_time - 5)) {
         $timeout_passed = TRUE;
         return TRUE;
@@ -45,9 +45,9 @@ function PMA_checkTimeout()
 /**
  *  Detects what compression filse uses
  *
- *  @param  string filename to check
- *  @return string MIME type of compression, none for none
- *  @access public
+ * @param string filename to check
+ * @return string MIME type of compression, none for none
+ * @access public
  */
 function PMA_detectCompression($filepath)
 {
@@ -74,18 +74,18 @@ function PMA_detectCompression($filepath)
  * Runs query inside import buffer. This is needed to allow displaying
  * of last SELECT, SHOW or HANDLER results and similar nice stuff.
  *
- * @uses    $GLOBALS['finished'] read and write
- * @param  string query to run
- * @param  string query to display, this might be commented
- * @param  bool   whether to use control user for queries
+ * @param string query to run
+ * @param string query to display, this might be commented
+ * @param bool   whether to use control user for queries
  * @access public
+ * @uses    $GLOBALS['finished'] read and write
  */
 function PMA_importRunQuery($sql = '', $full = '', $controluser = false)
 {
     global $import_run_buffer, $go_sql, $complete_query, $display_query,
-        $sql_query, $my_die, $error, $reload,
-        $skip_queries, $executed_queries, $max_sql_len, $read_multiply,
-        $cfg, $sql_query_disabled, $db, $run_query, $is_superuser;
+           $sql_query, $my_die, $error, $reload,
+           $skip_queries, $executed_queries, $max_sql_len, $read_multiply,
+           $cfg, $sql_query_disabled, $db, $run_query, $is_superuser;
     $read_multiply = 1;
     if (isset($import_run_buffer)) {
         // Should we skip something?
@@ -98,8 +98,8 @@ function PMA_importRunQuery($sql = '', $full = '', $controluser = false)
                     $sql_query .= $import_run_buffer['full'];
                 }
                 if (!$cfg['AllowUserDropDatabase']
-                 && !$is_superuser
-                 && preg_match('@^[[:space:]]*DROP[[:space:]]+(IF EXISTS[[:space:]]+)?DATABASE @i', $import_run_buffer['sql'])) {
+                    && !$is_superuser
+                    && preg_match('@^[[:space:]]*DROP[[:space:]]+(IF EXISTS[[:space:]]+)?DATABASE @i', $import_run_buffer['sql'])) {
                     $GLOBALS['message'] = PMA_Message::error('strNoDropDatabases');
                     $error = TRUE;
                 } else {
@@ -107,7 +107,7 @@ function PMA_importRunQuery($sql = '', $full = '', $controluser = false)
                     if ($run_query && $GLOBALS['finished'] && empty($sql) && !$error && (
                             (!empty($import_run_buffer['sql']) && preg_match('/^[\s]*(SELECT|SHOW|HANDLER)/i', $import_run_buffer['sql'])) ||
                             ($executed_queries == 1)
-                            )) {
+                        )) {
                         $go_sql = TRUE;
                         if (!$sql_query_disabled) {
                             $complete_query = $sql_query;
@@ -156,7 +156,7 @@ function PMA_importRunQuery($sql = '', $full = '', $controluser = false)
                         // If a 'USE <db>' SQL-clause was found and the query succeeded, set our current $db to the new one
                         if ($result != FALSE && preg_match('@^[\s]*USE[[:space:]]*([\S]+)@i', $import_run_buffer['sql'], $match)) {
                             $db = trim($match[1]);
-                            $db = trim($db,';'); // for example, USE abc;
+                            $db = trim($db, ';'); // for example, USE abc;
                             $reload = TRUE;
                         }
 
@@ -179,8 +179,8 @@ function PMA_importRunQuery($sql = '', $full = '', $controluser = false)
             // check length of query unless we decided to pass it to sql.php
             // (if $run_query is false, we are just displaying so show
             // the complete query in the textarea)
-            if (! $go_sql && $run_query) {
-                if ($cfg['VerboseMultiSubmit'] && ! empty($sql_query)) {
+            if (!$go_sql && $run_query) {
+                if ($cfg['VerboseMultiSubmit'] && !empty($sql_query)) {
                     if (strlen($sql_query) > 50000 || $executed_queries > 50 || $max_sql_len > 1000) {
                         $sql_query = '';
                         $sql_query_disabled = TRUE;
@@ -207,20 +207,20 @@ function PMA_importRunQuery($sql = '', $full = '', $controluser = false)
 /**
  * Returns next part of imported file/buffer
  *
- * @uses    $GLOBALS['offset'] read and write
- * @uses    $GLOBALS['import_file'] read only
- * @uses    $GLOBALS['import_text'] read and write
- * @uses    $GLOBALS['finished'] read and write
- * @uses    $GLOBALS['read_limit'] read only
- * @param  integer size of buffer to read (this is maximal size
+ * @param integer size of buffer to read (this is maximal size
  *                  function will return)
  * @return string part of file/buffer
  * @access public
+ * @uses    $GLOBALS['import_text'] read and write
+ * @uses    $GLOBALS['finished'] read and write
+ * @uses    $GLOBALS['read_limit'] read only
+ * @uses    $GLOBALS['offset'] read and write
+ * @uses    $GLOBALS['import_file'] read only
  */
 function PMA_importGetNextChunk($size = 32768)
 {
     global $compression, $import_handle, $charset_conversion, $charset_of_file,
-        $charset, $read_multiply;
+           $charset, $read_multiply;
 
     // Add some progression while reading large amount of data
     if ($read_multiply <= 8) {
@@ -290,7 +290,7 @@ function PMA_importGetNextChunk($size = 32768)
             // UTF-8
             if (strncmp($result, "\xEF\xBB\xBF", 3) == 0) {
                 $result = substr($result, 3);
-            // UTF-16 BE, LE
+                // UTF-16 BE, LE
             } elseif (strncmp($result, "\xFE\xFF", 2) == 0 || strncmp($result, "\xFF\xFE", 2) == 0) {
                 $result = substr($result, 2);
             }
@@ -298,4 +298,5 @@ function PMA_importGetNextChunk($size = 32768)
         return $result;
     }
 }
+
 ?>

@@ -31,11 +31,11 @@ require_once './libraries/db_table_exists.lib.php';
 PMA_DBI_select_db($db);
 $table_def = PMA_DBI_query('SHOW FIELDS FROM ' . PMA_backquote($table), null, PMA_DBI_QUERY_STORE);
 if (isset($primary_key)) {
-    $result      = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' WHERE ' . $primary_key . ';', null, PMA_DBI_QUERY_STORE);
-    $row         = PMA_DBI_fetch_assoc($result);
+    $result = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' WHERE ' . $primary_key . ';', null, PMA_DBI_QUERY_STORE);
+    $row = PMA_DBI_fetch_assoc($result);
 } else {
-    $result      = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' LIMIT 1;', null, PMA_DBI_QUERY_STORE);
-    $row         = PMA_DBI_fetch_assoc($result);
+    $result = PMA_DBI_query('SELECT * FROM ' . PMA_backquote($table) . ' LIMIT 1;', null, PMA_DBI_QUERY_STORE);
+    $row = PMA_DBI_fetch_assoc($result);
 }
 
 // No row returned
@@ -87,15 +87,15 @@ if (!isset($resize)) {
     // if so adjust accordingly to make sure the image
     // stays smaller then the $newWidth and $newHeight
 
-    $ratioWidth = $srcWidth/$newWidth;
-    $ratioHeight = $srcHeight/$newHeight;
+    $ratioWidth = $srcWidth / $newWidth;
+    $ratioHeight = $srcHeight / $newHeight;
 
-    if ($ratioWidth < $ratioHeight){
-        $destWidth = $srcWidth/$ratioHeight;
+    if ($ratioWidth < $ratioHeight) {
+        $destWidth = $srcWidth / $ratioHeight;
         $destHeight = $newHeight;
     } else {
         $destWidth = $newWidth;
-        $destHeight = $srcHeight/$ratioWidth;
+        $destHeight = $srcHeight / $ratioWidth;
     }
 
     if ($resize) {

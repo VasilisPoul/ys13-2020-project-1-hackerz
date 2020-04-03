@@ -5,7 +5,7 @@
  * @version $Id: db_common.inc.php 11982 2008-11-24 10:32:56Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -30,7 +30,7 @@ if ($db == 'information_schema') {
  * Defines the urls to return to in case of error in a sql statement
  */
 $err_url_0 = 'main.php?' . PMA_generate_common_url();
-$err_url   = $cfg['DefaultTabDatabase'] . '?' . PMA_generate_common_url($db);
+$err_url = $cfg['DefaultTabDatabase'] . '?' . PMA_generate_common_url($db);
 
 
 /**
@@ -42,7 +42,7 @@ if (!isset($is_db) || !$is_db) {
     if (strlen($db)) {
         $is_db = PMA_DBI_select_db($db);
     }
-    if (! strlen($db) || !$is_db) {
+    if (!strlen($db) || !$is_db) {
         PMA_sendHeaderLocation($cfg['PmaAbsoluteUri'] . 'main.php?' . PMA_generate_common_url('', '', '&') . (isset($message) ? '&message=' . urlencode($message) : '') . '&reload=1');
         exit;
     }
@@ -53,9 +53,9 @@ if (!isset($is_db) || !$is_db) {
  */
 if (isset($submitcollation) && !empty($db_collation)) {
     list($db_charset) = explode('_', $db_collation);
-    $sql_query        = 'ALTER DATABASE ' . PMA_backquote($db) . ' DEFAULT' . PMA_generateCharsetQueryPart($db_collation);
-    $result           = PMA_DBI_query($sql_query);
-    $message          = PMA_Message::success();
+    $sql_query = 'ALTER DATABASE ' . PMA_backquote($db) . ' DEFAULT' . PMA_generateCharsetQueryPart($db_collation);
+    $result = PMA_DBI_query($sql_query);
+    $message = PMA_Message::success();
     unset($db_charset, $db_collation);
 }
 

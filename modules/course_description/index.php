@@ -57,7 +57,7 @@ $nameTools = $langCourseProgram;
 $tool_content = '';
 
 if ($is_adminOfCourse) {
-	$tool_content .= "
+    $tool_content .= "
   <div id='operations_container'>
     <ul id='opslist'>
 	  <li><a href='edit.php'>$langEditCourseProgram</a></li>
@@ -68,8 +68,8 @@ if ($is_adminOfCourse) {
 $sql = "SELECT `id`,`title`,`content` FROM `course_description` order by id";
 $res = db_query($sql, $currentCourseID);
 if (mysql_num_rows($res) > 0) {
-	while ($bloc = mysql_fetch_array($res)) {
-	$tool_content .= "
+    while ($bloc = mysql_fetch_array($res)) {
+        $tool_content .= "
     <br />
 
     <table width='99%' class='CourseDescr'>
@@ -84,14 +84,14 @@ if (mysql_num_rows($res) > 0) {
       </td>
     </tr>
     <tr>
-      <td colspan='2'>".mathfilter(make_clickable(nl2br($bloc['content'])), 12, "../../courses/mathimg/")."</td>
+      <td colspan='2'>" . mathfilter(make_clickable(nl2br($bloc['content'])), 12, "../../courses/mathimg/") . "</td>
     </tr>
     </table>";
 
-	$tool_content .= "<br />";
-	}
+        $tool_content .= "<br />";
+    }
 } else {
-	$tool_content .= "<p class='alert1'>$langThisCourseDescriptionIsEmpty</p>";
+    $tool_content .= "<p class='alert1'>$langThisCourseDescriptionIsEmpty</p>";
 }
 
 add_units_navigation(TRUE);

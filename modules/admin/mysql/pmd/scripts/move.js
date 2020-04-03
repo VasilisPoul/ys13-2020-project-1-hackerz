@@ -12,23 +12,23 @@ var dx, dy, dy2;
 var cur_click;
 // update in Main()
 var sm_x = 2, sm_y = 2;
-var sm_s           = 0;
-var sm_add         = 10;
-var s_left         = 0;
-var s_right        = 0;
-var ON_relation    = 0;
-var ON_grid        = 0;
+var sm_s = 0;
+var sm_add = 10;
+var s_left = 0;
+var s_right = 0;
+var ON_relation = 0;
+var ON_grid = 0;
 var ON_display_field = 0;
 // relation_style: 0 - angular 1 - direct
 var ON_angular_direct = 1;
-var click_field    = 0;
-var link_relation  = "";
+var click_field = 0;
+var link_relation = "";
 var id_hint;
-var canvas_width   = 0;
-var canvas_height  = 0;
-var osn_tab_width  = 0;
+var canvas_width = 0;
+var canvas_height = 0;
+var osn_tab_width = 0;
 var osn_tab_height = 0;
-var height_field   = 7;
+var height_field = 7;
 var Glob_X, Glob_Y;
 var timeoutID;
 var layer_menu_cur_click = 0;
@@ -43,7 +43,7 @@ var old_class;
 //window.captureEvents(Event.MOUSEDOWN | Event.MOUSEUP);
 //---CROSS
 document.onmousedown = MouseDown;
-document.onmouseup   = MouseUp;
+document.onmouseup = MouseUp;
 document.onmousemove = MouseMove;
 
 var isIE = document.all && !window.opera;
@@ -52,12 +52,13 @@ var isN4 = document.layers;
 
 if (isIE) {
     window.onscroll = General_scroll;
-    document.onselectstart = function () {return false;};
+    document.onselectstart = function () {
+        return false;
+    };
 }
 
 //document.onmouseup = function(){General_scroll_end();}
-function MouseDown(e)
-{
+function MouseDown(e) {
     var offsetx, offsety;
     if (cur_click != null) {
         offsetx = isIE ? event.clientX + document.body.scrollLeft : e.pageX;
@@ -82,8 +83,7 @@ function MouseDown(e)
     }
 }
 
-function MouseMove(e)
-{
+function MouseMove(e) {
     //Glob_X = e.pageX;
     //Glob_Y = e.pageY;
     Glob_X = isIE ? event.clientX + document.body.scrollLeft : e.pageX;
@@ -106,12 +106,12 @@ function MouseMove(e)
         }
 
         cur_click.style.left = mGx + 'px';
-        cur_click.style.top  = mGy + 'px';
+        cur_click.style.top = mGy + 'px';
     }
 
     if (ON_relation || ON_display_field) {
         document.getElementById('hint').style.left = (Glob_X + 20) + 'px';
-        document.getElementById('hint').style.top  = (Glob_Y + 20) + 'px';
+        document.getElementById('hint').style.top = (Glob_Y + 20) + 'px';
     }
 
     if (layer_menu_cur_click) {
@@ -121,8 +121,7 @@ function MouseMove(e)
     }
 }
 
-function MouseUp(e)
-{
+function MouseUp(e) {
     if (cur_click != null) {
         document.getElementById("canvas").style.visibility = 'visible';
         Re_load();
@@ -132,6 +131,7 @@ function MouseUp(e)
     layer_menu_cur_click = 0;
     //window.releaseEvents(Event.MOUSEMOVE);
 }
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -142,26 +142,23 @@ function MouseUp(e)
 //    return s.substring(0,s.length-2)*1; //re = /(\d+)\w*/; newstr = str.replace(re, "$1");
 //}
 
-function Canvas_pos()
-{
-    canvas_width  = document.getElementById('canvas').width  = osn_tab_width  - 3;
+function Canvas_pos() {
+    canvas_width = document.getElementById('canvas').width = osn_tab_width - 3;
     canvas_height = document.getElementById('canvas').height = osn_tab_height - 3;
 
     if (isIE) {
-        document.getElementById('canvas').style.width  = ((osn_tab_width  - 3)?(osn_tab_width  - 3):0) + 'px';
-        document.getElementById('canvas').style.height = ((osn_tab_height - 3)?(osn_tab_height - 3):0) + 'px';
+        document.getElementById('canvas').style.width = ((osn_tab_width - 3) ? (osn_tab_width - 3) : 0) + 'px';
+        document.getElementById('canvas').style.height = ((osn_tab_height - 3) ? (osn_tab_height - 3) : 0) + 'px';
     }
 }
 
-function Osn_tab_pos()
-{
-    osn_tab_width  = parseInt(document.getElementById('osn_tab').style.width);
+function Osn_tab_pos() {
+    osn_tab_width = parseInt(document.getElementById('osn_tab').style.width);
     osn_tab_height = parseInt(document.getElementById('osn_tab').style.height);
 }
 
 
-function Main()
-{
+function Main() {
     //alert( document.getElementById('osn_tab').offsetTop);
     //---CROSS
     if (isIE) {
@@ -184,8 +181,7 @@ function Main()
 
 
 //-------------------------------- new -----------------------------------------
-function Rezize_osn_tab()
-{
+function Rezize_osn_tab() {
     var max_X = 0;
     var max_Y = 0;
     for (key in j_tabs) {
@@ -195,19 +191,19 @@ function Rezize_osn_tab()
         max_Y = max_Y < k_y ? k_y : max_Y;
     }
 
-    osn_tab_width  = max_X + 50;
+    osn_tab_width = max_X + 50;
     osn_tab_height = max_Y + 50;
     Canvas_pos();
     document.getElementById('osn_tab').style.width = osn_tab_width + 'px';
     document.getElementById('osn_tab').style.height = osn_tab_height + 'px';
 }
+
 //------------------------------------------------------------------------------
 
 /**
  * refreshes display, must be called after state changes
  */
-function Re_load()
-{
+function Re_load() {
     Rezize_osn_tab();
     var n;
     var x1;
@@ -224,9 +220,9 @@ function Re_load()
                         // if hide
                         continue;
                     }
-                    var x1_left  = document.getElementById(key2).offsetLeft+1;
+                    var x1_left = document.getElementById(key2).offsetLeft + 1;
                     var x1_right = x1_left + document.getElementById(key2).offsetWidth;
-                    var x2_left  = document.getElementById(contr[K][key][key2][key3][0]).offsetLeft;
+                    var x2_left = document.getElementById(contr[K][key][key2][key3][0]).offsetLeft;
                     var x2_right = x2_left + document.getElementById(contr[K][key][key2][key3][0]).offsetWidth;
                     a[0] = Math.abs(x1_left - x2_left);
                     a[1] = Math.abs(x1_left - x2_right);
@@ -275,8 +271,8 @@ function Re_load()
                     }
 
                     var y1 = document.getElementById(key2).offsetTop
-                         + row_offset_top
-                         + height_field;
+                        + row_offset_top
+                        + height_field;
                     //alert(1);
 
                     row_offset_top = 0;
@@ -287,7 +283,7 @@ function Re_load()
                     }
 
                     var y2 =
-                          document.getElementById(contr[K][key][key2][key3][0]).offsetTop
+                        document.getElementById(contr[K][key][key2][key3][0]).offsetTop
                         + row_offset_top
                         + height_field;
 
@@ -299,10 +295,9 @@ function Re_load()
 /**
  * draws a line from x1:y1 to x2:y2 with color
  */
-function Line(x1, y1, x2, y2, color_line)
-{
+function Line(x1, y1, x2, y2, color_line) {
     var canvas = document.getElementById("canvas");
-    var ctx    = canvas.getContext("2d");
+    var ctx = canvas.getContext("2d");
     ctx.strokeStyle = color_line;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -314,8 +309,7 @@ function Line(x1, y1, x2, y2, color_line)
 /**
  * draws a relation/constraint line, whether angular or not
  */
-function Line0(x1, y1, x2, y2, color_line)
-{
+function Line0(x1, y1, x2, y2, color_line) {
     Circle(x1, y1, 3, 3, "rgba(0,0,255,1)");
     Rect(x2 - 1, y2 - 2, 4, 4, "rgba(0,0,255,1)");
 
@@ -329,8 +323,7 @@ function Line0(x1, y1, x2, y2, color_line)
 /**
  * draws a angualr relation/constraint line
  */
-function Line2(x1, y1, x2, y2, color_line)
-{
+function Line2(x1, y1, x2, y2, color_line) {
     var x1_ = x1;
     var x2_ = x2;
 
@@ -356,8 +349,7 @@ function Line2(x1, y1, x2, y2, color_line)
 /**
  * draws a relation/constraint line
  */
-function Line3(x1, y1, x2, y2, color_line)
-{
+function Line3(x1, y1, x2, y2, color_line) {
     var x1_ = x1;
     var x2_ = x2;
 
@@ -396,8 +388,7 @@ function Line3(x1, y1, x2, y2, color_line)
     Line(x_s, y1, x_s, y2, color_line);
 }
 
-function Circle(x, y, r, w, color)
-{
+function Circle(x, y, r, w, color) {
     var ctx = document.getElementById('canvas').getContext('2d');
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -407,15 +398,13 @@ function Circle(x, y, r, w, color)
     ctx.stroke();
 }
 
-function Clear()
-{
+function Clear() {
     var canvas = document.getElementById("canvas");
-    var ctx    = canvas.getContext("2d");
+    var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas_width, canvas_height);
 }
 
-function Rect(x1, y1, w, h, color)
-{
+function Rect(x1, y1, w, h, color) {
     var ctx = document.getElementById('canvas').getContext('2d');
     ctx.fillStyle = color;
     ctx.fillRect(x1, y1, w, h);
@@ -434,8 +423,7 @@ function Save(url) // (del?) no for pdf
     document.form1.submit();
 }
 
-function Get_url_pos()
-{
+function Get_url_pos() {
     var poststr = '';
     for (key in j_tabs) {
         poststr += '&t_x[' + key + ']=' + parseInt(document.getElementById(key).style.left);
@@ -446,15 +434,13 @@ function Get_url_pos()
     return poststr;
 }
 
-function Save2()
-{
-    var poststr = 'IS_AJAX=1&server='+server+'&db=' + db + '&token=' + token + '&die_save_pos=1';
+function Save2() {
+    var poststr = 'IS_AJAX=1&server=' + server + '&db=' + db + '&token=' + token + '&die_save_pos=1';
     poststr += Get_url_pos();
     makeRequest('pmd_save_pos.php', poststr);
 }
 
-function Grid()
-{
+function Grid() {
     if (!ON_grid) {
         ON_grid = 1;
         document.getElementById('grid_button').className = 'M_butt_Selected_down';
@@ -464,8 +450,7 @@ function Grid()
     }
 }
 
-function Angular_direct()
-{
+function Angular_direct() {
     if (ON_angular_direct) {
         ON_angular_direct = 0;
         document.getElementById('angular_direct_button').className = 'M_butt_Selected_down';
@@ -475,9 +460,9 @@ function Angular_direct()
     }
     Re_load();
 }
+
 //++++++++++++++++++++++++++++++ RELATION ++++++++++++++++++++++++++++++++++++++
-function Start_relation()
-{
+function Start_relation() {
     if (ON_display_field) {
         return;
     }
@@ -517,10 +502,10 @@ function Click_field(T, f, PK) // table field
             if (j_tabs[db + '.' + T] != '1' || !PK) {
                 document.getElementById('foreign_relation').style.display = 'none';
             }
-            var left = Glob_X - (document.getElementById('layer_new_relation').offsetWidth>>1);
+            var left = Glob_X - (document.getElementById('layer_new_relation').offsetWidth >> 1);
             document.getElementById('layer_new_relation').style.left = left + 'px';
             var top = Glob_Y - document.getElementById('layer_new_relation').offsetHeight - 10;
-            document.getElementById('layer_new_relation').style.top  = top + 'px';
+            document.getElementById('layer_new_relation').style.top = top + 'px';
             document.getElementById('layer_new_relation').style.visibility = "visible";
             link_relation += '&T2=' + T + '&F2=' + f;
         }
@@ -553,8 +538,7 @@ function Click_field(T, f, PK) // table field
     }
 }
 
-function New_relation()
-{
+function New_relation() {
     document.getElementById('layer_new_relation').style.visibility = 'hidden';
     link_relation += '&server=' + server + '&db=' + db + '&token=' + token + '&die_save_pos=0';
     link_relation += '&on_delete=' + document.getElementById('on_delete').value + '&on_update=' + document.getElementById('on_update').value;
@@ -566,22 +550,21 @@ function New_relation()
 
 //-------------------------- create tables -------------------------------------
 
-function Start_table_new()
-{
+function Start_table_new() {
     window.location.href = 'db_operations.php?server=' + server + '&db=' + db + '&token=' + token;
 }
 
-function Start_tab_upd(table)
-{
+function Start_tab_upd(table) {
     window.location.href = 'tbl_structure.php?server=' + server + '&db=' + db + '&token=' + token + '&table=' + table;
 }
+
 //--------------------------- hide tables --------------------------------------
 
 function Small_tab_all(id_this) // max/min all tables
 {
     if (id_this.alt == "v") {
         for (key in j_tabs) {
-            if (document.getElementById('id_hide_tbody_'+key).innerHTML == "v") {
+            if (document.getElementById('id_hide_tbody_' + key).innerHTML == "v") {
                 Small_tab(key, 0);
             }
         }
@@ -589,7 +572,7 @@ function Small_tab_all(id_this) // max/min all tables
         id_this.src = "pmd/images/rightarrow1.png";
     } else {
         for (key in j_tabs) {
-            if (document.getElementById('id_hide_tbody_'+key).innerHTML != "v") {
+            if (document.getElementById('id_hide_tbody_' + key).innerHTML != "v") {
                 Small_tab(key, 0);
             }
         }
@@ -607,21 +590,19 @@ function Small_tab_invert() // invert max/min all tables
     Re_load();
 }
 
-function Small_tab_refresh()
-{
-     for (key in j_tabs) {
-         if(document.getElementById('id_hide_tbody_'+key).innerHTML != "v") {
-             Small_tab(key, 0);
-             Small_tab(key, 0);
-         }
-     }
+function Small_tab_refresh() {
+    for (key in j_tabs) {
+        if (document.getElementById('id_hide_tbody_' + key).innerHTML != "v") {
+            Small_tab(key, 0);
+            Small_tab(key, 0);
+        }
+    }
 }
 
-function Small_tab(t, re_load)
-{
-    var id      = document.getElementById('id_tbody_' + t);
+function Small_tab(t, re_load) {
+    var id = document.getElementById('id_tbody_' + t);
     var id_this = document.getElementById('id_hide_tbody_' + t);
-    var id_t    = document.getElementById(t);
+    var id_t = document.getElementById(t);
 
     id_t.style.width = id_t.offsetWidth + 'px';
     if (id_this.innerHTML == "v") {
@@ -636,9 +617,9 @@ function Small_tab(t, re_load)
         Re_load();
     }
 }
+
 //------------------------------------------------------------------------------
-function Select_tab(t)
-{
+function Select_tab(t) {
     var id_zag = document.getElementById('id_zag_' + t);
     if (id_zag.className != 'tab_zag_3') {
         document.getElementById('id_zag_' + t).className = 'tab_zag_2';
@@ -649,12 +630,14 @@ function Select_tab(t)
     var id_t = document.getElementById(t);
     window.scrollTo(parseInt(id_t.style.left) - 300, parseInt(id_t.style.top) - 300);
 
-    setTimeout(function(){document.getElementById('id_zag_' + t).className = 'tab_zag';}, 800);
+    setTimeout(function () {
+        document.getElementById('id_zag_' + t).className = 'tab_zag';
+    }, 800);
 }
+
 //------------------------------------------------------------------------------
 
-function Canvas_click(id)
-{
+function Canvas_click(id) {
     var n = 0;
     var relation_name = 0;
     var selected = 0;
@@ -665,11 +648,11 @@ function Canvas_click(id)
         for (key in contr[K])
             for (key2 in contr[K][key])
                 for (key3 in contr[K][key][key2]) {
-                    if (!document.getElementById("check_vis_"+key2).checked ||
-                        !document.getElementById("check_vis_"+contr[K][key][key2][key3][0]).checked) continue; // if hide
-                    var x1_left  = document.getElementById(key2).offsetLeft + 1;//document.getElementById(key2+"."+key3).offsetLeft;
+                    if (!document.getElementById("check_vis_" + key2).checked ||
+                        !document.getElementById("check_vis_" + contr[K][key][key2][key3][0]).checked) continue; // if hide
+                    var x1_left = document.getElementById(key2).offsetLeft + 1;//document.getElementById(key2+"."+key3).offsetLeft;
                     var x1_right = x1_left + document.getElementById(key2).offsetWidth;
-                    var x2_left  = document.getElementById(contr[K][key][key2][key3][0]).offsetLeft;//+document.getElementById(contr[K][key2][key3][0]+"."+contr[K][key2][key3][1]).offsetLeft
+                    var x2_left = document.getElementById(contr[K][key][key2][key3][0]).offsetLeft;//+document.getElementById(contr[K][key2][key3][0]+"."+contr[K][key2][key3][1]).offsetLeft
                     var x2_right = x2_left + document.getElementById(contr[K][key][key2][key3][0]).offsetWidth;
                     a[0] = Math.abs(x1_left - x2_left);
                     a[1] = Math.abs(x1_left - x2_right);
@@ -703,19 +686,20 @@ function Canvas_click(id)
                     if (n == 0) {
                         x1 = x1_left - sm_s;
                         x2 = x2_left - sm_s;
-                        s_left    = 1;
+                        s_left = 1;
                     }
 
-                    var y1 = document.getElementById(key2).offsetTop + document.getElementById(key2+"."+key3).offsetTop + height_field;
+                    var y1 = document.getElementById(key2).offsetTop + document.getElementById(key2 + "." + key3).offsetTop + height_field;
                     var y2 = document.getElementById(contr[K][key][key2][key3][0]).offsetTop +
-                                     document.getElementById(contr[K][key][key2][key3][0]+"."+contr[K][key][key2][key3][1]).offsetTop + height_field;
+                        document.getElementById(contr[K][key][key2][key3][0] + "." + contr[K][key][key2][key3][1]).offsetTop + height_field;
                     if (!selected && Glob_X > x1 - 10 && Glob_X < x1 + 10 && Glob_Y > y1 - 7 && Glob_Y < y1 + 7) {
                         Line0(x1 - sm_x, y1 - sm_y, x2 - sm_x, y2 - sm_y, "rgba(255,0,0,1)");
                         selected = 1; // Rect(x1-sm_x,y1-sm_y,10,10,"rgba(0,255,0,1)");
                         relation_name = key; //
                         Key0 = contr[K][key][key2][key3][0];
                         Key1 = contr[K][key][key2][key3][1];
-                        Key2 = key2; Key3 = key3;
+                        Key2 = key2;
+                        Key3 = key3;
                         Key = K;
                     } else {
                         Line0(x1 - sm_x, y1 - sm_y, x2 - sm_x, y2 - sm_y, "rgba(0,100,150,1)");
@@ -724,7 +708,7 @@ function Canvas_click(id)
     if (selected) {
         // select relations
         //alert(Key0+' - '+Key1+' - '+Key2+' - '+Key3);
-        var left = Glob_X - (document.getElementById('layer_upd_relation').offsetWidth>>1);
+        var left = Glob_X - (document.getElementById('layer_upd_relation').offsetWidth >> 1);
         document.getElementById('layer_upd_relation').style.left = left + 'px';
         var top = Glob_Y - document.getElementById('layer_upd_relation').offsetHeight - 10;
         document.getElementById('layer_upd_relation').style.top = top + 'px';
@@ -733,16 +717,14 @@ function Canvas_click(id)
     }
 }
 
-function Upd_relation()
-{
+function Upd_relation() {
     document.getElementById('layer_upd_relation').style.visibility = 'hidden';
     link_relation += '&server=' + server + '&db=' + db + '&token=' + token + '&die_save_pos=0';
     link_relation += Get_url_pos();
     makeRequest('pmd_relation_upd.php', link_relation);
 }
 
-function VisibleTab(id, t_n)
-{
+function VisibleTab(id, t_n) {
     if (id.checked) {
         document.getElementById(t_n).style.visibility = 'visible';
     } else {
@@ -775,20 +757,18 @@ function Hide_tab_all(id_this) // max/min all tables
     Re_load();
 }
 
-function in_array_k(x, m)
-{
+function in_array_k(x, m) {
     var b = 0;
     for (u in m) {
         if (x == u) {
-            b=1;
+            b = 1;
             break;
         }
     }
     return b;
 }
 
-function No_have_constr(id_this)
-{
+function No_have_constr(id_this) {
     var a = new Array();
     for (K in contr)
         for (key in contr[K])                     // contr name
@@ -806,34 +786,30 @@ function No_have_constr(id_this)
     }
     var E = document.form1;
     for (i = 0; i < E.elements.length; i++) {
-        if (E.elements[i].type == "checkbox" && E.elements[i].id.substring(0, 10) == 'check_vis_')
-        {
+        if (E.elements[i].type == "checkbox" && E.elements[i].id.substring(0, 10) == 'check_vis_') {
             if (!in_array_k(E.elements[i].value, a))
-            if (id_this.alt == 'v') {
-                E.elements[i].checked = true;
-                document.getElementById(E.elements[i].value).style.visibility = 'visible';
-            } else {
-                E.elements[i].checked = false;
-                document.getElementById(E.elements[i].value).style.visibility = 'hidden';
-            }
+                if (id_this.alt == 'v') {
+                    E.elements[i].checked = true;
+                    document.getElementById(E.elements[i].value).style.visibility = 'visible';
+                } else {
+                    E.elements[i].checked = false;
+                    document.getElementById(E.elements[i].value).style.visibility = 'hidden';
+                }
         }
     }
 }
 
-function Help()
-{
+function Help() {
     var WinHelp = window.open("pmd_help.php", "wind1", "top=200,left=400,width=300,height=200,resizable=yes,scrollbars=yes,menubar=no");
 }
 
-function PDF_save()
-{
+function PDF_save() {
     // var WinPDF =
     // window.open("pmd_pdf.php?token="+token+"&db="+db,"wind1", "top=200,left=200,width=200,height=100,resizable=yes,scrollbars=yes,menubar=no");
     Save('pmd_pdf.php?server=' + server + '&token=' + token + '&db=' + db);
 }
 
-function General_scroll()
-{
+function General_scroll() {
     /*
     if (!document.getElementById('show_relation_olways').checked) {
         document.getElementById("canvas").style.visibility = 'hidden';
@@ -845,14 +821,13 @@ function General_scroll()
     clearTimeout(timeoutID);
     timeoutID = setTimeout
     (
-        function()
-        {
+        function () {
             document.getElementById('top_menu').style.left = document.body.scrollLeft + 'px';
-            document.getElementById('top_menu').style.top  = document.body.scrollTop + 'px';
+            document.getElementById('top_menu').style.top = document.body.scrollTop + 'px';
             document.getElementById('layer_menu').style.left = document.body.scrollLeft + 'px';
-            document.getElementById('layer_menu').style.top  = (document.body.scrollTop + document.getElementById('top_menu').offsetHeight) + 'px';
+            document.getElementById('layer_menu').style.top = (document.body.scrollTop + document.getElementById('top_menu').offsetHeight) + 'px';
         }
-        ,200
+        , 200
     );
 }
 
@@ -886,9 +861,9 @@ function Show_left_menu(id_this) // max/min all tables
         id_this.src = "pmd/images/downarrow2_m.png";
     }
 }
+
 //------------------------------------------------------------------------------
-function Top_menu_right(id_this)
-{
+function Top_menu_right(id_this) {
     if (id_this.alt == ">") {
         document.getElementById('top_menu').style.marginLeft = document.getElementById('top_menu').offsetWidth + 'px'; // = 350
         id_this.alt = "<";
@@ -899,9 +874,9 @@ function Top_menu_right(id_this)
         id_this.src = "pmd/images/2rightarrow_m.png";
     }
 }
+
 //------------------------------------------------------------------------------
-function Start_display_field()
-{
+function Start_display_field() {
     if (ON_relation) {
         return;
     }

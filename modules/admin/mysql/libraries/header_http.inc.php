@@ -5,7 +5,7 @@
  * @version $Id: header_http.inc.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 

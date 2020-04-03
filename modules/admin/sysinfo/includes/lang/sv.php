@@ -21,61 +21,61 @@
 //
 // translation by shockzor
 
-$text['title']          = 'Systeminformation';
+$text['title'] = 'Systeminformation';
 
-$text['vitals']         = 'Elementa';
-$text['hostname']       = 'Värdnamn';
-$text['ip']             = 'IPaddress';
-$text['kversion']       = 'Kernelversion';
-$text['uptime']         = 'Drifttid';
-$text['users']          = 'Antal användare';
-$text['loadavg']        = 'Snittbelastning';
+$text['vitals'] = 'Elementa';
+$text['hostname'] = 'Värdnamn';
+$text['ip'] = 'IPaddress';
+$text['kversion'] = 'Kernelversion';
+$text['uptime'] = 'Drifttid';
+$text['users'] = 'Antal användare';
+$text['loadavg'] = 'Snittbelastning';
 
-$text['hardware']       = 'Hårdvaruinformation';
-$text['numcpu']         = 'Processorer';
-$text['cpumodel']       = 'Modell';
-$text['mhz']            = 'Klockfrekvens';
-$text['cache']          = 'Cachestorlek';
-$text['bogomips']       = 'Bogomips';
-$text['pci']            = 'PCI-enheter';
-$text['ide']            = 'IDE-enheter';
-$text['scsi']           = 'SCSI-enheter';
+$text['hardware'] = 'Hårdvaruinformation';
+$text['numcpu'] = 'Processorer';
+$text['cpumodel'] = 'Modell';
+$text['mhz'] = 'Klockfrekvens';
+$text['cache'] = 'Cachestorlek';
+$text['bogomips'] = 'Bogomips';
+$text['pci'] = 'PCI-enheter';
+$text['ide'] = 'IDE-enheter';
+$text['scsi'] = 'SCSI-enheter';
 
-$text['netusage']       = 'Nätverksanvändning';
-$text['device']         = 'Enheter';
-$text['received']       = 'Mottaget';
-$text['sent']           = 'Skickat';
-$text['errors']         = 'Fel/Förlorat';
+$text['netusage'] = 'Nätverksanvändning';
+$text['device'] = 'Enheter';
+$text['received'] = 'Mottaget';
+$text['sent'] = 'Skickat';
+$text['errors'] = 'Fel/Förlorat';
 
-$text['memusage']       = 'Minnesanvändning';
-$text['phymem']         = 'Fysiskt minne';
-$text['swap']           = 'Växlingsminne';
+$text['memusage'] = 'Minnesanvändning';
+$text['phymem'] = 'Fysiskt minne';
+$text['swap'] = 'Växlingsminne';
 
-$text['fs']             = 'Monterade filsystem';
-$text['mount']          = 'Montera';
-$text['partition']      = 'Partition';
+$text['fs'] = 'Monterade filsystem';
+$text['mount'] = 'Montera';
+$text['partition'] = 'Partition';
 
-$text['percent']        = 'Kapacitetsutnyttjande';
-$text['type']           = 'Typ';
-$text['free']           = 'Fritt';
-$text['used']           = 'Använt';
-$text['size']           = 'Storlek';
-$text['totals']         = 'Totalt';
+$text['percent'] = 'Kapacitetsutnyttjande';
+$text['type'] = 'Typ';
+$text['free'] = 'Fritt';
+$text['used'] = 'Använt';
+$text['size'] = 'Storlek';
+$text['totals'] = 'Totalt';
 
-$text['kb']             = 'KB';
-$text['mb']             = 'MB';
-$text['gb']             = 'GB';
+$text['kb'] = 'KB';
+$text['mb'] = 'MB';
+$text['gb'] = 'GB';
 
-$text['none']           = 'inget';
+$text['none'] = 'inget';
 
-$text['capacity']       = 'Kapacitet';
-  
-$text['template']       = 'Förlaga';
-$text['language']       = 'Språk';
-$text['submit']         = 'Skicka';
+$text['capacity'] = 'Kapacitet';
 
-$text['days']           = 'dagar';
-$text['hours']          = 'timmar';
-$text['minutes']        = 'minuter';
-$text['created']        = 'Från';
+$text['template'] = 'Förlaga';
+$text['language'] = 'Språk';
+$text['submit'] = 'Skicka';
+
+$text['days'] = 'dagar';
+$text['hours'] = 'timmar';
+$text['minutes'] = 'minuter';
+$text['created'] = 'Från';
 ?>

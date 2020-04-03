@@ -1,26 +1,22 @@
-function PMA_queryAutoCommit()
-{
+function PMA_queryAutoCommit() {
     document.getElementById('sqlqueryform').target = window.opener.frame_content.name;
     document.getElementById('sqlqueryform').submit();
     return;
 }
 
-function PMA_querywindowCommit(tab)
-{
+function PMA_querywindowCommit(tab) {
     document.getElementById('hiddenqueryform').querydisplay_tab.value = tab;
     document.getElementById('hiddenqueryform').submit();
     return false;
 }
 
-function PMA_querywindowSetFocus()
-{
+function PMA_querywindowSetFocus() {
     document.getElementById('sqlquery').focus();
 }
 
-function PMA_querywindowResize()
-{
+function PMA_querywindowResize() {
     // for Gecko
-    if (typeof(self.sizeToContent) == 'function') {
+    if (typeof (self.sizeToContent) == 'function') {
         self.sizeToContent();
         //self.scrollbars.visible = false;
         // give some more space ... to prevent 'fli(pp/ck)ing'
@@ -29,10 +25,10 @@ function PMA_querywindowResize()
     }
 
     // for IE, Opera
-    if (document.getElementById && typeof(document.getElementById('querywindowcontainer')) != 'undefined') {
+    if (document.getElementById && typeof (document.getElementById('querywindowcontainer')) != 'undefined') {
 
         // get content size
-        var newWidth  = document.getElementById('querywindowcontainer').offsetWidth;
+        var newWidth = document.getElementById('querywindowcontainer').offsetWidth;
         var newHeight = document.getElementById('querywindowcontainer').offsetHeight;
 
         // set size to contentsize

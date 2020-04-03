@@ -22,10 +22,10 @@
 $net = $sysinfo->network();
 
 $_text = '<table width="100%" align="center">'
-       . '<tr><td align="left" valign="top"><font size="-1"><b>' . $text['device'] . '</b></font></td>'
-       . '<td align="right" valign="top"><font size="-1"><b>' . $text['received'] . '</b></font></td>'
-       . '<td align="right" valign="top"><font size="-1"><b>' . $text['sent'] . '</b></font></td>'
-       . '<td align="right" valign="top"><font size="-1"><b>' . $text['errors'] . '</b></font></td>';
+    . '<tr><td align="left" valign="top"><font size="-1"><b>' . $text['device'] . '</b></font></td>'
+    . '<td align="right" valign="top"><font size="-1"><b>' . $text['received'] . '</b></font></td>'
+    . '<td align="right" valign="top"><font size="-1"><b>' . $text['sent'] . '</b></font></td>'
+    . '<td align="right" valign="top"><font size="-1"><b>' . $text['errors'] . '</b></font></td>';
 
 while (list($dev, $stats) = each($net)) {
     $_text .= "\t<tr>\n";

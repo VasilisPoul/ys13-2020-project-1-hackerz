@@ -26,49 +26,45 @@
 
 
 /**===========================================================================
-	serachuser.php
-	@last update: 15-10-2006 by Karatzidis Stratos
-	@authors list: Karatzidis Stratos <kstratos@uom.gr>
-		       Pitsiougas Vagelis <vagpits@uom.gr>
-==============================================================================
-  @Description: Activate the inactive accounts
-
-
-==============================================================================
-*/
+ * serachuser.php
+ * @last update: 15-10-2006 by Karatzidis Stratos
+ * @authors list: Karatzidis Stratos <kstratos@uom.gr>
+ * Pitsiougas Vagelis <vagpits@uom.gr>
+ * ==============================================================================
+ * @Description: Activate the inactive accounts
+ *
+ *
+ * ==============================================================================
+ */
 
 // BASETHEME, OTHER INCLUDES AND NAMETOOLS
 $require_admin = TRUE;
 include '../../include/baseTheme.php';
 include 'admin.inc.php';
-$nameTools = $langAddTime;		// Define $nameTools
+$nameTools = $langAddTime;        // Define $nameTools
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
-$tool_content = "";		// Initialise $tool_content
+$tool_content = "";        // Initialise $tool_content
 
 // Main body
-$activate = isset($_GET['activate'])?$_GET['activate']:'';		//variable of declaring the activation update
+$activate = isset($_GET['activate']) ? $_GET['activate'] : '';        //variable of declaring the activation update
 
 // update process for all the inactive records/users
-if((!empty($activate)) && ($activate==1)) {
-	// do the update
-	$newtime = time() + 15552000;
-	$qry = "UPDATE user SET expires_at=".$newtime." WHERE expires_at<=".time();
-	$sql = mysql_query($qry);
-	if($sql)
-	{
-		$countinactive = mysql_affected_rows();
-		if($countinactive>0)
-		{
-			$tool_content .= " ".$langRealised." ".$countinactive." ".$langUpdate." <br><br>";
-			$tool_content .= "<a href='index.php'>$langBack</a>";
-		}
-	}
-	else
-	{
-		$tool_content .=$langNoChanges;
-		$tool_content .= "<a href='index.php'>$langBack</a>";
-	}
+if ((!empty($activate)) && ($activate == 1)) {
+    // do the update
+    $newtime = time() + 15552000;
+    $qry = "UPDATE user SET expires_at=" . $newtime . " WHERE expires_at<=" . time();
+    $sql = mysql_query($qry);
+    if ($sql) {
+        $countinactive = mysql_affected_rows();
+        if ($countinactive > 0) {
+            $tool_content .= " " . $langRealised . " " . $countinactive . " " . $langUpdate . " <br><br>";
+            $tool_content .= "<a href='index.php'>$langBack</a>";
+        }
+    } else {
+        $tool_content .= $langNoChanges;
+        $tool_content .= "<a href='index.php'>$langBack</a>";
+    }
 }
 // 3: display administrator menu
-draw($tool_content,3);
+draw($tool_content, 3);
 ?>

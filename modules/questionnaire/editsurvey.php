@@ -64,18 +64,18 @@ include '../../include/baseTheme.php';
 $tool_content = "";
 
 switch ($UseCase) {
-case 1:
-   // handle multi choice surveys
-   printMCQuestionForm();
-   break;
-case 2:
-   // handle text input surveys
-   printTFQuestionForm();
-   break;
-default:
-   // print new survey form
-   printSurveyCreationForm();
+    case 1:
+        // handle multi choice surveys
+        printMCQuestionForm();
+        break;
+    case 2:
+        // handle text input surveys
+        printTFQuestionForm();
+        break;
+    default:
+        // print new survey form
+        printSurveyCreationForm();
 }
 
-draw($tool_content, 2); 
+draw($tool_content, 2);
 ?>

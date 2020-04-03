@@ -64,25 +64,25 @@
 class PMA_Message
 {
     const SUCCESS = 1; // 0001
-    const NOTICE  = 2; // 0010
+    const NOTICE = 2; // 0010
     const WARNING = 4; // 0100
-    const ERROR   = 8; // 1000
+    const ERROR = 8; // 1000
 
-    const SANITIZE_NONE   = 0;  // 0000 0000
+    const SANITIZE_NONE = 0;  // 0000 0000
     const SANITIZE_STRING = 16; // 0001 0000
     const SANITIZE_PARAMS = 32; // 0010 0000
-    const SANITIZE_BOOTH  = 48; // 0011 0000
+    const SANITIZE_BOOTH = 48; // 0011 0000
 
     /**
      * message levels
      *
      * @var array
      */
-    static public $level = array (
+    static public $level = array(
         PMA_Message::SUCCESS => 'success',
-        PMA_Message::NOTICE  => 'notice',
+        PMA_Message::NOTICE => 'notice',
         PMA_Message::WARNING => 'warning',
-        PMA_Message::ERROR   => 'error',
+        PMA_Message::ERROR => 'error',
     );
 
     /**
@@ -144,6 +144,10 @@ class PMA_Message
     /**
      * Constructor
      *
+     * @param string $string
+     * @param integer $number
+     * @param array   $$params
+     * @param boolean $sanitize
      * @uses    PMA_Message::setNumber()
      * @uses    PMA_Message::setString()
      * @uses    PMA_Message::setParams()
@@ -151,13 +155,9 @@ class PMA_Message
      * @uses    PMA_Message::SANITIZE_NONE
      * @uses    PMA_Message::SANITIZE_STRING
      * @uses    PMA_Message::SANITIZE_PARAMS
-     * @param   string  $string
-     * @param   integer $number
-     * @param   array   $$params
-     * @param   boolean $sanitize
      */
     public function __construct($string = '', $number = PMA_Message::NOTICE,
-        $params = array(), $sanitize = PMA_Message::SANITIZE_NONE)
+                                $params = array(), $sanitize = PMA_Message::SANITIZE_NONE)
     {
         $this->setString($string, $sanitize & PMA_Message::SANITIZE_STRING);
         $this->setNumber($number);
@@ -167,8 +167,8 @@ class PMA_Message
     /**
      * magic method: return string representation for this object
      *
-     * @uses    PMA_Message::getMessage()
      * @return string
+     * @uses    PMA_Message::getMessage()
      */
     public function __toString()
     {
@@ -181,10 +181,10 @@ class PMA_Message
      * shorthand for getting a simple success message
      *
      * @static
+     * @param string $string
+     * @return  PMA_Message
      * @uses    PMA_Message as returned object
      * @uses    PMA_Message::SUCCESS
-     * @param   string $string
-     * @return  PMA_Message
      */
     static public function success($string = '')
     {
@@ -201,10 +201,10 @@ class PMA_Message
      * shorthand for getting a simple error message
      *
      * @static
+     * @param string $string
+     * @return  PMA_Message
      * @uses    PMA_Message as returned object
      * @uses    PMA_Message::ERROR
-     * @param   string $string
-     * @return  PMA_Message
      */
     static public function error($string = '')
     {
@@ -221,10 +221,10 @@ class PMA_Message
      * shorthand for getting a simple warning message
      *
      * @static
+     * @param string $string
+     * @return  PMA_Message
      * @uses    PMA_Message as returned object
      * @uses    PMA_Message::WARNING
-     * @param   string $string
-     * @return  PMA_Message
      */
     static public function warning($string)
     {
@@ -237,10 +237,10 @@ class PMA_Message
      * shorthand for getting a simple notice message
      *
      * @static
+     * @param string $string
+     * @return  PMA_Message
      * @uses    PMA_Message as returned object
      * @uses    PMA_Message::NOTICE
-     * @param   string  $string
-     * @return  PMA_Message
      */
     static public function notice($string)
     {
@@ -253,11 +253,11 @@ class PMA_Message
      * shorthand for getting a customized message
      *
      * @static
-     * @uses    PMA_Message as returned object
-     * @uses    PMA_Message::setMessage()
-     * @param   string    $message
-     * @param   integer   $type
+     * @param string $message
+     * @param integer $type
      * @return  PMA_Message
+     * @uses    PMA_Message::setMessage()
+     * @uses    PMA_Message as returned object
      */
     static public function raw($message, $type = PMA_Message::NOTICE)
     {
@@ -272,10 +272,10 @@ class PMA_Message
      * shorthand for getting a customized error message
      *
      * @static
+     * @param string $message
+     * @return  PMA_Message
      * @uses    PMA_Message::raw()
      * @uses    PMA_Message::ERROR
-     * @param   string  $message
-     * @return  PMA_Message
      */
     static public function rawError($message)
     {
@@ -288,10 +288,10 @@ class PMA_Message
      * shorthand for getting a customized warning message
      *
      * @static
+     * @param string $message
+     * @return  PMA_Message
      * @uses    PMA_Message::raw()
      * @uses    PMA_Message::WARNING
-     * @param   string  $message
-     * @return  PMA_Message
      */
     static public function rawWarning($message)
     {
@@ -304,10 +304,10 @@ class PMA_Message
      * shorthand for getting a customized notice message
      *
      * @static
+     * @param string $message
+     * @return  PMA_Message
      * @uses    PMA_Message::raw()
      * @uses    PMA_Message::NOTICE
-     * @param   string  $message
-     * @return  PMA_Message
      */
     static public function rawNotice($message)
     {
@@ -320,10 +320,10 @@ class PMA_Message
      * shorthand for getting a customized success message
      *
      * @static
+     * @param string $message
+     * @return  PMA_Message
      * @uses    PMA_Message::raw()
      * @uses    PMA_Message::SUCCESS
-     * @param   string  $message
-     * @return  PMA_Message
      */
     static public function rawSuccess($message)
     {
@@ -334,11 +334,11 @@ class PMA_Message
      * returns whether this message is a success message or not
      * and optionaly makes this message a success message
      *
+     * @param boolean $set
+     * @return  boolean whether this is a success message or not
+     * @uses    PMA_Message::getNumber()
      * @uses    PMA_Message::SUCCESS
      * @uses    PMA_Message::setNumber()
-     * @uses    PMA_Message::getNumber()
-     * @param   boolean $set
-     * @return  boolean whether this is a success message or not
      */
     public function isSuccess($set = false)
     {
@@ -353,11 +353,11 @@ class PMA_Message
      * returns whether this message is a notice message or not
      * and optionaly makes this message a notice message
      *
+     * @param boolean $set
+     * @return  boolean whether this is a notice message or not
+     * @uses    PMA_Message::getNumber()
      * @uses    PMA_Message::NOTICE
      * @uses    PMA_Message::setNumber()
-     * @uses    PMA_Message::getNumber()
-     * @param   boolean $set
-     * @return  boolean whether this is a notice message or not
      */
     public function isNotice($set = false)
     {
@@ -372,11 +372,11 @@ class PMA_Message
      * returns whether this message is a warning message or not
      * and optionaly makes this message a warning message
      *
+     * @param boolean $set
+     * @return  boolean whether this is a warning message or not
+     * @uses    PMA_Message::getNumber()
      * @uses    PMA_Message::WARNING
      * @uses    PMA_Message::setNumber()
-     * @uses    PMA_Message::getNumber()
-     * @param   boolean $set
-     * @return  boolean whether this is a warning message or not
      */
     public function isWarning($set = false)
     {
@@ -391,11 +391,11 @@ class PMA_Message
      * returns whether this message is an error message or not
      * and optionaly makes this message an error message
      *
+     * @param boolean $set
+     * @return  boolean whether this is an error message or not
+     * @uses    PMA_Message::getNumber()
      * @uses    PMA_Message::ERROR
      * @uses    PMA_Message::setNumber()
-     * @uses    PMA_Message::getNumber()
-     * @param   boolean $set
-     * @return  boolean whether this is an error message or not
      */
     public function isError($set = false)
     {
@@ -409,10 +409,10 @@ class PMA_Message
     /**
      * set raw message (overrides string)
      *
+     * @param string $message
+     * @param boolean $sanitize whether to sanitize $message or not
      * @uses    PMA_Message::$_message to set it
      * @uses    PMA_Message::sanitize()
-     * @param   string  $message
-     * @param   boolean $sanitize whether to sanitize $message or not
      */
     public function setMessage($message, $sanitize = false)
     {
@@ -425,10 +425,10 @@ class PMA_Message
     /**
      * set string (does not take effect if raw message is set)
      *
+     * @param string $_string
+     * @param boolean $sanitize whether to sanitize $string or not
      * @uses    PMA_Message::$_string to set it
      * @uses    PMA_Message::sanitize()
-     * @param   string  $_string
-     * @param   boolean $sanitize whether to sanitize $string or not
      */
     public function setString($_string, $sanitize = true)
     {
@@ -441,8 +441,8 @@ class PMA_Message
     /**
      * set message type number
      *
+     * @param integer $number
      * @uses    PMA_Message::$_number to set it
-     * @param   integer $number
      */
     public function setNumber($number)
     {
@@ -459,11 +459,11 @@ class PMA_Message
      * $message->addParam('<img src="img" />', false);
      * </code>
      *
+     * @param mixed $param
+     * @param boolean $raw
+     * @uses    PMA_Message::notice()
      * @uses    htmlspecialchars()
      * @uses    PMA_Message::$_params to fill
-     * @uses    PMA_Message::notice()
-     * @param   mixed   $param
-     * @param   boolean $raw
      */
     public function addParam($param, $raw = true)
     {
@@ -479,10 +479,10 @@ class PMA_Message
     /**
      * add another string to be concatenated on displaying
      *
+     * @param string $string to be added
+     * @param string $separator to use between this and previous string/message
      * @uses    PMA_Message::$_added_messages to fill
      * @uses    PMA_Message::notice()
-     * @param   string  $string    to be added
-     * @param   string  $separator to use between this and previous string/message
      */
     public function addString($string, $separator = ' ')
     {
@@ -493,9 +493,9 @@ class PMA_Message
     /**
      * add a bunch of messages at once
      *
+     * @param array $messages to be added
+     * @param string $separator to use between this and previous string/message
      * @uses    PMA_Message::addMessage()
-     * @param   array   $messages  to be added
-     * @param   string  $separator to use between this and previous string/message
      */
     public function addMessages($messages, $separator = ' ')
     {
@@ -507,10 +507,10 @@ class PMA_Message
     /**
      * add another raw message to be concatenated on displaying
      *
+     * @param mixed $message to be added
+     * @param string $separator to use between this and previous string/message
      * @uses    PMA_Message::$_added_messages to fill
      * @uses    PMA_Message::rawNotice()
-     * @param   mixed   $message   to be added
-     * @param   string  $separator to use between this and previous string/message
      */
     public function addMessage($message, $separator = ' ')
     {
@@ -528,10 +528,10 @@ class PMA_Message
     /**
      * set all params at once, usually used in conjunction with string
      *
+     * @param array $params
+     * @param boolean $sanitize
      * @uses    PMA_Message::sanitize()
      * @uses    PMA_Message::$_params to set
-     * @param   array   $params
-     * @param   boolean $sanitize
      */
     public function setParams($params, $sanitize = false)
     {
@@ -544,8 +544,8 @@ class PMA_Message
     /**
      * return all parameters
      *
-     * @uses    PMA_Message::$_params as return value
      * @return array
+     * @uses    PMA_Message::$_params as return value
      */
     public function getParams()
     {
@@ -555,8 +555,8 @@ class PMA_Message
     /**
      * return all added messages
      *
-     * @uses    PMA_Message::$_added_messages as return value
      * @return array
+     * @uses    PMA_Message::$_added_messages as return value
      */
     public function getAddedMessages()
     {
@@ -567,12 +567,12 @@ class PMA_Message
      * Sanitizes $message
      *
      * @static
-     * @uses    is_array()
-     * @uses    htmlspecialchars()
-     * @uses    PMA_Message::sanitize() recursiv
-     * @param   mixed   the message(s)
+     * @param mixed   the message(s)
      * @return  mixed   the sanitized message(s)
      * @access  public
+     * @uses    PMA_Message::sanitize() recursiv
+     * @uses    is_array()
+     * @uses    htmlspecialchars()
      */
     static public function sanitize($message)
     {
@@ -592,38 +592,38 @@ class PMA_Message
      * for formatting
      *
      * @static
-     * @uses    PREG_SET_ORDER
-     * @uses    in_array()
+     * @param string $message the message
+     * @return  string  the decoded message
+     * @access  public
      * @uses    preg_match_all()
      * @uses    preg_match()
      * @uses    preg_replace()
      * @uses    substr()
      * @uses    strtr()
-     * @param   string  $message the message
-     * @return  string  the decoded message
-     * @access  public
+     * @uses    PREG_SET_ORDER
+     * @uses    in_array()
      */
     static public function decodeBB($message)
     {
         $replace_pairs = array(
-            '[i]'       => '<em>',      // deprecated by em
-            '[/i]'      => '</em>',     // deprecated by em
-            '[em]'      => '<em>',
-            '[/em]'     => '</em>',
-            '[b]'       => '<strong>',  // deprecated by strong
-            '[/b]'      => '</strong>', // deprecated by strong
-            '[strong]'  => '<strong>',
+            '[i]' => '<em>',      // deprecated by em
+            '[/i]' => '</em>',     // deprecated by em
+            '[em]' => '<em>',
+            '[/em]' => '</em>',
+            '[b]' => '<strong>',  // deprecated by strong
+            '[/b]' => '</strong>', // deprecated by strong
+            '[strong]' => '<strong>',
             '[/strong]' => '</strong>',
-            '[tt]'      => '<code>',    // deprecated by CODE or KBD
-            '[/tt]'     => '</code>',   // deprecated by CODE or KBD
-            '[code]'    => '<code>',
-            '[/code]'   => '</code>',
-            '[kbd]'     => '<kbd>',
-            '[/kbd]'    => '</kbd>',
-            '[br]'      => '<br />',
-            '[/a]'      => '</a>',
-            '[sup]'     => '<sup>',
-            '[/sup]'    => '</sup>',
+            '[tt]' => '<code>',    // deprecated by CODE or KBD
+            '[/tt]' => '</code>',   // deprecated by CODE or KBD
+            '[code]' => '<code>',
+            '[/code]' => '</code>',
+            '[kbd]' => '<kbd>',
+            '[/kbd]' => '</kbd>',
+            '[br]' => '<br />',
+            '[/a]' => '</a>',
+            '[sup]' => '<sup>',
+            '[/sup]' => '</sup>',
         );
 
         $message = strtr($message, $replace_pairs);
@@ -638,11 +638,11 @@ class PMA_Message
 
             foreach ($founds as $found) {
                 // only http... and ./Do... allowed
-                if (! in_array(substr($found[1], 0, 4), $valid_links)) {
+                if (!in_array(substr($found[1], 0, 4), $valid_links)) {
                     return $message;
                 }
                 // a-z and _ allowed in target
-                if (! empty($found[2]) && preg_match('/[^a-z_]+/i', $found[2])) {
+                if (!empty($found[2]) && preg_match('/[^a-z_]+/i', $found[2])) {
                     return $message;
                 }
             }
@@ -656,12 +656,12 @@ class PMA_Message
     /**
      * wrapper for sprintf()
      *
-     * @uses    sprintf()
+     * @return  string formated
      * @uses    func_get_args()
      * @uses    is_array()
      * @uses    array_unshift()
      * @uses    call_user_func_array()
-     * @return  string formated
+     * @uses    sprintf()
      */
     static public function format()
     {
@@ -677,13 +677,13 @@ class PMA_Message
     /**
      * returns unique PMA_Message::$_hash, if not exists it will be created
      *
-     * @uses    PMA_Message::$_hash as return value and to set it if required
-     * @uses    PMA_Message::getNumber()
+     * @param string $file
+     * @return  string PMA_Message::$_hash
      * @uses    PMA_Message::$_string
      * @uses    PMA_Message::$_message
      * @uses    md5()
-     * @param   string $file
-     * @return  string PMA_Message::$_hash
+     * @uses    PMA_Message::$_hash as return value and to set it if required
+     * @uses    PMA_Message::getNumber()
      */
     public function getHash()
     {
@@ -701,14 +701,14 @@ class PMA_Message
     /**
      * returns compiled message
      *
-     * @uses    PMA_Message::$_message as return value
+     * @return  string complete message
      * @uses    PMA_Message::getString()
      * @uses    PMA_Message::getParams()
      * @uses    PMA_Message::format()
      * @uses    PMA_Message::decodeBB()
      * @uses    PMA_Message::getAddedMessages()
      * @uses    strlen()
-     * @return  string complete message
+     * @uses    PMA_Message::$_message as return value
      */
     public function getMessage()
     {
@@ -741,8 +741,8 @@ class PMA_Message
     /**
      * returns PMA_Message::$_string
      *
-     * @uses    PMA_Message::$_string as return value
      * @return  string PMA_Message::$_string
+     * @uses    PMA_Message::$_string as return value
      */
     public function getString()
     {
@@ -752,8 +752,8 @@ class PMA_Message
     /**
      * returns PMA_Message::$_number
      *
-     * @uses    PMA_Message::$_number as return value
      * @return  integer PMA_Message::$_number
+     * @uses    PMA_Message::$_number as return value
      */
     public function getNumber()
     {
@@ -763,9 +763,9 @@ class PMA_Message
     /**
      * returns level of message
      *
-     * @uses    PMA_Message::$level
-     * @uses    PMA_Message::getNumber()
      * @return  string  level of message
+     * @uses    PMA_Message::getNumber()
+     * @uses    PMA_Message::$level
      */
     public function getLevel()
     {
@@ -799,9 +799,9 @@ class PMA_Message
     /**
      * sets and returns whether the message was displayed or not
      *
-     * @uses    PMA_Message::$_is_displayed to set it and/or return it
-     * @param   boolean $is_displayed
+     * @param boolean $is_displayed
      * @return  boolean PMA_Message::$_is_displayed
+     * @uses    PMA_Message::$_is_displayed to set it and/or return it
      */
     public function isDisplayed($is_displayed = false)
     {
@@ -812,4 +812,5 @@ class PMA_Message
         return $this->_is_displayed;
     }
 }
+
 ?>

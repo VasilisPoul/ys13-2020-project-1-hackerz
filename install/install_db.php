@@ -25,18 +25,18 @@
 * =========================================================================*/
 
 if (!defined('ECLASS_VERSION')) {
-        exit;
+    exit;
 }
 
-db_query("DROP DATABASE IF EXISTS ".$mysqlMainDb);
+db_query("DROP DATABASE IF EXISTS " . $mysqlMainDb);
 if (mysql_version()) db_query("SET NAMES utf8");
 if (mysql_version()) {
-        $cdb=db_query("CREATE DATABASE $mysqlMainDb CHARACTER SET utf8");
+    $cdb = db_query("CREATE DATABASE $mysqlMainDb CHARACTER SET utf8");
 
 } else {
-        $cdb=db_query("CREATE DATABASE $mysqlMainDb");
+    $cdb = db_query("CREATE DATABASE $mysqlMainDb");
 }
-mysql_select_db ($mysqlMainDb);
+mysql_select_db($mysqlMainDb);
 
 // drop old tables if they exist
 db_query("DROP TABLE IF EXISTS admin");
@@ -149,9 +149,9 @@ db_query("CREATE TABLE `cours` (
 
 
 # #
- # Table `cours_faculte`	 
- #
- db_query("CREATE TABLE cours_faculte ( 	 
+# Table `cours_faculte`
+#
+db_query("CREATE TABLE cours_faculte ( 	 
        id int(11) NOT NULL auto_increment, 	 
        faculte varchar(100) NOT NULL, 	 
        code varchar(20) NOT NULL, 	 
@@ -253,13 +253,13 @@ db_query("CREATE TABLE monthly_summary (
 $password_encrypted = md5($passForm);
 $exp_time = time() + 140000000;
 db_query("INSERT INTO `user` (`prenom`, `nom`, `username`, `password`, `email`, `statut`,`registered_at`,`expires_at`)
-    VALUES ('$nameForm', '$surnameForm', '$loginForm','$password_encrypted','$emailForm','1',".time().",".$exp_time.")");
-$idOfAdmin=mysql_insert_id();
-db_query("INSERT INTO loginout (loginout.idLog, loginout.id_user, loginout.ip, loginout.when, loginout.action) VALUES ('', '".$idOfAdmin."', '".$REMOTE_ADDR."', NOW(), 'LOGIN')");
+    VALUES ('$nameForm', '$surnameForm', '$loginForm','$password_encrypted','$emailForm','1'," . time() . "," . $exp_time . ")");
+$idOfAdmin = mysql_insert_id();
+db_query("INSERT INTO loginout (loginout.idLog, loginout.id_user, loginout.ip, loginout.when, loginout.action) VALUES ('', '" . $idOfAdmin . "', '" . $REMOTE_ADDR . "', NOW(), 'LOGIN')");
 
 
 #add admin in list of admin
-db_query("INSERT INTO admin VALUES ('".$idOfAdmin."')");
+db_query("INSERT INTO admin VALUES ('" . $idOfAdmin . "')");
 
 #
 # Table structure for table `prof_request`
@@ -364,7 +364,7 @@ db_query("CREATE TABLE `config` (
                PRIMARY KEY (`id`)) $charset_spec");
 
 db_query("INSERT INTO `config` (`key`, `value`)
-               VALUES ('version', '" . ECLASS_VERSION ."')");
+               VALUES ('version', '" . ECLASS_VERSION . "')");
 
 
 #
@@ -386,7 +386,7 @@ db_query("CREATE TABLE `course_units` (
 	`order` INT(11) NOT NULL DEFAULT 0,
 	`course_id` INT(11) NOT NULL) $charset_spec");
 
- db_query("CREATE TABLE `unit_resources` (
+db_query("CREATE TABLE `unit_resources` (
 	`id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY ,
 	`unit_id` INT(11) NOT NULL ,
 	`title` VARCHAR(255) NOT NULL DEFAULT '',
@@ -396,7 +396,7 @@ db_query("CREATE TABLE `course_units` (
 	`visibility` CHAR(1) NOT NULL DEFAULT 'v',
 	`order` INT(11) NOT NULL DEFAULT 0,
 	`date` DATETIME NOT NULL DEFAULT '0000-00-00') $charset_spec");
- 
+
 //dhmiourgia full text indexes
 db_query("ALTER TABLE `annonces` ADD FULLTEXT `annonces` (`contenu`)");
 db_query("ALTER TABLE `cours` ADD FULLTEXT `cours` (`code` ,`description` ,`intitule` ,`course_keywords`, `course_addon`)");

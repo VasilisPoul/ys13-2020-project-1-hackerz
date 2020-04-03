@@ -42,8 +42,8 @@ class HTMLPurifier_Length
      */
     public function __construct($n = '0', $u = false)
     {
-        $this->n = (string) $n;
-        $this->unit = $u !== false ? (string) $u : false;
+        $this->n = (string)$n;
+        $this->unit = $u !== false ? (string)$u : false;
     }
 
     /**

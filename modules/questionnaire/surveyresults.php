@@ -62,195 +62,195 @@ $helpTopic = 'Questionnaire';
 include '../../include/baseTheme.php';
 
 $nameTools = $langSurveyCharts;
-$navigation[] = array("url"=>"questionnaire.php", "name"=> $langQuestionnaire);
+$navigation[] = array("url" => "questionnaire.php", "name" => $langQuestionnaire);
 
 $tool_content = "";
 $total_answers = 0;
 
-if(!isset($_GET['sid']) || !is_numeric($_GET['sid'])) die();
+if (!isset($_GET['sid']) || !is_numeric($_GET['sid'])) die();
 
-	$tool_content = "\n<!-- BEGIN SURVEY -->\n";
-	$current_survey = db_query("
+$tool_content = "\n<!-- BEGIN SURVEY -->\n";
+$current_survey = db_query("
 		select * from survey 
-		where sid=".mysql_real_escape_string($_GET['sid'])." "
-		."ORDER BY sid", $currentCourse);
-	$theSurvey = mysql_fetch_array($current_survey);
-	$tool_content .= "<b>" . $theSurvey["name"] . "</b></b><br><br>";
-	$tool_content .= "$langSurveyDateCreated : <b>" . $theSurvey["creation_date"] . "</b><br><br>";
-	$tool_content .= "$langSurveyStart <b>" . $theSurvey["start_date"] . "</b> ";
-	$tool_content .= "$langSurveyEnd <b>" . $theSurvey["end_date"] . "</b><br><br>";
+		where sid=" . mysql_real_escape_string($_GET['sid']) . " "
+    . "ORDER BY sid", $currentCourse);
+$theSurvey = mysql_fetch_array($current_survey);
+$tool_content .= "<b>" . $theSurvey["name"] . "</b></b><br><br>";
+$tool_content .= "$langSurveyDateCreated : <b>" . $theSurvey["creation_date"] . "</b><br><br>";
+$tool_content .= "$langSurveyStart <b>" . $theSurvey["start_date"] . "</b> ";
+$tool_content .= "$langSurveyEnd <b>" . $theSurvey["end_date"] . "</b><br><br>";
 
-if(!isset($_GET['type']) || !is_numeric($_GET['type'])) $_GET['type'] = 0;
+if (!isset($_GET['type']) || !is_numeric($_GET['type'])) $_GET['type'] = 0;
 
 if ($_GET['type'] == 2) { //TF
 
-	$answers = db_query("
+    $answers = db_query("
 	select * from survey_answer 
-	where sid=".mysql_real_escape_string($_GET['sid'])." "
-	."ORDER BY sid", $currentCourse);
-	
-	while ($theAnswer = mysql_fetch_array($answers)) {
-		++$total_answers;	
-		$creator_id = $theAnswer["creator_id"];
-		$aid = $theAnswer["aid"];
-		$answer_creator = db_query("
+	where sid=" . mysql_real_escape_string($_GET['sid']) . " "
+        . "ORDER BY sid", $currentCourse);
+
+    while ($theAnswer = mysql_fetch_array($answers)) {
+        ++$total_answers;
+        $creator_id = $theAnswer["creator_id"];
+        $aid = $theAnswer["aid"];
+        $answer_creator = db_query("
 			select nom,prenom from user 
 			where user_id='$creator_id'", $mysqlMainDb);
-		$theCreator = mysql_fetch_array($answer_creator);
-		$tool_content .= "<table border=\"1\" width=\"100%\"><tr><td>";
-		$tool_content .= "<br><b>" . $theCreator["nom"]. " " . $theCreator["prenom"] . "</b><br>";
-		$qas = db_query("
+        $theCreator = mysql_fetch_array($answer_creator);
+        $tool_content .= "<table border=\"1\" width=\"100%\"><tr><td>";
+        $tool_content .= "<br><b>" . $theCreator["nom"] . " " . $theCreator["prenom"] . "</b><br>";
+        $qas = db_query("
 			select * from survey_answer_record 
 			where aid=$aid 
 			ORDER BY aid", $currentCourse);
-			while ($theQAs = mysql_fetch_array($qas)) {	
-			$tool_content .= "<br>" . $theQAs["question_text"]. ": <br>" . $theQAs["question_answer"] . "<br>";
-			}
-			$tool_content .= "<br>";
-			$tool_content .= "</td></tr></table><br><br>";
-			$tool_content .= "<b>" . $langSurveyTotalAnswers . ": " . $total_answers . "</b><br>";
-	}
+        while ($theQAs = mysql_fetch_array($qas)) {
+            $tool_content .= "<br>" . $theQAs["question_text"] . ": <br>" . $theQAs["question_answer"] . "<br>";
+        }
+        $tool_content .= "<br>";
+        $tool_content .= "</td></tr></table><br><br>";
+        $tool_content .= "<b>" . $langSurveyTotalAnswers . ": " . $total_answers . "</b><br>";
+    }
 } else { //MC
-	$tool_content .= "\n<!-- BEGIN MC -->\n";
-	
-	
-	$total_answers = 0;
-	
+    $tool_content .= "\n<!-- BEGIN MC -->\n";
+
+
+    $total_answers = 0;
+
 // Get data to print pie chart ////////////////////////////////////////////////////
 
-	require_once '../../include/libchart/libchart.php';
-	//$chart = new PieChart(600, 300);
-	//$chart->setTitle("������������ ������������");
-	
-	$answers = db_query("
+    require_once '../../include/libchart/libchart.php';
+    //$chart = new PieChart(600, 300);
+    //$chart->setTitle("������������ ������������");
+
+    $answers = db_query("
 		select * from survey_answer 
-		where sid=".mysql_real_escape_string($_GET['sid'])." "
-		."ORDER BY sid", $currentCourse);
-		
-	while ($theAnswer = mysql_fetch_array($answers)) {
-		++$total_answers;
-		
-		$aid = $theAnswer["aid"];
-		
-		$arids = db_query("
+		where sid=" . mysql_real_escape_string($_GET['sid']) . " "
+        . "ORDER BY sid", $currentCourse);
+
+    while ($theAnswer = mysql_fetch_array($answers)) {
+        ++$total_answers;
+
+        $aid = $theAnswer["aid"];
+
+        $arids = db_query("
 			select arid from survey_answer_record 
 			where aid=$aid 
 			ORDER BY aid", $currentCourse);
-		
-		while ($theArid = mysql_fetch_array($arids)) {
-			// Create array to hold IDs to ANSWER_RECORDs for current survey
-			$arid_GD[] = $theArid["arid"]; 
-			
-			// Get the text of questions
-			$q_ts = db_query("
+
+        while ($theArid = mysql_fetch_array($arids)) {
+            // Create array to hold IDs to ANSWER_RECORDs for current survey
+            $arid_GD[] = $theArid["arid"];
+
+            // Get the text of questions
+            $q_ts = db_query("
 				select question_text from survey_answer_record 
 				where aid=$aid 
 				ORDER BY arid", $currentCourse);
-			
-			$q_t_GD = array(); // the array to hold the text of questions
-			
-			while ($theQ_Ts = mysql_fetch_array($q_ts)) {
-				if (!count($q_t_GD)) {
-					$q_t_GD[] = $theQ_Ts["question_text"]; 
-				} else {
-					$flag = 0;
-					for ($i = 0; $i < count($q_t_GD); $i++) {
-   					if ($q_t_GD[$i] == $theQ_Ts["question_text"]) 
-   						++$flag;
-					}
-					if (!$flag) 
-						$q_t_GD[] = $theQ_Ts["question_text"]; 
-				}
-			}
-		}
-	}
-	$tool_content .= $langSurveyTotalAnswers . ": " . $total_answers . "</b><br>";
-	
-	if (isset($q_t_GD)) {
-/*****************************************************************************
-		Print graphs
-******************************************************************************/
-			//$chart->reset();
-			$tool_content .= "<br><br><b>" . $langCollectiveCharts . "</b><br>";
-			for ($i = 0; $i < count($q_t_GD); $i++) {
-   		
-   			$chart = new PieChart(600, 300);
-   			
-   		 $current_q_t = $q_t_GD[$i];
-   		
-   		$q_as = db_query("
+
+            $q_t_GD = array(); // the array to hold the text of questions
+
+            while ($theQ_Ts = mysql_fetch_array($q_ts)) {
+                if (!count($q_t_GD)) {
+                    $q_t_GD[] = $theQ_Ts["question_text"];
+                } else {
+                    $flag = 0;
+                    for ($i = 0; $i < count($q_t_GD); $i++) {
+                        if ($q_t_GD[$i] == $theQ_Ts["question_text"])
+                            ++$flag;
+                    }
+                    if (!$flag)
+                        $q_t_GD[] = $theQ_Ts["question_text"];
+                }
+            }
+        }
+    }
+    $tool_content .= $langSurveyTotalAnswers . ": " . $total_answers . "</b><br>";
+
+    if (isset($q_t_GD)) {
+        /*****************************************************************************
+         * Print graphs
+         ******************************************************************************/
+        //$chart->reset();
+        $tool_content .= "<br><br><b>" . $langCollectiveCharts . "</b><br>";
+        for ($i = 0; $i < count($q_t_GD); $i++) {
+
+            $chart = new PieChart(600, 300);
+
+            $current_q_t = $q_t_GD[$i];
+
+            $q_as = db_query("
 			select question_answer from survey_answer_record 
 			where question_text='$current_q_t' 
 			ORDER BY arid", $currentCourse);
-			
-			$q_a_GD = array();
-			while ($theQ_As = mysql_fetch_array($q_as)) {
-				$v = $theQ_As["question_answer"];
-				//$tool_content .= "<br>".$v."<br>";
-				if (!count($q_a_GD)) {
-					$q_a_GD[$v] = 1; 
-				} else {
-   					if (array_key_exists($v,$q_a_GD))
-   						++$q_a_GD[$v];
-   					else
-   						$q_a_GD[$v] = 1;
-				}
-			}
 
-			$chart->setTitle("$q_t_GD[$i]");
-			
-			foreach ($q_a_GD as $k => $v) {
-   			//echo "\$a[$k] => $v.\n";
-   			$percentage = 100*($v/$total_answers);
-   			$label = $q_a_GD["$k"]; 
-   			$chart->addPoint(new Point("$k ($percentage)", $percentage));
-			}
-				
-			$chart_path = 'courses/'.$currentCourseID.'/temp/chart_'.md5(serialize($chart)).'.png';
-			$chart->render($webDir.$chart_path);
-			
-			$tool_content .= '<br><table width="100%"><tr><td><img src="'.$urlServer.$chart_path.'" /></td></tr></table><br>';
-			
-		}
-	}
+            $q_a_GD = array();
+            while ($theQ_As = mysql_fetch_array($q_as)) {
+                $v = $theQ_As["question_answer"];
+                //$tool_content .= "<br>".$v."<br>";
+                if (!count($q_a_GD)) {
+                    $q_a_GD[$v] = 1;
+                } else {
+                    if (array_key_exists($v, $q_a_GD))
+                        ++$q_a_GD[$v];
+                    else
+                        $q_a_GD[$v] = 1;
+                }
+            }
+
+            $chart->setTitle("$q_t_GD[$i]");
+
+            foreach ($q_a_GD as $k => $v) {
+                //echo "\$a[$k] => $v.\n";
+                $percentage = 100 * ($v / $total_answers);
+                $label = $q_a_GD["$k"];
+                $chart->addPoint(new Point("$k ($percentage)", $percentage));
+            }
+
+            $chart_path = 'courses/' . $currentCourseID . '/temp/chart_' . md5(serialize($chart)) . '.png';
+            $chart->render($webDir . $chart_path);
+
+            $tool_content .= '<br><table width="100%"><tr><td><img src="' . $urlServer . $chart_path . '" /></td></tr></table><br>';
+
+        }
+    }
 
 
-/*****************************************************************************
- Print individual results 
-******************************************************************************/
+    /*****************************************************************************
+     * Print individual results
+     ******************************************************************************/
 
 // display individual results
-  $tool_content .= "<br><br><b>" . $langIndividuals . "</b><br><br>";
+    $tool_content .= "<br><br><b>" . $langIndividuals . "</b><br><br>";
 
-	$answers = db_query("
+    $answers = db_query("
 	select * from survey_answer 
-	where sid=".mysql_real_escape_string($_GET['sid'])." "
-	."ORDER BY sid", $currentCourse);
-	while ($theAnswer = mysql_fetch_array($answers)) {
-		++$total_answers;	
-		$creator_id = $theAnswer["creator_id"];
-		$aid = $theAnswer["aid"];
-		$answer_creator = db_query("
+	where sid=" . mysql_real_escape_string($_GET['sid']) . " "
+        . "ORDER BY sid", $currentCourse);
+    while ($theAnswer = mysql_fetch_array($answers)) {
+        ++$total_answers;
+        $creator_id = $theAnswer["creator_id"];
+        $aid = $theAnswer["aid"];
+        $answer_creator = db_query("
 			select nom,prenom from user 
 			where user_id='$creator_id'", $mysqlMainDb);
-		$theCreator = mysql_fetch_array($answer_creator);
-		$tool_content .= "<table border=\"1\" width=\"100%\"><tr><td>";
-		$tool_content .= "<br><b>" . $theCreator["nom"]. " " . $theCreator["prenom"] . "</b><br>";
-		$qas = db_query("
+        $theCreator = mysql_fetch_array($answer_creator);
+        $tool_content .= "<table border=\"1\" width=\"100%\"><tr><td>";
+        $tool_content .= "<br><b>" . $theCreator["nom"] . " " . $theCreator["prenom"] . "</b><br>";
+        $qas = db_query("
 			select * from survey_answer_record 
 			where aid=$aid 
 			ORDER BY aid", $currentCourse);
-			while ($theQAs = mysql_fetch_array($qas)) {	
-				$tool_content .= "<br>" . $theQAs["question_text"]. ": <br>" . $theQAs["question_answer"] . "<br>";
-			}
-			$tool_content .= "<br>";
-			$tool_content .= "</td></tr></table><br><br>";
-			
-	}
+        while ($theQAs = mysql_fetch_array($qas)) {
+            $tool_content .= "<br>" . $theQAs["question_text"] . ": <br>" . $theQAs["question_answer"] . "<br>";
+        }
+        $tool_content .= "<br>";
+        $tool_content .= "</td></tr></table><br><br>";
+
+    }
 }
 /*****************************************************************************
-		Print the page
-******************************************************************************/
-draw($tool_content, 2); 
+ * Print the page
+ ******************************************************************************/
+draw($tool_content, 2);
 
 ?>

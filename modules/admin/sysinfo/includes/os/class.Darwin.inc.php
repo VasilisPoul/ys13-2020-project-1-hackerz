@@ -31,13 +31,13 @@ class sysinfo extends bsd_common
 
     // Our contstructor
     // this function is run on the initialization of this class
-    function sysinfo ()
+    function sysinfo()
     {
         $this->cpu_regexp = "CPU: (.*) \((.*)-MHz (.*)\)";
         $this->scsi_regexp = "^(.*): <(.*)> .*SCSI.*device";
     }
 
-    function grab_key ($key) 
+    function grab_key($key)
     {
         $s = execute_program('sysctl', $key);
         $s = preg_replace('/' . $key . ': /', '', $s);
@@ -46,7 +46,7 @@ class sysinfo extends bsd_common
         return $s;
     }
 
-    function get_sys_ticks ()
+    function get_sys_ticks()
     {
         $s = explode(' ', $this->grab_key('kern.boottime'));
         $a = strtotime("$s[2] $s[1] $s[4] $s[3]"); // convert boottime to proper value
@@ -55,20 +55,20 @@ class sysinfo extends bsd_common
         return $sys_ticks;
     }
 
-    function cpu_info ()
+    function cpu_info()
     {
         $results = array();
 
         $results['model'] = $this->grab_key('hw.model'); // need to expand this somehow...
         //$results['model'] = $this->grab_key('hw.machine');
-        $results['cpus']  = $this->grab_key('hw.ncpu');
+        $results['cpus'] = $this->grab_key('hw.ncpu');
         $results['mhz'] = round($this->grab_key('hw.cpufrequency') / 1000000); // return cpu speed
-        $results['cache']  = round($this->grab_key('hw.l2cachesize') / 1024); // return l2 cache
+        $results['cache'] = round($this->grab_key('hw.l2cachesize') / 1024); // return l2 cache
 
         return $results;
     }
 
-    function memory ()
+    function memory()
     {
         $s = $this->grab_key('hw.physmem');
 
@@ -92,11 +92,11 @@ class sysinfo extends bsd_common
         $results['ram']['t_used'] = $results['ram']['used'];
         $results['ram']['t_free'] = $results['ram']['free'];
 
-        $results['ram']['percent'] = round(($results['ram']['used'] *100) / $results['ram']['total']);
+        $results['ram']['percent'] = round(($results['ram']['used'] * 100) / $results['ram']['total']);
 
         // need to fix the swap info...
         $pstat = execute_program('swapinfo', '-k');
-        $lines = split("\n",$pstat);
+        $lines = split("\n", $pstat);
 
         for ($i = 0; $i < sizeof($lines); $i++) {
             $ar_buf = preg_split("/\s+/", $lines[$i], 6);
@@ -116,7 +116,7 @@ class sysinfo extends bsd_common
         return $results;
     }
 
-    function network ()
+    function network()
     {
         $netstat = execute_program('netstat', '-nbdi | cut -c1-24,42- | grep Link');
         $lines = split("\n", $netstat);

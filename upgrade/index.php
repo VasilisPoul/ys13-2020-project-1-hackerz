@@ -27,17 +27,17 @@
 
 header('Content-Type: text/html; charset=UTF-8');
 
-$path2add=2;
+$path2add = 2;
 include '../include/baseTheme.php';
 
 $nameTools = $langUpgrade;
 
 if ($GLOBALS['language'] == 'greek') {
-	$upgrade_info_file = 'upgrade_info.php';
-	$link_changes_file = 'CHANGES_el.txt';
+    $upgrade_info_file = 'upgrade_info.php';
+    $link_changes_file = 'CHANGES_el.txt';
 } else {
- 	$upgrade_info_file = 'upgrade_info_en.php';
-	$link_changes_file = 'CHANGES_en.txt';
+    $upgrade_info_file = 'upgrade_info_en.php';
+    $link_changes_file = 'CHANGES_en.txt';
 }
 
 // Initialise $tool_content
@@ -50,9 +50,9 @@ $tool_content .= "
 set_time_limit(0);
 $max_execution_time = ini_get('max_execution_time');
 if ($max_execution_time != 0 and $max_execution_time < 300) {
-	$tool_content .= "<hr><p>$langExecTimeUpgrade</p><hr>";
-	draw($tool_content, 0);
-	exit;
+    $tool_content .= "<hr><p>$langExecTimeUpgrade</p><hr>";
+    draw($tool_content, 0);
+    exit;
 }
 $tool_content .= "<p>$langUpgToSee <a href='$link_changes_file'>$langHere</a>. $langUpgRead <a href='$upgrade_info_file'>$langUpgMan</a>
    $langUpgLastStep</p>
@@ -76,14 +76,14 @@ $tool_content .= "<p>$langUpgToSee <a href='$link_changes_file'>$langHere</a>. $
 </td></tr></table>";
 
 if (isset($from_admin)) {
-        $tool_content .= "<input type='hidden' name='from_admin' value='$from_admin'>";
+    $tool_content .= "<input type='hidden' name='from_admin' value='$from_admin'>";
 }
 
 $tool_content .= "</form></td></tr><tr><td style=\"border: 1px solid #FFFFFF;\" colspan=2>";
 
 if (isset($from_admin)) {
-        $tool_content .= "<p align=right><a href='../modules/admin/index.php' class=mainpage>$langBackAdmin</a></p>";
+    $tool_content .= "<p align=right><a href='../modules/admin/index.php' class=mainpage>$langBackAdmin</a></p>";
 } else {
-        $tool_content .= "&nbsp;";
+    $tool_content .= "&nbsp;";
 }
 draw($tool_content, 0);

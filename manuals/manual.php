@@ -34,32 +34,32 @@
  *
  */
 
-$path2add=2;
+$path2add = 2;
 include '../include/baseTheme.php';
 $nameTools = $langManuals;
 
 $tool_content = "";
-$urlServerTemp = strrev(substr(strrev($urlServer),1));
+$urlServerTemp = strrev(substr(strrev($urlServer), 1));
 
 $ext = langname_to_code($language);
 
 
 function manlink($basename, $langext, $desc)
 {
-        global $urlServerTemp, $langFormatPDF;
+    global $urlServerTemp, $langFormatPDF;
 
-        if (file_exists($basename . '_' . $langext . '.pdf')) {
-                $url = $urlServerTemp . '/manuals/' . $basename . '_' . $langext . '.pdf';
-        } else {
-                $url = $urlServerTemp . '/manuals/' . $basename . '_en.pdf';
-        }
-        return "<td width='1%'><a href='$url' target='_blank' class='mainpage'><img src='../images/pdf.gif' title='$langFormatPDF' alt='$langFormatPDF' /></a></td><td><a href='$url' target='_blank' class='mainpage'>$desc</a></td>";
+    if (file_exists($basename . '_' . $langext . '.pdf')) {
+        $url = $urlServerTemp . '/manuals/' . $basename . '_' . $langext . '.pdf';
+    } else {
+        $url = $urlServerTemp . '/manuals/' . $basename . '_en.pdf';
+    }
+    return "<td width='1%'><a href='$url' target='_blank' class='mainpage'><img src='../images/pdf.gif' title='$langFormatPDF' alt='$langFormatPDF' /></a></td><td><a href='$url' target='_blank' class='mainpage'>$desc</a></td>";
 }
 
 if (isset($language) and $language == 'greek') {
-	$rowspan = 5;
+    $rowspan = 5;
 } else {
-	$rowspan = 1;
+    $rowspan = 1;
 }
 
 $tool_content .= "<p>$langIntroMan</p><br />
@@ -71,19 +71,19 @@ $tool_content .= "<p>$langIntroMan</p><br />
   <tbody>
   <tr class='odd'>
     <th class='left' width='160' rowspan='2' valign='top'>$langAllTutorials</th>
-    ". manlink('OpeneClass23', $ext, $langFinalDesc) ."
+    " . manlink('OpeneClass23', $ext, $langFinalDesc) . "
   </tr>
   <tr class='odd'>
-    ". manlink('OpeneClass23_short', $ext, $langShortDesc) ."
+    " . manlink('OpeneClass23_short', $ext, $langShortDesc) . "
   </tr>
 
   <tr class='odd'>
     <th class='left' rowspan='$rowspan' valign='top'>$langTutorials $langOfTeacher</th>
-    ". manlink('manT/OpeneClass23_ManT', $ext, $langManT) ."
+    " . manlink('manT/OpeneClass23_ManT', $ext, $langManT) . "
   </tr>";
 
 if (isset($language) and $language == 'greek') {
-	$tool_content .= "<tr>
+    $tool_content .= "<tr>
 	<td colspan='2'><br /><strong>$langCreateAccount</strong><br />
 	<img style='vertical-align: bottom;' src='../template/classic/img/pdf.gif' width='20' height='20'>
 		<a href='http://www.openeclass.org/guides/pdf/create_teacher_account.pdf' target='_blank'>$langTut</a>
@@ -128,19 +128,19 @@ if (isset($language) and $language == 'greek') {
 	</tr>";
 }
 if (isset($language) and $language == 'greek') {
-	$rowspan ='4';
+    $rowspan = '4';
 } else {
-	$rowspan ='1';
+    $rowspan = '1';
 }
 
 $tool_content .= "
   <tr class=\"odd\">
   	<th class='left' rowspan='$rowspan' valign='top'>$langTutorials $langOfStudent</th>
-    ". manlink('manS/OpeneClass23_ManS', $ext, $langManS) ."
+    " . manlink('manS/OpeneClass23_ManS', $ext, $langManS) . "
   </tr>";
 
 if (isset($language) and $language == 'greek') {
-	$tool_content .= "
+    $tool_content .= "
 	<tr>
 	<td colspan='2'><br /><strong>$langRegCourses</strong><br />
 	<img style='vertical-align: bottom;' src='../template/classic/img/pdf.gif' width='20' height='20'>
@@ -170,7 +170,7 @@ if (isset($language) and $language == 'greek') {
 		<a href='http://www.openeclass.org/guides/video/view_course' target='_blank'>$langScormVideo</a> 
 		<strong>| <img src='../template/classic/img/scorm.png' width='16' height='16'></strong> 
 		<a href='http://www.openeclass.org/guides/scorm/view_course.zip'>Scorm Package</a><br /><br /></td></tr>";
-	
+
 }
 
 $tool_content .= "</tbody></table></td></tr>";
@@ -179,8 +179,8 @@ $tool_content .= "</tbody></table><br />";
 $tool_content .= "<p><b>$langNote: </b><br/>$langAcrobat <img src='../images/acrobat.png' width='15' height='15' /> $langWhere <a href='http://www.adobe.com/products/acrobat/readstep2.html' target='_blank'><span class='explanationtext'>$langHere</span></a>.</p>";
 
 if (isset($uid) and $uid) {
-        draw($tool_content, 1);
+    draw($tool_content, 1);
 } else {
-        draw($tool_content, 0);
+    draw($tool_content, 0);
 }
 

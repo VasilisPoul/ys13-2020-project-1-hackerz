@@ -30,14 +30,14 @@
  * @uses PMA_sqlAddslashes()
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
 /**
  * do not import request variable into global scope
  */
-if (! defined('PMA_NO_VARIABLES_IMPORT')) {
+if (!defined('PMA_NO_VARIABLES_IMPORT')) {
     define('PMA_NO_VARIABLES_IMPORT', true);
 }
 /**
@@ -82,7 +82,7 @@ if (false !== $possibly_uploaded_val) {
                 // if we have a set, then construct the value
             case 'foreign':
                 // if we have a foreign key, then construct the value
-                if (! empty($_REQUEST[$f]['multi_edit'][$rowcount])) {
+                if (!empty($_REQUEST[$f]['multi_edit'][$rowcount])) {
                     $val = implode(',', $_REQUEST[$f]['multi_edit'][$rowcount]);
                     $val = "'" . PMA_sqlAddslashes($val) . "'";
                 }
@@ -96,7 +96,7 @@ if (false !== $possibly_uploaded_val) {
                 // garvin: when in UPDATE mode, do not alter field's contents. When in INSERT
                 // mode, insert empty field because no values were submitted. If protected
                 // blobs where set, insert original fields content.
-                if (! empty($prot_row[$me_fields_name[$key]])) {
+                if (!empty($prot_row[$me_fields_name[$key]])) {
                     $val = '0x' . bin2hex($prot_row[$me_fields_name[$key]]);
                 } else {
                     $val = '';
@@ -105,7 +105,7 @@ if (false !== $possibly_uploaded_val) {
                 break;
             default:
                 // best way to avoid problems in strict mode (works also in non-strict mode)
-                if (isset($me_auto_increment)  && isset($me_auto_increment[$key])) {
+                if (isset($me_auto_increment) && isset($me_auto_increment[$key])) {
                     $val = 'NULL';
                 }
                 break;
@@ -113,7 +113,7 @@ if (false !== $possibly_uploaded_val) {
     } elseif ($type == 'bit') {
         $val = preg_replace('/[^01]/', '0', $val);
         $val = "b'" . PMA_sqlAddslashes($val) . "'";
-    } elseif (! ($type == 'timestamp' && $val == 'CURRENT_TIMESTAMP')) {
+    } elseif (!($type == 'timestamp' && $val == 'CURRENT_TIMESTAMP')) {
         $val = "'" . PMA_sqlAddslashes($val) . "'";
     }
 
@@ -121,12 +121,12 @@ if (false !== $possibly_uploaded_val) {
     // (if there is a value, we ignore the Null checkbox: this could
     // be possible if Javascript is disabled in the browser)
     if (isset($me_fields_null[$key])
-     && $val == "''") {
+        && $val == "''") {
         $val = 'NULL';
     }
 
     // The Null checkbox was unchecked for this field
-    if (empty($val) && isset($me_fields_null_prev[$key]) && ! isset($me_fields_null[$key])) {
+    if (empty($val) && isset($me_fields_null_prev[$key]) && !isset($me_fields_null[$key])) {
         $val = "''";
     }
 }  // end else (field value in the form)

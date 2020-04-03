@@ -52,7 +52,7 @@ PMA_checkParameters(array('db', 'table'));
 /**
  * Defines the url to return to in case of error in a sql statement
  */
-if (! strlen($table)) {
+if (!strlen($table)) {
     // No table name
     PMA_mysqlDie($strTableEmpty, '', '',
         'db_structure.php?' . PMA_generate_common_url($db));
@@ -69,7 +69,7 @@ if (isset($_REQUEST['submit_num_fields'])) {
     $regenerate = true; // for libraries/tbl_properties.inc.php
     $num_fields = $_REQUEST['orig_num_fields'] + $_REQUEST['added_fields'];
 } elseif (isset($_REQUEST['num_fields']) && intval($_REQUEST['num_fields']) > 0) {
-    $num_fields = (int) $_REQUEST['num_fields'];
+    $num_fields = (int)$_REQUEST['num_fields'];
 } else {
     $num_fields = 2;
 }
@@ -93,10 +93,10 @@ if (isset($_REQUEST['do_save_data'])) {
                 $field_primary[] = $i;
             }
             if ($_REQUEST['field_key'][$i] == 'index_' . $i) {
-                $field_index[]   = $i;
+                $field_index[] = $i;
             }
             if ($_REQUEST['field_key'][$i] == 'unique_' . $i) {
-                $field_unique[]  = $i;
+                $field_unique[] = $i;
             }
         } // end if
     } // end for
@@ -137,7 +137,7 @@ if (isset($_REQUEST['do_save_data'])) {
     $sql_query = preg_replace('@, $@', '', $sql_query);
 
     // Builds the primary keys statements
-    $primary     = '';
+    $primary = '';
     $primary_cnt = (isset($field_primary) ? count($field_primary) : 0);
     for ($i = 0; $i < $primary_cnt; $i++) {
         $j = $field_primary[$i];
@@ -153,9 +153,9 @@ if (isset($_REQUEST['do_save_data'])) {
     unset($primary);
 
     // Builds the indexes statements
-    $index     = '';
+    $index = '';
     $index_cnt = (isset($field_index) ? count($field_index) : 0);
-    for ($i = 0;$i < $index_cnt; $i++) {
+    for ($i = 0; $i < $index_cnt; $i++) {
         $j = $field_index[$i];
         if (isset($_REQUEST['field_name'][$j]) && strlen($_REQUEST['field_name'][$j])) {
             $index .= PMA_backquote($_REQUEST['field_name'][$j]) . ', ';
@@ -169,12 +169,12 @@ if (isset($_REQUEST['do_save_data'])) {
     unset($index);
 
     // Builds the uniques statements
-    $unique     = '';
+    $unique = '';
     $unique_cnt = (isset($field_unique) ? count($field_unique) : 0);
     for ($i = 0; $i < $unique_cnt; $i++) {
         $j = $field_unique[$i];
         if (isset($_REQUEST['field_name'][$j]) && strlen($_REQUEST['field_name'][$j])) {
-           $unique .= PMA_backquote($_REQUEST['field_name'][$j]) . ', ';
+            $unique .= PMA_backquote($_REQUEST['field_name'][$j]) . ', ';
         }
     } // end for
     unset($unique_cnt);
@@ -185,12 +185,12 @@ if (isset($_REQUEST['do_save_data'])) {
     unset($unique);
 
     // Builds the FULLTEXT statements
-    $fulltext     = '';
+    $fulltext = '';
     $fulltext_cnt = (isset($field_fulltext) ? count($field_fulltext) : 0);
     for ($i = 0; $i < $fulltext_cnt; $i++) {
         $j = $field_fulltext[$i];
         if (isset($_REQUEST['field_name'][$j]) && strlen($_REQUEST['field_name'][$j])) {
-           $fulltext .= PMA_backquote($_REQUEST['field_name'][$j]) . ', ';
+            $fulltext .= PMA_backquote($_REQUEST['field_name'][$j]) . ', ';
         }
     } // end for
 
@@ -202,7 +202,7 @@ if (isset($_REQUEST['do_save_data'])) {
 
     // Builds the 'create table' statement
     $sql_query = 'CREATE TABLE ' . PMA_backquote($db) . '.' . PMA_backquote($table)
-     . ' (' . $sql_query . ')';
+        . ' (' . $sql_query . ')';
 
     // Adds table type, character set, comments and partition definition
     if (!empty($_REQUEST['tbl_type']) && ($_REQUEST['tbl_type'] != 'Default')) {
@@ -230,14 +230,14 @@ if (isset($_REQUEST['do_save_data'])) {
 
         // garvin: Update comment table for mime types [MIME]
         if (isset($_REQUEST['field_mimetype'])
-         && is_array($_REQUEST['field_mimetype'])
-         && $cfg['BrowseMIME']) {
+            && is_array($_REQUEST['field_mimetype'])
+            && $cfg['BrowseMIME']) {
             foreach ($_REQUEST['field_mimetype'] as $fieldindex => $mimetype) {
                 if (isset($_REQUEST['field_name'][$fieldindex])
-                 && strlen($_REQUEST['field_name'][$fieldindex])) {
+                    && strlen($_REQUEST['field_name'][$fieldindex])) {
                     PMA_setMIME($db, $table, $_REQUEST['field_name'][$fieldindex], $mimetype,
-                            $_REQUEST['field_transformation'][$fieldindex],
-                            $_REQUEST['field_transformation_options'][$fieldindex]);
+                        $_REQUEST['field_transformation'][$fieldindex],
+                        $_REQUEST['field_transformation_options'][$fieldindex]);
                 }
             }
         }

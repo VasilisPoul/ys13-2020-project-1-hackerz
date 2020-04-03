@@ -7,8 +7,7 @@
 KITS="all-languages english"
 COMPRESSIONS="zip-7z tbz tgz 7z"
 
-if [ $# = 0 ]
-then
+if [ $# = 0 ]; then
   echo "Usages:"
   echo "  create-release.sh <version> [from_branch]"
   echo "  create-release.sh snapshot [sf]"
@@ -22,16 +21,16 @@ fi
 
 branch='trunk'
 
-if [ "$1" = "snapshot" ] ; then
-    mode="snapshot"
-    date_snapshot=`date +%Y%m%d-%H%M%S`
-    target=$date_snapshot
+if [ "$1" = "snapshot" ]; then
+  mode="snapshot"
+  date_snapshot=$(date +%Y%m%d-%H%M%S)
+  target=$date_snapshot
 else
-    if [ "$#" -ge 2 ] ; then
-        branch="$2"
-    fi
-    target="$1"
-    cat <<END
+  if [ "$#" -ge 2 ]; then
+    branch="$2"
+  fi
+  target="$1"
+  cat <<END
 
 Please ensure you have:
   1. incremented rc count or version in subversion :
@@ -47,22 +46,22 @@ Please ensure you have:
 
 Continue (y/n)?
 END
-    read do_release
+  read do_release
 
-    if [ "$do_release" != 'y' ]; then
-        exit
-    fi
+  if [ "$do_release" != 'y' ]; then
+    exit
+  fi
 fi
 
-if [ "$mode" = "snapshot" -a "$2" = "sf" ] ; then
-    # Goto project dir
-    cd /home/groups/p/ph/phpmyadmin/htdocs
+if [ "$mode" = "snapshot" -a "$2" = "sf" ]; then
+  # Goto project dir
+  cd /home/groups/p/ph/phpmyadmin/htdocs
 
-    # Keep one previous version of the cvs directory
-    if [ -e svn-prev ] ; then
-        rm -rf svn-prev
-    fi
-    mv svn svn-prev
+  # Keep one previous version of the cvs directory
+  if [ -e svn-prev ]; then
+    rm -rf svn-prev
+  fi
+  mv svn svn-prev
 fi
 
 # Do SVNcheckout
@@ -73,16 +72,16 @@ echo "Exporting repository from subversion"
 
 svn export -q https://phpmyadmin.svn.sourceforge.net/svnroot/phpmyadmin/$branch/phpMyAdmin
 
-if [ $? -ne 0 ] ; then
-    echo "Subversion checkout failed, bailing out"
-    exit 2
+if [ $? -ne 0 ]; then
+  echo "Subversion checkout failed, bailing out"
+  exit 2
 fi
 
 # Cleanup release dir
-LC_ALL=C date -u > phpMyAdmin/RELEASE-DATE-${target}
+LC_ALL=C date -u >phpMyAdmin/RELEASE-DATE-${target}
 
 # Building Documentation.txt
-LC_ALL=C w3m -dump phpMyAdmin/Documentation.html > phpMyAdmin/Documentation.txt
+LC_ALL=C w3m -dump phpMyAdmin/Documentation.html >phpMyAdmin/Documentation.txt
 
 # Remove test directory from package to avoid Path disclosure messages
 # if someone runs /test/wui.php and there are test failures
@@ -92,79 +91,77 @@ rm -rf phpMyAdmin/test
 mv phpMyAdmin phpMyAdmin-$target
 
 # Prepare all kits
-for kit in $KITS ; do
-    # Copy all files
-	name=phpMyAdmin-$target-$kit
-	cp -r phpMyAdmin-$target $name
+for kit in $KITS; do
+  # Copy all files
+  name=phpMyAdmin-$target-$kit
+  cp -r phpMyAdmin-$target $name
 
-	# Cleanup translations
-    cd phpMyAdmin-$target-$kit
-    scripts/lang-cleanup.sh $kit
-    cd ..
+  # Cleanup translations
+  cd phpMyAdmin-$target-$kit
+  scripts/lang-cleanup.sh $kit
+  cd ..
 
-    # Prepare distributions
-    for comp in $COMPRESSIONS ; do
-        case $comp in
-            tbz|tgz)
-                echo "Creating $name.tar"
-                tar cf $name.tar $name
-                if [ $comp = tbz ] ; then
-                    echo "Creating $name.tar.bz2"
-                    bzip2 -9k $name.tar
-                fi
-                if [ $comp = tgz ] ; then
-                    echo "Creating $name.tar.gz"
-                    gzip -9c $name.tar > $name.tar.gz
-                fi
-                rm $name.tar
-                ;;
-            zip)
-                echo "Creating $name.zip"
-                zip -q -9 -r $name.zip $name
-                ;;
-            zip-7z)
-                echo "Creating $name.zip"
-                7za a -bd -tzip $name.zip $name > /dev/null
-                ;;
-            7z)
-                echo "Creating $name.7z"
-                7za a -bd $name.7z $name > /dev/null
-                ;;
-            *)
-                echo "WARNING: ignoring compression '$comp', not known!"
-                ;;
-        esac
-    done
+  # Prepare distributions
+  for comp in $COMPRESSIONS; do
+    case $comp in
+    tbz | tgz)
+      echo "Creating $name.tar"
+      tar cf $name.tar $name
+      if [ $comp = tbz ]; then
+        echo "Creating $name.tar.bz2"
+        bzip2 -9k $name.tar
+      fi
+      if [ $comp = tgz ]; then
+        echo "Creating $name.tar.gz"
+        gzip -9c $name.tar >$name.tar.gz
+      fi
+      rm $name.tar
+      ;;
+    zip)
+      echo "Creating $name.zip"
+      zip -q -9 -r $name.zip $name
+      ;;
+    zip-7z)
+      echo "Creating $name.zip"
+      7za a -bd -tzip $name.zip $name >/dev/null
+      ;;
+    7z)
+      echo "Creating $name.7z"
+      7za a -bd $name.7z $name >/dev/null
+      ;;
+    *)
+      echo "WARNING: ignoring compression '$comp', not known!"
+      ;;
+    esac
+  done
 
-    # Remove directory with current dist set
-    rm -rf $name
+  # Remove directory with current dist set
+  rm -rf $name
 done
 
 # Cleanup
 rm -rf phpMyAdmin-${target}
 
-if [ "$mode" != "snapshot" ]
-then
+if [ "$mode" != "snapshot" ]; then
 
+  echo ""
+  echo ""
+  echo ""
+  echo "Files:"
+  echo "------"
 
-echo ""
-echo ""
-echo ""
-echo "Files:"
-echo "------"
+  ls -la *.gz *.zip *.bz2 *.7z
 
-ls -la *.gz *.zip *.bz2 *.7z
+  echo
+  echo "MD5 sums:"
+  echo "--------"
 
-echo
-echo "MD5 sums:"
-echo "--------"
+  md5sum *.{gz,zip,bz2,7z} | sed "s/\([^ ]*\)[ ]*\([^ ]*\)/md5sum['\2'] = '\1'/"
 
-md5sum *.{gz,zip,bz2,7z} | sed "s/\([^ ]*\)[ ]*\([^ ]*\)/md5sum['\2'] = '\1'/"
+  echo
+  echo "Add these to website/data/md5sums.py in SVN"
 
-echo
-echo "Add these to website/data/md5sums.py in SVN"
-
-cat <<END
+  cat <<END
 
 
 Todo now:

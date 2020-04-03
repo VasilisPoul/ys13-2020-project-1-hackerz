@@ -8,16 +8,17 @@
 /**
  *
  */
-function PMA_transformation_text_plain__substr($buffer, $options = array(), $meta = '') {
+function PMA_transformation_text_plain__substr($buffer, $options = array(), $meta = '')
+{
     // possibly use a global transform and feed it with special options:
     // include './libraries/transformations/global.inc.php';
 
     // further operations on $buffer using the $options[] array.
-    if (!isset($options[0]) ||  $options[0] == '') {
+    if (!isset($options[0]) || $options[0] == '') {
         $options[0] = 0;
     }
 
-    if (!isset($options[1]) ||  $options[1] == '') {
+    if (!isset($options[1]) || $options[1] == '') {
         $options[1] = 'all';
     }
 

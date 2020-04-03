@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*========================================================================
 *   Open eClass 2.3
@@ -60,14 +60,14 @@
 // Print a two-cell table row with that title, if the content is non-empty
 function table_row($title, $content)
 {
-	global $tool_content;
-	if (trim($content) != '') {
-		$tool_content .= "
+    global $tool_content;
+    if (trim($content) != '') {
+        $tool_content .= "
     <tr>
       <th class=\"left\">$title:</th>
-      <td>".htmlspecialchars($content)."</td>
+      <td>" . htmlspecialchars($content) . "</td>
     </tr>";
-	}
+    }
 }
 
 
@@ -75,46 +75,46 @@ function table_row($title, $content)
 // use the assignment's id instead. Also insures that secret subdir exists
 function work_secret($id)
 {
-	global $currentCourseID, $workPath, $tool_content, $coursePath;
-	
-	$res = db_query("SELECT secret_directory FROM assignments WHERE id = '$id'", $currentCourseID);
-	if ($res) {
-		$secret = mysql_fetch_row($res);
-		if (!empty($secret[0])) {
-			$s = $secret[0];
-		} else {
-			$s = $id;
-		}
-		if (!is_dir("$workPath/$s")) {
-			if (!file_exists($coursePath)) {
-				mkdir("$coursePath",0777);
-			}
-			mkdir("$workPath",0777);
-			mkdir("$workPath/$s",0777);
-			$tool_content .= "$workPath/$s";
-		}
-		return $s;
-	} else {
-		die("Error: group $gid doesn't exist");
-	}
+    global $currentCourseID, $workPath, $tool_content, $coursePath;
+
+    $res = db_query("SELECT secret_directory FROM assignments WHERE id = '$id'", $currentCourseID);
+    if ($res) {
+        $secret = mysql_fetch_row($res);
+        if (!empty($secret[0])) {
+            $s = $secret[0];
+        } else {
+            $s = $id;
+        }
+        if (!is_dir("$workPath/$s")) {
+            if (!file_exists($coursePath)) {
+                mkdir("$coursePath", 0777);
+            }
+            mkdir("$workPath", 0777);
+            mkdir("$workPath/$s", 0777);
+            $tool_content .= "$workPath/$s";
+        }
+        return $s;
+    } else {
+        die("Error: group $gid doesn't exist");
+    }
 }
 
 
 // Is this a group assignment?
 function is_group_assignment($id)
 {
-	global $tool_content;
-	$res = db_query("SELECT group_submissions FROM assignments WHERE id = '$id'");
-	if ($res) {
-		$row = mysql_fetch_row($res);
-		if ($row[0] == 0) {
-			return FALSE;
-		} else {
-			return TRUE;
-		}
-	} else {
-		die("Error: assignment $id doesn't exist");
-	}
+    global $tool_content;
+    $res = db_query("SELECT group_submissions FROM assignments WHERE id = '$id'");
+    if ($res) {
+        $row = mysql_fetch_row($res);
+        if ($row[0] == 0) {
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    } else {
+        die("Error: assignment $id doesn't exist");
+    }
 }
 
 
@@ -122,62 +122,62 @@ function is_group_assignment($id)
 // Doesn't delete files if they are the same with $new_filename
 function delete_submissions_by_uid($uid, $gid, $id, $new_filename = '')
 {
-	global $m, $tool_content;
-	$return="";
-	$res = db_query("SELECT * FROM assignment_submit WHERE
+    global $m, $tool_content;
+    $return = "";
+    $res = db_query("SELECT * FROM assignment_submit WHERE
 		uid = '$uid' AND assignment_id = '$id'");
-	while ($row = mysql_fetch_array($res)) {
-                if ($row['file_path'] != $new_filename) {
-        		@unlink("$GLOBALS[workPath]/$row[file_path]");
-                }
-		db_query("DELETE FROM assignment_submit WHERE id = '$row[id]'");
-		$return .= "$m[deleted_work_by_user] \"$row[file_name]\"";
-	}
-	$res = db_query("SELECT * FROM assignment_submit WHERE
+    while ($row = mysql_fetch_array($res)) {
+        if ($row['file_path'] != $new_filename) {
+            @unlink("$GLOBALS[workPath]/$row[file_path]");
+        }
+        db_query("DELETE FROM assignment_submit WHERE id = '$row[id]'");
+        $return .= "$m[deleted_work_by_user] \"$row[file_name]\"";
+    }
+    $res = db_query("SELECT * FROM assignment_submit WHERE
 		group_id = '$gid' AND assignment_id = '$id'");
-	while ($row = mysql_fetch_array($res)) {
-                if ($row['file_path'] != $new_filename) {
-                        @unlink("$GLOBALS[workPath]/$row[file_path]");
-                }
-		db_query("DELETE FROM assignment_submit WHERE id = '$row[id]'");
-		$return .= "$m[deleted_work_by_group] \"$row[file_name]\".";
-	}
-	return $return;
+    while ($row = mysql_fetch_array($res)) {
+        if ($row['file_path'] != $new_filename) {
+            @unlink("$GLOBALS[workPath]/$row[file_path]");
+        }
+        db_query("DELETE FROM assignment_submit WHERE id = '$row[id]'");
+        $return .= "$m[deleted_work_by_group] \"$row[file_name]\".";
+    }
+    return $return;
 }
 
 
 // Translate Greek characters to Latin
 function greek_to_latin($string)
 {
-	return str_replace(
-		array(
-			'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π',
-			'ρ', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ',
-			'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω',
-			'ς', 'ά', 'έ', 'ή', 'ί', 'ύ', 'ό', 'ώ', 'Ά', 'Έ', 'Ή', 'Ί', 'Ύ', 'Ό', 'Ώ', 'ϊ',
-			'ΐ', 'ϋ', 'ΰ', 'Ϊ', 'Ϋ'),
-		array(
-			'a', 'b', 'g', 'd', 'e', 'z', 'i', 'th', 'i', 'k', 'l', 'm', 'n', 'x', 'o', 'p',
-			'r', 's', 't', 'y', 'f', 'x', 'ps', 'o', 'A', 'B', 'G', 'D', 'E', 'Z', 'H', 'Th',
-			'I', 'K', 'L', 'M', 'N', 'X', 'O', 'P', 'R', 'S', 'T', 'Y', 'F', 'X', 'Ps', 'O',
-			's', 'a', 'e', 'i', 'i', 'y', 'o', 'o', 'A', 'E', 'H', 'I', 'Y', 'O', 'O', 'i',
-			'i', 'y', 'y', 'I', 'Y'),
-		$string);
+    return str_replace(
+        array(
+            'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'θ', 'ι', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ο', 'π',
+            'ρ', 'σ', 'τ', 'υ', 'φ', 'χ', 'ψ', 'ω', 'Α', 'Β', 'Γ', 'Δ', 'Ε', 'Ζ', 'Η', 'Θ',
+            'Ι', 'Κ', 'Λ', 'Μ', 'Ν', 'Ξ', 'Ο', 'Π', 'Ρ', 'Σ', 'Τ', 'Υ', 'Φ', 'Χ', 'Ψ', 'Ω',
+            'ς', 'ά', 'έ', 'ή', 'ί', 'ύ', 'ό', 'ώ', 'Ά', 'Έ', 'Ή', 'Ί', 'Ύ', 'Ό', 'Ώ', 'ϊ',
+            'ΐ', 'ϋ', 'ΰ', 'Ϊ', 'Ϋ'),
+        array(
+            'a', 'b', 'g', 'd', 'e', 'z', 'i', 'th', 'i', 'k', 'l', 'm', 'n', 'x', 'o', 'p',
+            'r', 's', 't', 'y', 'f', 'x', 'ps', 'o', 'A', 'B', 'G', 'D', 'E', 'Z', 'H', 'Th',
+            'I', 'K', 'L', 'M', 'N', 'X', 'O', 'P', 'R', 'S', 'T', 'Y', 'F', 'X', 'Ps', 'O',
+            's', 'a', 'e', 'i', 'i', 'y', 'o', 'o', 'A', 'E', 'H', 'I', 'Y', 'O', 'O', 'i',
+            'i', 'y', 'y', 'I', 'Y'),
+        $string);
 }
 
 
 // Returns an array of a group's members' uids
 function group_members($gid)
-{	
-	global $currentCourseID, $tool_content;
+{
+    global $currentCourseID, $tool_content;
 
-	$members = array();
-	$res = db_query("SELECT user FROM user_group WHERE team = '$gid'",
-		$currentCourseID);
-	while ($user = mysql_fetch_row($res)) {
-		$members[] = $user[0];
-	}
-	return $members;
+    $members = array();
+    $res = db_query("SELECT user FROM user_group WHERE team = '$gid'",
+        $currentCourseID);
+    while ($user = mysql_fetch_row($res)) {
+        $members[] = $user[0];
+    }
+    return $members;
 }
 
 
@@ -185,45 +185,44 @@ function group_members($gid)
 // a group's members
 function group_member_names($gid)
 {
-	global $tool_content;
-	$start = TRUE;
-	$names= '';
-	foreach (group_members($gid) as $id) {
-		if ($start) {
-			$start = FALSE;
-		} else {
-			$names .= ', ';
-		}
-		$names .= uid_to_name($id);
-		if ($am = uid_to_am($id)) {
-			$names .= " ($am)";
-		}
-	}
-	return $names;
+    global $tool_content;
+    $start = TRUE;
+    $names = '';
+    foreach (group_members($gid) as $id) {
+        if ($start) {
+            $start = FALSE;
+        } else {
+            $names .= ', ';
+        }
+        $names .= uid_to_name($id);
+        if ($am = uid_to_am($id)) {
+            $names .= " ($am)";
+        }
+    }
+    return $names;
 }
 
 
 // Find submission by a user (or the user's group)
 function find_submission($uid, $id)
 {
-	global $tool_content;
-	if (is_group_assignment($id)) {
-		$gid = user_group($uid);
-		$res = db_query("SELECT id FROM assignment_submit
+    global $tool_content;
+    if (is_group_assignment($id)) {
+        $gid = user_group($uid);
+        $res = db_query("SELECT id FROM assignment_submit
 				WHERE assignment_id = '$id'
 				AND (uid = '$uid' OR group_id = '$gid')");
-	} else {
-		$res = db_query("SELECT id FROM assignment_submit
+    } else {
+        $res = db_query("SELECT id FROM assignment_submit
 				WHERE assignment_id = '$id' AND uid = '$uid'");
-	}
-	if ($res) {
-		$row = mysql_fetch_row($res);
-		return $row[0];
-	} else {
-		return FALSE;
-	}
+    }
+    if ($res) {
+        $row = mysql_fetch_row($res);
+        return $row[0];
+    } else {
+        return FALSE;
+    }
 }
-
 
 
 // Returns grade, if submission has been graded, or "Yes" (translated) if
@@ -231,22 +230,22 @@ function find_submission($uid, $id)
 // grade or professor comment is set
 function submission_grade($subid)
 {
-	global $m, $tool_content;
+    global $m, $tool_content;
 
-	$res = mysql_fetch_row(db_query("SELECT grade, grade_comments
+    $res = mysql_fetch_row(db_query("SELECT grade, grade_comments
 		FROM assignment_submit WHERE id = '$subid'"));
-	if ($res) {
-		$grade = trim($res[0]);
-		if (!empty($grade)) {
-			return $grade;
-		} elseif (!empty($res[1])) {
-			return $m['yes'];
-		} else {
-			return FALSE;
-		}
-	} else {
-		return FALSE;
-	}
+    if ($res) {
+        $grade = trim($res[0]);
+        if (!empty($grade)) {
+            return $grade;
+        } elseif (!empty($res[1])) {
+            return $m['yes'];
+        } else {
+            return FALSE;
+        }
+    } else {
+        return FALSE;
+    }
 }
 
 
@@ -256,57 +255,57 @@ function submission_grade($subid)
 // assignments were found.
 function was_graded($uid, $id, $ret_val = FALSE)
 {
-	global $tool_content;
-	$gid = user_group($uid);
-	$res = db_query("SELECT * FROM assignment_submit
+    global $tool_content;
+    $gid = user_group($uid);
+    $res = db_query("SELECT * FROM assignment_submit
 			WHERE assignment_id = '$id'
 			AND (uid = '$uid' OR group_id = '$gid')");
-	if ($res) {
-		while ($row = mysql_fetch_array($res)) {
-			if ($row['grade']) {
-				if ($ret_val) {
-					return $row;
-				} else {
-					return $row['id'];
-				}
-			}
-		}
-	} else {
-		return FALSE;
-	}
+    if ($res) {
+        while ($row = mysql_fetch_array($res)) {
+            if ($row['grade']) {
+                if ($ret_val) {
+                    return $row;
+                } else {
+                    return $row['id'];
+                }
+            }
+        }
+    } else {
+        return FALSE;
+    }
 }
 
 
 // Show details of a submission
 function show_submission_details($id)
 {
-	global $uid, $m, $currentCourseID, $langSubmittedAndGraded, $tool_content;
+    global $uid, $m, $currentCourseID, $langSubmittedAndGraded, $tool_content;
 
-	$sub = mysql_fetch_array(
-		db_query("SELECT * FROM assignment_submit
+    $sub = mysql_fetch_array(
+        db_query("SELECT * FROM assignment_submit
 			WHERE id = '$id'"));
-	if (!$sub) {
-		die("Error: submission $id doesn't exist.");
-	}
-	if (!empty($sub['grade']) or !empty($sub['grade_comment'])) {
-		$graded = TRUE;
-		$notice = $langSubmittedAndGraded;
-	} else {
-		$graded = FALSE;
-		$notice = $GLOBALS['langSubmitted'];
-	}
-	
-	if ($sub['uid'] != $uid) {
-		$sub_notice = "$m[submitted_by_other_member] ".
-			"<a href='../group/group_space.php?userGroupId=$sub[group_id]'>".
-			"$m[your_group]</a> (".uid_to_name($sub['uid']).")";
-	} else $sub_notice = "";
-	
-	$tool_content .= "
+    if (!$sub) {
+        die("Error: submission $id doesn't exist.");
+    }
+    if (!empty($sub['grade']) or !empty($sub['grade_comment'])) {
+        $graded = TRUE;
+        $notice = $langSubmittedAndGraded;
+    } else {
+        $graded = FALSE;
+        $notice = $GLOBALS['langSubmitted'];
+    }
+
+    if ($sub['uid'] != $uid) {
+        $sub_notice = "$m[submitted_by_other_member] " .
+            "<a href='../group/group_space.php?userGroupId=$sub[group_id]'>" .
+            "$m[your_group]</a> (" . uid_to_name($sub['uid']) . ")";
+    } else $sub_notice = "";
+
+    $tool_content .= "
     <br />
     <table width=\"99%\" class=\"FormData\">
     <tbody>";
-	$tool_content .= "
+    $tool_content .= "
     <tr>
       <th width=\"220\">&nbsp;</th>
       <td><b>$m[SubmissionWorkInfo]</b></td>
@@ -315,16 +314,16 @@ function show_submission_details($id)
       <th class=\"left\">$m[SubmissionStatusWorkInfo]:</th>
       <td>$notice</td>
     </tr>";
-	table_row($m['grade'], $sub['grade']);
-	table_row($m['gradecomments'], $sub['grade_comments']);
-	table_row($m['sub_date'], $sub['submission_date']);
-	table_row($m['filename'], $sub['file_name']);
-	table_row($m['comments'], $sub['comments']);
-	$tool_content .= "
+    table_row($m['grade'], $sub['grade']);
+    table_row($m['gradecomments'], $sub['grade_comments']);
+    table_row($m['sub_date'], $sub['submission_date']);
+    table_row($m['filename'], $sub['file_name']);
+    table_row($m['comments'], $sub['comments']);
+    $tool_content .= "
     </tbody>
     </table>
     $sub_notice";
-	mysql_select_db($currentCourseID);
+    mysql_select_db($currentCourseID);
 }
 
 
@@ -332,34 +331,34 @@ function show_submission_details($id)
 // for assignment id. Returns 'user' if by user, 'group' if by group
 function was_submitted($uid, $gid, $id)
 {
-	global $tool_content;
-	if (mysql_num_rows(db_query(
-		"SELECT id FROM assignment_submit WHERE assignment_id = '$id'
+    global $tool_content;
+    if (mysql_num_rows(db_query(
+        "SELECT id FROM assignment_submit WHERE assignment_id = '$id'
 			AND uid = '$uid'"))) {
-		return 'user';
-	}
-	if (mysql_num_rows(db_query(
-		"SELECT id FROM assignment_submit WHERE assignment_id = '$id'
+        return 'user';
+    }
+    if (mysql_num_rows(db_query(
+        "SELECT id FROM assignment_submit WHERE assignment_id = '$id'
 			AND group_id = '$gid'"))) {
-		return 'group';
-	}
-	return FALSE;
+        return 'group';
+    }
+    return FALSE;
 }
 
 
 // Remove extension and directory from filename
 function basename_noext($f)
 {
-	return preg_replace('{\.[^\.]*$}', '', basename($f));
+    return preg_replace('{\.[^\.]*$}', '', basename($f));
 }
 
 // Disallow '..' and initial '/' in filenames
 function cleanup_filename($f)
 {
-	if (preg_match('{/\.\./}', $f) or
-	    preg_match('{^\.\./}', $f)) {
-		die("Error: up-dir detected in filename: $f");
-	}
-	$f = preg_replace('{^/+}', '', $f);
-	return preg_replace('{//}', '/', $f);
+    if (preg_match('{/\.\./}', $f) or
+        preg_match('{^\.\./}', $f)) {
+        die("Error: up-dir detected in filename: $f");
+    }
+    $f = preg_replace('{^/+}', '', $f);
+    return preg_replace('{//}', '/', $f);
 }

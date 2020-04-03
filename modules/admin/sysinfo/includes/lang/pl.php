@@ -19,61 +19,61 @@
 //
 // $Id: pl.php,v 1.1.1.1 2006-04-13 09:44:37 jexi Exp $
 
-$text['title']          = 'Informacja o systemie';
+$text['title'] = 'Informacja o systemie';
 
-$text['vitals']         = 'Stan systemu';
-$text['hostname']       = 'Nazwa kanoniczna hosta';
-$text['ip']             = 'IP nasÂłuchujÂący';
-$text['kversion']       = 'Wersja jÂądra';
-$text['uptime']         = 'Uptime';
-$text['users']          = 'Obecnych uÂżytkownkĂłw';
-$text['loadavg']        = 'ObciÂąÂżenia Âśrednie';
+$text['vitals'] = 'Stan systemu';
+$text['hostname'] = 'Nazwa kanoniczna hosta';
+$text['ip'] = 'IP nasÂłuchujÂący';
+$text['kversion'] = 'Wersja jÂądra';
+$text['uptime'] = 'Uptime';
+$text['users'] = 'Obecnych uÂżytkownkĂłw';
+$text['loadavg'] = 'ObciÂąÂżenia Âśrednie';
 
-$text['hardware']       = 'Informacja o sprzĂŞcie';
-$text['numcpu']         = 'Procesory';
-$text['cpumodel']       = 'Model';
-$text['mhz']            = 'Chip MHz';
-$text['cache']          = 'Cache Size';
-$text['bogomips']       = 'System Bogomips';
-$text['pci']            = 'UrzÂądzenia PCI';
-$text['ide']            = 'UrzÂądzenia IDE';
-$text['scsi']           = 'UrzÂądzenia SCSI';
+$text['hardware'] = 'Informacja o sprzĂŞcie';
+$text['numcpu'] = 'Procesory';
+$text['cpumodel'] = 'Model';
+$text['mhz'] = 'Chip MHz';
+$text['cache'] = 'Cache Size';
+$text['bogomips'] = 'System Bogomips';
+$text['pci'] = 'UrzÂądzenia PCI';
+$text['ide'] = 'UrzÂądzenia IDE';
+$text['scsi'] = 'UrzÂądzenia SCSI';
 
-$text['netusage']       = 'SieĂŚ';
-$text['device']         = 'UrzÂądzenie';
-$text['received']       = 'Odebrano';
-$text['sent']           = 'WysÂłano';
-$text['errors']         = 'BÂłĂŞdow/Porzuconych';
+$text['netusage'] = 'SieĂŚ';
+$text['device'] = 'UrzÂądzenie';
+$text['received'] = 'Odebrano';
+$text['sent'] = 'WysÂłano';
+$text['errors'] = 'BÂłĂŞdow/Porzuconych';
 
-$text['memusage']       = 'ObciÂąÂżenie pamiĂŞci';
-$text['phymem']         = 'PamiĂŞĂŚ fizyczna';
-$text['swap']           = 'PamiĂŞĂŚ Swap';
+$text['memusage'] = 'ObciÂąÂżenie pamiĂŞci';
+$text['phymem'] = 'PamiĂŞĂŚ fizyczna';
+$text['swap'] = 'PamiĂŞĂŚ Swap';
 
-$text['fs']             = 'Zamontowane systemy plikĂłw';
-$text['mount']          = 'Punkt montowania';
-$text['partition']      = 'Partycja';
+$text['fs'] = 'Zamontowane systemy plikĂłw';
+$text['mount'] = 'Punkt montowania';
+$text['partition'] = 'Partycja';
 
-$text['percent']        = 'Procentowo zajĂŞte';
-$text['type']           = 'Typ';
-$text['free']           = 'Wolne';
-$text['used']           = 'ZajĂŞte';
-$text['size']           = 'Rozmiar';
-$text['totals']         = 'CaÂłkowite';
+$text['percent'] = 'Procentowo zajĂŞte';
+$text['type'] = 'Typ';
+$text['free'] = 'Wolne';
+$text['used'] = 'ZajĂŞte';
+$text['size'] = 'Rozmiar';
+$text['totals'] = 'CaÂłkowite';
 
-$text['kb']             = 'KB';
-$text['mb']             = 'MB';
-$text['gb']             = 'GB';
+$text['kb'] = 'KB';
+$text['mb'] = 'MB';
+$text['gb'] = 'GB';
 
-$text['none']           = 'brak';
+$text['none'] = 'brak';
 
-$text['capacity']       = 'Rozmiar'; 
+$text['capacity'] = 'Rozmiar';
 
-$text['template']       = 'Szablon';
-$text['language']       = 'JĂŞzyk';
-$text['submit']         = 'WyÂślij';
-$text['created']        = 'Utworzone przez';
+$text['template'] = 'Szablon';
+$text['language'] = 'JĂŞzyk';
+$text['submit'] = 'WyÂślij';
+$text['created'] = 'Utworzone przez';
 
-$text['days']           = 'dni';
-$text['hours']          = 'godzin';
-$text['minutes']        = 'minut';
+$text['days'] = 'dni';
+$text['hours'] = 'godzin';
+$text['minutes'] = 'minut';
 ?>

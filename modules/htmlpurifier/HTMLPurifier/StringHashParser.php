@@ -85,9 +85,9 @@ class HTMLPurifier_StringHashParser
      */
     protected function parseHandle($fh)
     {
-        $state   = false;
-        $single  = false;
-        $ret     = array();
+        $state = false;
+        $single = false;
+        $ret = array();
         do {
             $line = fgets($fh);
             if ($line === false) {
@@ -118,13 +118,13 @@ class HTMLPurifier_StringHashParser
                     $line = trim($line);
                 } else {
                     // Use default declaration
-                    $state  = $this->default;
+                    $state = $this->default;
                 }
             }
             if ($single) {
                 $ret[$state] = $line;
                 $single = false;
-                $state  = false;
+                $state = false;
             } else {
                 $ret[$state] .= "$line\n";
             }

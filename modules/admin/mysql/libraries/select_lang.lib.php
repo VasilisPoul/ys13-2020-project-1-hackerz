@@ -6,13 +6,14 @@
  * @version $Id: select_lang.lib.php 12624 2009-07-05 12:49:44Z lem9 $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
 /**
  * tries to find the language to use
  *
+ * @return  bool    success if valid lang is found, otherwise false
  * @uses    $GLOBALS['cfg']['lang']
  * @uses    $GLOBALS['cfg']['DefaultLang']
  * @uses    $GLOBALS['lang_failed_cfg']
@@ -26,12 +27,11 @@ if (! defined('PHPMYADMIN')) {
  * @uses    PMA_langSet()
  * @uses    PMA_langDetect()
  * @uses    explode()
- * @return  bool    success if valid lang is found, otherwise false
  */
 function PMA_langCheck()
 {
     // check forced language
-    if (! empty($GLOBALS['cfg']['Lang'])) {
+    if (!empty($GLOBALS['cfg']['Lang'])) {
         if (PMA_langSet($GLOBALS['cfg']['Lang'])) {
             return true;
         } else {
@@ -41,7 +41,7 @@ function PMA_langCheck()
 
     // Don't use REQUEST in following code as it might be confused by cookies with same name
     // check user requested language (POST)
-    if (! empty($_POST['lang'])) {
+    if (!empty($_POST['lang'])) {
         if (PMA_langSet($_POST['lang'])) {
             return true;
         } elseif (!is_string($_POST['lang'])) {
@@ -53,7 +53,7 @@ function PMA_langCheck()
     }
 
     // check user requested language (GET)
-    if (! empty($_GET['lang'])) {
+    if (!empty($_GET['lang'])) {
         if (PMA_langSet($_GET['lang'])) {
             return true;
         } elseif (!is_string($_GET['lang'])) {
@@ -65,7 +65,7 @@ function PMA_langCheck()
     }
 
     // check previous set language
-    if (! empty($_COOKIE['pma_lang'])) {
+    if (!empty($_COOKIE['pma_lang'])) {
         if (PMA_langSet($_COOKIE['pma_lang'])) {
             return true;
         } elseif (!is_string($_COOKIE['lang'])) {
@@ -102,10 +102,10 @@ function PMA_langCheck()
  * checks given lang and sets it if valid
  * returns true on success, otherwise flase
  *
+ * @param string $lang language to set
+ * @return  bool    success
  * @uses    $GLOBALS['available_languages'] to check $lang
  * @uses    $GLOBALS['lang']                to set it
- * @param   string  $lang   language to set
- * @return  bool    success
  */
 function PMA_langSet(&$lang)
 {
@@ -120,8 +120,8 @@ function PMA_langSet(&$lang)
  * Analyzes some PHP environment variables to find the most probable language
  * that should be used
  *
- * @param   string   string to analyze
- * @param   integer  type of the PHP environment variable which value is $str
+ * @param string   string to analyze
+ * @param integer  type of the PHP environment variable which value is $str
  *
  * @return  bool    true on success, otherwise false
  *
@@ -145,8 +145,8 @@ function PMA_langDetect(&$str, $envType)
         if (strpos($expr, '[-_]') === FALSE) {
             $expr = str_replace('|', '([-_][[:alpha:]]{2,3})?|', $expr);
         }
-        if (($envType == 1 && preg_match('/^(' . addcslashes($expr,'/') . ')(;q=[0-9]\\.[0-9])?$/i', $str))
-            || ($envType == 2 && preg_match('/(\(|\[|;[[:space:]])(' . addcslashes($expr,'/') . ')(;|\]|\))/i', $str))) {
+        if (($envType == 1 && preg_match('/^(' . addcslashes($expr, '/') . ')(;q=[0-9]\\.[0-9])?$/i', $str))
+            || ($envType == 2 && preg_match('/(\(|\[|;[[:space:]])(' . addcslashes($expr, '/') . ')(;|\]|\))/i', $str))) {
             if (PMA_langSet($lang)) {
                 return true;
             }
@@ -191,63 +191,63 @@ function PMA_langList()
      *
      */
     return array(
-        'af-utf-8'    => array('af|afrikaans', 'afrikaans-utf-8', 'af', ''),
-        'ar-utf-8'    => array('ar|arabic', 'arabic-utf-8', 'ar', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
-        'az-utf-8'    => array('az|azerbaijani', 'azerbaijani-utf-8', 'az', 'Az&#601;rbaycanca'),
-        'bn-utf-8'    => array('bn|bangla', 'bangla-utf-8', 'bn', ''),
+        'af-utf-8' => array('af|afrikaans', 'afrikaans-utf-8', 'af', ''),
+        'ar-utf-8' => array('ar|arabic', 'arabic-utf-8', 'ar', '&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;'),
+        'az-utf-8' => array('az|azerbaijani', 'azerbaijani-utf-8', 'az', 'Az&#601;rbaycanca'),
+        'bn-utf-8' => array('bn|bangla', 'bangla-utf-8', 'bn', ''),
         'becyr-utf-8' => array('be|belarusian', 'belarusian_cyrillic-utf-8', 'be', '&#1041;&#1077;&#1083;&#1072;&#1088;&#1091;&#1089;&#1082;&#1072;&#1103;'),
         'belat-utf-8' => array('be[-_]lat|belarusian latin', 'belarusian_latin-utf-8', 'be-lat', 'Bie&#0322;aruskaja'),
-        'bg-utf-8'    => array('bg|bulgarian', 'bulgarian-utf-8', 'bg', '&#1041;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
-        'bs-utf-8'    => array('bs|bosnian', 'bosnian-utf-8', 'bs', 'Bosanski'),
-        'ca-utf-8'    => array('ca|catalan', 'catalan-utf-8', 'ca', 'Catal&agrave;'),
-        'cs-utf-8'    => array('cs|czech', 'czech-utf-8', 'cs', '&#268;esky'),
-        'da-utf-8'    => array('da|danish', 'danish-utf-8', 'da', 'Dansk'),
-        'de-utf-8'    => array('de|german', 'german-utf-8', 'de', 'Deutsch'),
-        'el-utf-8'    => array('el|greek',  'greek-utf-8', 'el', '&Epsilon;&lambda;&lambda;&eta;&nu;&iota;&kappa;&#940;'),
-        'en-utf-8'    => array('en|english',  'english-utf-8', 'en', ''),
-        'es-utf-8'    => array('es|spanish', 'spanish-utf-8', 'es', 'Espa&ntilde;ol'),
-        'et-utf-8'    => array('et|estonian', 'estonian-utf-8', 'et', 'Eesti'),
-        'eu-utf-8'    => array('eu|basque', 'basque-utf-8', 'eu', 'Euskara'),
-        'fa-utf-8'    => array('fa|persian', 'persian-utf-8', 'fa', '&#1601;&#1575;&#1585;&#1587;&#1740;'),
-        'fi-utf-8'    => array('fi|finnish', 'finnish-utf-8', 'fi', 'Suomi'),
-        'fr-utf-8'    => array('fr|french', 'french-utf-8', 'fr', 'Fran&ccedil;ais'),
-        'gl-utf-8'    => array('gl|galician', 'galician-utf-8', 'gl', 'Galego'),
-        'he-utf-8'    => array('he|hebrew', 'hebrew-utf-8', 'he', '&#1506;&#1489;&#1512;&#1497;&#1514;'),
-        'hi-utf-8'    => array('hi|hindi', 'hindi-utf-8', 'hi', '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'),
-        'hr-utf-8'    => array('hr|croatian', 'croatian-utf-8', 'hr', 'Hrvatski'),
-        'hu-utf-8'    => array('hu|hungarian', 'hungarian-utf-8', 'hu', 'Magyar'),
-        'id-utf-8'    => array('id|indonesian', 'indonesian-utf-8', 'id', 'Bahasa Indonesia'),
-        'it-utf-8'    => array('it|italian', 'italian-utf-8', 'it', 'Italiano'),
-        'ja-utf-8'    => array('ja|japanese', 'japanese-utf-8', 'ja', '&#26085;&#26412;&#35486;'),
-        'ko-utf-8'    => array('ko|korean', 'korean-utf-8', 'ko', '&#54620;&#44397;&#50612;'),
-        'ka-utf-8'    => array('ka|georgian', 'georgian-utf-8', 'ka', '&#4325;&#4304;&#4320;&#4311;&#4323;&#4314;&#4312;'),
-        'lt-utf-8'    => array('lt|lithuanian', 'lithuanian-utf-8', 'lt', 'Lietuvi&#371;'),
-        'lv-utf-8'    => array('lv|latvian', 'latvian-utf-8', 'lv', 'Latvie&scaron;u'),
+        'bg-utf-8' => array('bg|bulgarian', 'bulgarian-utf-8', 'bg', '&#1041;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;'),
+        'bs-utf-8' => array('bs|bosnian', 'bosnian-utf-8', 'bs', 'Bosanski'),
+        'ca-utf-8' => array('ca|catalan', 'catalan-utf-8', 'ca', 'Catal&agrave;'),
+        'cs-utf-8' => array('cs|czech', 'czech-utf-8', 'cs', '&#268;esky'),
+        'da-utf-8' => array('da|danish', 'danish-utf-8', 'da', 'Dansk'),
+        'de-utf-8' => array('de|german', 'german-utf-8', 'de', 'Deutsch'),
+        'el-utf-8' => array('el|greek', 'greek-utf-8', 'el', '&Epsilon;&lambda;&lambda;&eta;&nu;&iota;&kappa;&#940;'),
+        'en-utf-8' => array('en|english', 'english-utf-8', 'en', ''),
+        'es-utf-8' => array('es|spanish', 'spanish-utf-8', 'es', 'Espa&ntilde;ol'),
+        'et-utf-8' => array('et|estonian', 'estonian-utf-8', 'et', 'Eesti'),
+        'eu-utf-8' => array('eu|basque', 'basque-utf-8', 'eu', 'Euskara'),
+        'fa-utf-8' => array('fa|persian', 'persian-utf-8', 'fa', '&#1601;&#1575;&#1585;&#1587;&#1740;'),
+        'fi-utf-8' => array('fi|finnish', 'finnish-utf-8', 'fi', 'Suomi'),
+        'fr-utf-8' => array('fr|french', 'french-utf-8', 'fr', 'Fran&ccedil;ais'),
+        'gl-utf-8' => array('gl|galician', 'galician-utf-8', 'gl', 'Galego'),
+        'he-utf-8' => array('he|hebrew', 'hebrew-utf-8', 'he', '&#1506;&#1489;&#1512;&#1497;&#1514;'),
+        'hi-utf-8' => array('hi|hindi', 'hindi-utf-8', 'hi', '&#2361;&#2367;&#2344;&#2381;&#2342;&#2368;'),
+        'hr-utf-8' => array('hr|croatian', 'croatian-utf-8', 'hr', 'Hrvatski'),
+        'hu-utf-8' => array('hu|hungarian', 'hungarian-utf-8', 'hu', 'Magyar'),
+        'id-utf-8' => array('id|indonesian', 'indonesian-utf-8', 'id', 'Bahasa Indonesia'),
+        'it-utf-8' => array('it|italian', 'italian-utf-8', 'it', 'Italiano'),
+        'ja-utf-8' => array('ja|japanese', 'japanese-utf-8', 'ja', '&#26085;&#26412;&#35486;'),
+        'ko-utf-8' => array('ko|korean', 'korean-utf-8', 'ko', '&#54620;&#44397;&#50612;'),
+        'ka-utf-8' => array('ka|georgian', 'georgian-utf-8', 'ka', '&#4325;&#4304;&#4320;&#4311;&#4323;&#4314;&#4312;'),
+        'lt-utf-8' => array('lt|lithuanian', 'lithuanian-utf-8', 'lt', 'Lietuvi&#371;'),
+        'lv-utf-8' => array('lv|latvian', 'latvian-utf-8', 'lv', 'Latvie&scaron;u'),
         'mkcyr-utf-8' => array('mk|macedonian', 'macedonian_cyrillic-utf-8', 'mk', 'Macedonian'),
-        'mn-utf-8'    => array('mn|mongolian', 'mongolian-utf-8', 'mn', '&#1052;&#1086;&#1085;&#1075;&#1086;&#1083;'),
-        'ms-utf-8'    => array('ms|malay', 'malay-utf-8', 'ms', 'Bahasa Melayu'),
-        'nl-utf-8'    => array('nl|dutch', 'dutch-utf-8', 'nl', 'Nederlands'),
-        'no-utf-8'    => array('no|norwegian', 'norwegian-utf-8', 'no', 'Norsk'),
-        'pl-utf-8'    => array('pl|polish', 'polish-utf-8', 'pl', 'Polski'),
-        'ptbr-utf-8'  => array('pt[-_]br|brazilian portuguese', 'brazilian_portuguese-utf-8', 'pt-BR', 'Portugu&ecirc;s'),
-        'pt-utf-8'    => array('pt|portuguese', 'portuguese-utf-8', 'pt', 'Portugu&ecirc;s'),
-        'ro-utf-8'    => array('ro|romanian', 'romanian-utf-8', 'ro', 'Rom&acirc;n&#259;'),
-        'ru-utf-8'    => array('ru|russian', 'russian-utf-8', 'ru', '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'),
-        'si-utf-8'    => array('si|sinhala', 'sinhala-utf-8', 'si', '&#3523;&#3538;&#3458;&#3524;&#3517;'),
-        'sk-utf-8'    => array('sk|slovak', 'slovak-utf-8', 'sk', 'Sloven&#269;ina'),
-        'sl-utf-8'    => array('sl|slovenian', 'slovenian-utf-8', 'sl', 'Sloven&scaron;&#269;ina'),
-        'sq-utf-8'    => array('sq|albanian', 'albanian-utf-8', 'sq', 'Shqip'),
+        'mn-utf-8' => array('mn|mongolian', 'mongolian-utf-8', 'mn', '&#1052;&#1086;&#1085;&#1075;&#1086;&#1083;'),
+        'ms-utf-8' => array('ms|malay', 'malay-utf-8', 'ms', 'Bahasa Melayu'),
+        'nl-utf-8' => array('nl|dutch', 'dutch-utf-8', 'nl', 'Nederlands'),
+        'no-utf-8' => array('no|norwegian', 'norwegian-utf-8', 'no', 'Norsk'),
+        'pl-utf-8' => array('pl|polish', 'polish-utf-8', 'pl', 'Polski'),
+        'ptbr-utf-8' => array('pt[-_]br|brazilian portuguese', 'brazilian_portuguese-utf-8', 'pt-BR', 'Portugu&ecirc;s'),
+        'pt-utf-8' => array('pt|portuguese', 'portuguese-utf-8', 'pt', 'Portugu&ecirc;s'),
+        'ro-utf-8' => array('ro|romanian', 'romanian-utf-8', 'ro', 'Rom&acirc;n&#259;'),
+        'ru-utf-8' => array('ru|russian', 'russian-utf-8', 'ru', '&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;'),
+        'si-utf-8' => array('si|sinhala', 'sinhala-utf-8', 'si', '&#3523;&#3538;&#3458;&#3524;&#3517;'),
+        'sk-utf-8' => array('sk|slovak', 'slovak-utf-8', 'sk', 'Sloven&#269;ina'),
+        'sl-utf-8' => array('sl|slovenian', 'slovenian-utf-8', 'sl', 'Sloven&scaron;&#269;ina'),
+        'sq-utf-8' => array('sq|albanian', 'albanian-utf-8', 'sq', 'Shqip'),
         'srlat-utf-8' => array('sr[-_]lat|serbian latin', 'serbian_latin-utf-8', 'sr-lat', 'Srpski'),
         'srcyr-utf-8' => array('sr|serbian', 'serbian_cyrillic-utf-8', 'sr', '&#1057;&#1088;&#1087;&#1089;&#1082;&#1080;'),
-        'sv-utf-8'    => array('sv|swedish', 'swedish-utf-8', 'sv', 'Svenska'),
-        'th-utf-8'    => array('th|thai', 'thai-utf-8', 'th', '&#3616;&#3634;&#3625;&#3634;&#3652;&#3607;&#3618;'),
-        'tr-utf-8'    => array('tr|turkish', 'turkish-utf-8', 'tr', 'T&uuml;rk&ccedil;e'),
-        'tt-utf-8'    => array('tt|tatarish', 'tatarish-utf-8', 'tt', 'Tatar&ccedil;a'),
-        'uk-utf-8'    => array('uk|ukrainian', 'ukrainian-utf-8', 'uk', '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'),
+        'sv-utf-8' => array('sv|swedish', 'swedish-utf-8', 'sv', 'Svenska'),
+        'th-utf-8' => array('th|thai', 'thai-utf-8', 'th', '&#3616;&#3634;&#3625;&#3634;&#3652;&#3607;&#3618;'),
+        'tr-utf-8' => array('tr|turkish', 'turkish-utf-8', 'tr', 'T&uuml;rk&ccedil;e'),
+        'tt-utf-8' => array('tt|tatarish', 'tatarish-utf-8', 'tt', 'Tatar&ccedil;a'),
+        'uk-utf-8' => array('uk|ukrainian', 'ukrainian-utf-8', 'uk', '&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;'),
         'uzlat-utf-8' => array('uz[-_]lat|uzbek-latin', 'uzbek_latin-utf-8', 'uz-lat', 'O&lsquo;zbekcha'),
         'uzcyr-utf-8' => array('uz[-_]cyr|uzbek-cyrillic', 'uzbek_cyrillic-utf-8', 'uz-cyr', '&#1038;&#1079;&#1073;&#1077;&#1082;&#1095;&#1072;'),
-        'zhtw-utf-8'  => array('zh[-_](tw|hk)|chinese traditional', 'chinese_traditional-utf-8', 'zh-TW', '&#20013;&#25991;'),
-        'zh-utf-8'    => array('zh|chinese simplified', 'chinese_simplified-utf-8', 'zh', '&#20013;&#25991;'),
+        'zhtw-utf-8' => array('zh[-_](tw|hk)|chinese traditional', 'chinese_traditional-utf-8', 'zh-TW', '&#20013;&#25991;'),
+        'zh-utf-8' => array('zh|chinese simplified', 'chinese_simplified-utf-8', 'zh', '&#20013;&#25991;'),
     );
 }
 
@@ -283,7 +283,7 @@ $GLOBALS['text_dir'] = 'ltr';
 $GLOBALS['available_languages'] = PMA_langList();
 
 // Language filtering support
-if (! empty($GLOBALS['cfg']['FilterLanguages'])) {
+if (!empty($GLOBALS['cfg']['FilterLanguages'])) {
     $new_lang = array();
     foreach ($GLOBALS['available_languages'] as $key => $val) {
         if (preg_match('@' . $GLOBALS['cfg']['FilterLanguages'] . '@', $key)) {
@@ -299,7 +299,7 @@ if (! empty($GLOBALS['cfg']['FilterLanguages'])) {
 /**
  * first check for lang dir exists
  */
-if (! is_dir($GLOBALS['lang_path'])) {
+if (!is_dir($GLOBALS['lang_path'])) {
     // language directory not found
     trigger_error('phpMyAdmin-ERROR: path not found: '
         . $GLOBALS['lang_path'] . ', check your language directory.',
@@ -312,7 +312,7 @@ if (! is_dir($GLOBALS['lang_path'])) {
  * check for language files
  */
 foreach ($GLOBALS['available_languages'] as $each_lang_key => $each_lang) {
-    if (! file_exists($GLOBALS['lang_path'] . $each_lang[1] . '.inc.php')) {
+    if (!file_exists($GLOBALS['lang_path'] . $each_lang[1] . '.inc.php')) {
         unset($GLOBALS['available_languages'][$each_lang_key]);
     }
 }
@@ -322,24 +322,24 @@ unset($each_lang_key, $each_lang);
  * @global array MySQL charsets map
  */
 $GLOBALS['mysql_charset_map'] = array(
-    'big5'         => 'big5',
-    'cp-866'       => 'cp866',
-    'euc-jp'       => 'ujis',
-    'euc-kr'       => 'euckr',
-    'gb2312'       => 'gb2312',
-    'gbk'          => 'gbk',
-    'iso-8859-1'   => 'latin1',
-    'iso-8859-2'   => 'latin2',
-    'iso-8859-7'   => 'greek',
-    'iso-8859-8'   => 'hebrew',
+    'big5' => 'big5',
+    'cp-866' => 'cp866',
+    'euc-jp' => 'ujis',
+    'euc-kr' => 'euckr',
+    'gb2312' => 'gb2312',
+    'gbk' => 'gbk',
+    'iso-8859-1' => 'latin1',
+    'iso-8859-2' => 'latin2',
+    'iso-8859-7' => 'greek',
+    'iso-8859-8' => 'hebrew',
     'iso-8859-8-i' => 'hebrew',
-    'iso-8859-9'   => 'latin5',
-    'iso-8859-13'  => 'latin7',
-    'iso-8859-15'  => 'latin1',
-    'koi8-r'       => 'koi8r',
-    'shift_jis'    => 'sjis',
-    'tis-620'      => 'tis620',
-    'utf-8'        => 'utf8',
+    'iso-8859-9' => 'latin5',
+    'iso-8859-13' => 'latin7',
+    'iso-8859-15' => 'latin1',
+    'koi8-r' => 'koi8r',
+    'shift_jis' => 'sjis',
+    'tis-620' => 'tis620',
+    'utf-8' => 'utf8',
     'windows-1250' => 'cp1250',
     'windows-1251' => 'cp1251',
     'windows-1252' => 'latin1',
@@ -361,11 +361,11 @@ if (empty($GLOBALS['convcharset'])) {
     }
 }
 
-if (! PMA_langCheck()) {
+if (!PMA_langCheck()) {
     // fallback language
     $fall_back_lang = 'en-utf-8';
     $line = __LINE__;
-    if (! PMA_langSet($fall_back_lang)) {
+    if (!PMA_langSet($fall_back_lang)) {
         trigger_error('phpMyAdmin-ERROR: invalid lang code: '
             . __FILE__ . '#' . $line . ', check hard coded fall back language.',
             E_USER_WARNING);

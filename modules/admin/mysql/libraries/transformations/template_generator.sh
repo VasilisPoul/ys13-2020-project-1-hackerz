@@ -10,15 +10,12 @@
 # special escaping.
 #
 # Example:  template_generator.sh 'filename' 'description'
-# 
-if [ $# == 0 ]
-then
+#
+if [ $# == 0 ]; then
   echo "Usage: template_generator.sh 'filename' 'description'"
   echo ""
   exit 65
 fi
-
-
 
 ./generator.sh 'TEMPLATE' "$1" "$2"
 echo " "

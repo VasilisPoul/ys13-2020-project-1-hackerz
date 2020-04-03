@@ -27,10 +27,10 @@
 
 function display_text()
 {
-	global $tool_content, $id, $langContent, $langAdd;
+    global $tool_content, $id, $langContent, $langAdd;
 
-	$tool_content .= "<form action='insert.php' method='post'><input type='hidden' name='id' value='$id'";
-	$tool_content .= "<table width='99%' class='FormData' align='center'><tbody>
+    $tool_content .= "<form action='insert.php' method='post'><input type='hidden' name='id' value='$id'";
+    $tool_content .= "<table width='99%' class='FormData' align='center'><tbody>
         <tr><th class='left'>$langContent:</th><td>
         <table class='xinha_editor'><tr><td><textarea id='xinha' name='comments'></textarea></td></tr>
         </table></td></tr>

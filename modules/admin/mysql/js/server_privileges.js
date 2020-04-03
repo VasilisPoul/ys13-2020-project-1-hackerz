@@ -1,4 +1,5 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
+
 /**
  * function used in server privilege pages
  *
@@ -13,15 +14,14 @@
  * @param   object   the form
  * @return  boolean  whether the field value is valid or not
  */
-function checkPassword(the_form)
-{
+function checkPassword(the_form) {
     // Did the user select 'no password'?
-    if (typeof(the_form.elements['nopass']) != 'undefined'
-     && the_form.elements['nopass'][0].checked) {
+    if (typeof (the_form.elements['nopass']) != 'undefined'
+        && the_form.elements['nopass'][0].checked) {
         return true;
-    } else if (typeof(the_form.elements['pred_password']) != 'undefined'
-     && (the_form.elements['pred_password'].value == 'none'
-      || the_form.elements['pred_password'].value == 'keep')) {
+    } else if (typeof (the_form.elements['pred_password']) != 'undefined'
+        && (the_form.elements['pred_password'].value == 'none'
+            || the_form.elements['pred_password'].value == 'keep')) {
         return true;
     }
 
@@ -37,7 +37,7 @@ function checkPassword(the_form)
 
     if (alert_msg) {
         alert(alert_msg);
-        password.value  = '';
+        password.value = '';
         password_repeat.value = '';
         password.focus();
         return false;
@@ -52,8 +52,7 @@ function checkPassword(the_form)
  *
  * @return  boolean  whether the form is validated or not
  */
-function checkAddUser(the_form)
-{
+function checkAddUser(the_form) {
     if (the_form.elements['pred_hostname'].value == 'userdefined' && the_form.elements['hostname'].value == '') {
         alert(PMA_messages['strHostEmpty']);
         the_form.elements['hostname'].focus();
@@ -86,8 +85,8 @@ function suggestPassword() {
     var passwd = document.getElementById('generated_pw');
     passwd.value = '';
 
-    for ( i = 0; i < passwordlength; i++ ) {
-        passwd.value += pwchars.charAt( Math.floor( Math.random() * pwchars.length ) )
+    for (i = 0; i < passwordlength; i++) {
+        passwd.value += pwchars.charAt(Math.floor(Math.random() * pwchars.length))
     }
     document.getElementById('text_pma_pw').value = passwd.value;
     document.getElementById('text_pma_pw2').value = passwd.value;

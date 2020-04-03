@@ -18,8 +18,8 @@ class PMA_Partition
      * returns array of partition names for a specific db/table
      *
      * @access  public
-     * @uses    PMA_DBI_fetch_result()
      * @return  array   of partition names
+     * @uses    PMA_DBI_fetch_result()
      */
     static public function getPartitionNames($db, $table)
     {
@@ -37,15 +37,15 @@ class PMA_Partition
      * @staticvar boolean $have_partitioning
      * @staticvar boolean $already_checked
      * @access  public
-     * @uses    PMA_DBI_fetch_result()
      * @return  boolean
+     * @uses    PMA_DBI_fetch_result()
      */
     static public function havePartitioning()
     {
         static $have_partitioning = false;
         static $already_checked = false;
 
-        if (! $already_checked) {
+        if (!$already_checked) {
             $have_partitioning = PMA_MYSQL_INT_VERSION >= 50100 && PMA_DBI_fetch_value("SHOW VARIABLES LIKE 'have_partitioning';");
             $already_checked = true;
         }

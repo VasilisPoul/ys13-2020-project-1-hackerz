@@ -95,9 +95,9 @@ if ($import_type == 'table') {
     } else {
         $common = PMA_generate_common_url();
     }
-    $err_url  = $goto
-              . '?' . $common
-              . (preg_match('@^tbl_[a-z]*\.php$@', $goto) ? '&amp;table=' . urlencode($table) : '');
+    $err_url = $goto
+        . '?' . $common
+        . (preg_match('@^tbl_[a-z]*\.php$@', $goto) ? '&amp;table=' . urlencode($table) : '');
 }
 
 
@@ -173,10 +173,10 @@ if (isset($GLOBALS['show_as_php'])) {
 if (!empty($bkm_label) && !empty($import_text)) {
     require_once './libraries/bookmark.lib.php';
     $bfields = array(
-                 'dbase' => $db,
-                 'user'  => $cfg['Bookmark']['user'],
-                 'query' => urlencode($import_text),
-                 'label' => $bkm_label
+        'dbase' => $db,
+        'user' => $cfg['Bookmark']['user'],
+        'query' => urlencode($import_text),
+        'label' => $bkm_label
     );
 
     // Should we replace bookmark?
@@ -224,9 +224,9 @@ if (!empty($local_import_file) && !empty($cfg['UploadDir'])) {
     // sanitize $local_import_file as it comes from a POST
     $local_import_file = PMA_securePath($local_import_file);
 
-    $import_file  = PMA_userDir($cfg['UploadDir']) . $local_import_file;
-} elseif (empty($import_file) || !is_uploaded_file($import_file))  {
-    $import_file  = 'none';
+    $import_file = PMA_userDir($cfg['UploadDir']) . $local_import_file;
+} elseif (empty($import_file) || !is_uploaded_file($import_file)) {
+    $import_file = 'none';
 }
 
 // Do we have file to import?
@@ -253,7 +253,7 @@ if ($import_file != 'none' && !$error) {
 
     /**
      *  Handle file compression
-     *  @todo duplicate code exists in File.class.php
+     * @todo duplicate code exists in File.class.php
      */
     $compression = PMA_detectCompression($import_file);
     if ($compression === FALSE) {
@@ -286,7 +286,7 @@ if ($import_file != 'none' && !$error) {
                      */
                     include_once './libraries/zip_extension.lib.php';
                     $result = PMA_getZipContents($import_file);
-                    if (! empty($result['error'])) {
+                    if (!empty($result['error'])) {
                         $message = PMA_Message::rawError($result['error']);
                         $error = TRUE;
                     } else {
@@ -355,7 +355,7 @@ if (!$error) {
     }
 }
 
-if (! $error && FALSE !== $import_handle && NULL !== $import_handle) {
+if (!$error && FALSE !== $import_handle && NULL !== $import_handle) {
     fclose($import_handle);
 }
 

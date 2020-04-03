@@ -56,7 +56,7 @@ $tool_content .= "
   </ul>
 </div>";
 
-$dateNow = date("d-m-Y / H:i:s",time());
+$dateNow = date("d-m-Y / H:i:s", time());
 $nameTools = $langUsage;
 $local_style = '
     .month { font-weight : bold; color: #FFFFFF; background-color: #edecdf; padding-left: 15px; padding-right : 15px; }
@@ -69,7 +69,7 @@ if ($language == 'greek') {
     $lang = 'en';
 }
 
-$jscalendar = new DHTML_Calendar($urlServer.'include/jscalendar/', $lang, 'calendar-blue2', false);
+$jscalendar = new DHTML_Calendar($urlServer . 'include/jscalendar/', $lang, 'calendar-blue2', false);
 $local_head = $jscalendar->get_load_files_code();
 if (isset($_POST['u_analyze']) && isset($_POST['user_id']) && $_POST['user_id'] != -1) {
     require_once "analyze.php";

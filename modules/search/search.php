@@ -41,15 +41,13 @@ search.php
 //*/
 
 include '../../include/baseTheme.php';
-if(isset($_POST['search_terms'])) {
-	$search_terms_title = $search_terms_keywords = $search_terms_instructor = $search_terms_coursecode = $_POST['search_terms'];
+if (isset($_POST['search_terms'])) {
+    $search_terms_title = $search_terms_keywords = $search_terms_instructor = $search_terms_coursecode = $_POST['search_terms'];
 }
 //elegxos ean o xrhsths vrisketai sthn kentrikh selida tou systhmatos xwris na exei kanei login
-if (@empty($uid))
-{
-	include 'search_loggedout.php';
-}else
-{
-	include 'search_loggedin.php';
+if (@empty($uid)) {
+    include 'search_loggedout.php';
+} else {
+    include 'search_loggedin.php';
 }
 ?>

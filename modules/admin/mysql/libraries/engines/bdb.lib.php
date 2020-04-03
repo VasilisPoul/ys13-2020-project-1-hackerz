@@ -21,36 +21,25 @@ class PMA_StorageEngine_bdb extends PMA_StorageEngine
                 'title' => $GLOBALS['strVersionInformation'],
             ),
             'bdb_cache_size' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
+                'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
             ),
-            'bdb_home' => array(
-            ),
+            'bdb_home' => array(),
             'bdb_log_buffer_size' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
+                'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
             ),
-            'bdb_logdir' => array(
-            ),
+            'bdb_logdir' => array(),
             'bdb_max_lock' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
+                'type' => PMA_ENGINE_DETAILS_TYPE_NUMERIC,
             ),
-            'bdb_shared_data' => array(
-            ),
-            'bdb_tmpdir' => array(
-            ),
-            'bdb_data_direct' => array(
-            ),
-            'bdb_lock_detect' => array(
-            ),
-            'bdb_log_direct' => array(
-            ),
-            'bdb_no_recover' => array(
-            ),
-            'bdb_no_sync' => array(
-            ),
-            'skip_sync_bdb_logs' => array(
-            ),
-            'sync_bdb_logs' => array(
-            ),
+            'bdb_shared_data' => array(),
+            'bdb_tmpdir' => array(),
+            'bdb_data_direct' => array(),
+            'bdb_lock_detect' => array(),
+            'bdb_log_direct' => array(),
+            'bdb_no_recover' => array(),
+            'bdb_no_sync' => array(),
+            'skip_sync_bdb_logs' => array(),
+            'sync_bdb_logs' => array(),
         );
     }
 

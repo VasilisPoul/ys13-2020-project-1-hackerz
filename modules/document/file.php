@@ -34,7 +34,7 @@ session_start();
 
 // save current course
 if (isset($_SESSION['dbname'])) {
-        define('old_dbname', $_SESSION['dbname']);
+    define('old_dbname', $_SESSION['dbname']);
 }
 
 $uri = str_replace('//', chr(1), strstr($_SERVER['REQUEST_URI'], 'file.php/'));
@@ -58,33 +58,33 @@ $basedir = "{$webDir}courses/$dbname/document";
 $depth = 1;
 $path = '';
 foreach ($path_components as $component) {
-        $component = urldecode(str_replace(chr(1), '/', $component));
-        $q = db_query("SELECT path, visibility, format,
+    $component = urldecode(str_replace(chr(1), '/', $component));
+    $q = db_query("SELECT path, visibility, format,
                               (LENGTH(path) - LENGTH(REPLACE(path, '/', ''))) AS depth
                        FROM document WHERE filename = " . quote($component) .
-                       " AND path LIKE '$path%' HAVING depth = $depth");
-        if (!$q or mysql_num_rows($q) == 0) {
-                restore_saved_course();
-                header("HTTP/1.0 404 Not Found");
-                echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head>',
-                     '<title>404 Not Found</title></head><body>',
-                     '<h1>Not Found</h1><p>The requested path "',
-                     htmlspecialchars(preg_replace('/^.*file\.php/', '', $uri)),
-                     '" was not found.</p></body></html>';
-                exit;
-        }
-        $r = mysql_fetch_array($q);
-        $path = $r['path'];
-        $depth++;
+        " AND path LIKE '$path%' HAVING depth = $depth");
+    if (!$q or mysql_num_rows($q) == 0) {
+        restore_saved_course();
+        header("HTTP/1.0 404 Not Found");
+        echo '<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><html><head>',
+        '<title>404 Not Found</title></head><body>',
+        '<h1>Not Found</h1><p>The requested path "',
+        htmlspecialchars(preg_replace('/^.*file\.php/', '', $uri)),
+        '" was not found.</p></body></html>';
+        exit;
+    }
+    $r = mysql_fetch_array($q);
+    $path = $r['path'];
+    $depth++;
 }
 if ($r['visibility'] != 'v' and !$is_adminOfCourse) {
-        $_SESSION['errMessage'] = $langNoRead;
-        restore_saved_course();
-        session_write_close();
-        header("Location: $urlServer" );
+    $_SESSION['errMessage'] = $langNoRead;
+    restore_saved_course();
+    session_write_close();
+    header("Location: $urlServer");
 }
 if (!preg_match("/\.$r[format]$/", $component)) {
-        $component .= '.' . $r['format'];
+    $component .= '.' . $r['format'];
 }
 
 // record file access
@@ -93,15 +93,15 @@ $action->record('MODULE_ID_DOCS');
 
 restore_saved_course();
 if (file_exists($basedir . $r['path'])) {
-        send_file_to_client($basedir . $r['path'], $component, true);
+    send_file_to_client($basedir . $r['path'], $component, true);
 } else {
-        header('Location: ', $urlServer);
+    header('Location: ', $urlServer);
 }
 
 // Restore current course
 function restore_saved_course()
 {
-        if (defined('old_dbname')) {
-                $_SESSION['dbname'] = old_dbname;
-        }
+    if (defined('old_dbname')) {
+        $_SESSION['dbname'] = old_dbname;
+    }
 }

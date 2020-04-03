@@ -40,11 +40,11 @@ $require_prof = true;
 include '../../include/baseTheme.php';
 
 if (!$is_adminOfCourse) {
-	die("You are not professor for this lesson");
+    die("You are not professor for this lesson");
 }
 
 $nameTools = $langNewGroupCreate;
-$navigation[]= array ("url"=>"group.php", "name"=> $langGroups);
+$navigation[] = array("url" => "group.php", "name" => $langGroups);
 $tool_content = "";
 
 $tool_content = <<<tCont

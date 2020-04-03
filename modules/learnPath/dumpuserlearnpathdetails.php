@@ -30,52 +30,49 @@ include '../../include/init.php';
 require_once "../../include/lib/learnPathLib.inc.php";
 
 // IF PROF ONLY
-if($is_adminOfCourse) {
+if ($is_adminOfCourse) {
 
-	if (isset($_GET['enc']) and $_GET['enc'] == '1253') {
-		$charset = 'Windows-1253';
-	} else {
-		$charset = 'UTF-8';
-	}
-	$crlf="\r\n";
+    if (isset($_GET['enc']) and $_GET['enc'] == '1253') {
+        $charset = 'Windows-1253';
+    } else {
+        $charset = 'UTF-8';
+    }
+    $crlf = "\r\n";
 
-	header("Content-Type: text/csv; charset=$charset");
-	header("Content-Disposition: attachment; filename=userslearningpathstats.csv");
-	
-	echo join(';', array_map("csv_escape", array($langStudent, $langAm, $langGroup, $langProgress))),
-	     $crlf;
-	
-	// display a list of user and their respective progress
-	$sql = "SELECT U.`nom`, U.`prenom`, U.`user_id`
+    header("Content-Type: text/csv; charset=$charset");
+    header("Content-Disposition: attachment; filename=userslearningpathstats.csv");
+
+    echo join(';', array_map("csv_escape", array($langStudent, $langAm, $langGroup, $langProgress))),
+    $crlf;
+
+    // display a list of user and their respective progress
+    $sql = "SELECT U.`nom`, U.`prenom`, U.`user_id`
 		FROM `user` AS U, `cours_user` AS CU
 		WHERE U.`user_id`= CU.`user_id`
 		AND CU.`cours_id` = $cours_id
 		ORDER BY U.`nom` ASC";
-	$usersList = get_limited_list($sql, 500000);
-	mysql_select_db($currentCourseID);
-	foreach ($usersList as $user)
-	{
-		echo "$crlf";
-		$sql = "SELECT LP.`learnPath_id` FROM `lp_learnPath` AS LP";
-		$learningPathList = db_query_fetch_all($sql);
-		$iterator = 1;
-		$globalprog = 0;
-		
-		foreach($learningPathList as $learningPath)
-		{
-			// % progress
-			$prog = get_learnPath_progress($learningPath['learnPath_id'], $user['user_id']);
-			if ($prog >= 0)
-			{
-				$globalprog += $prog;
-			}
-			$iterator++;
-		}
-		$total = round($globalprog/($iterator-1));
-		echo csv_escape(uid_to_name($user['user_id'])).
-		";".csv_escape(uid_to_am($user['user_id'])).
-		";".csv_escape(gid_to_name(user_group($user['user_id']))).
-		";".$total."%";
-	}
-	echo "$crlf";
+    $usersList = get_limited_list($sql, 500000);
+    mysql_select_db($currentCourseID);
+    foreach ($usersList as $user) {
+        echo "$crlf";
+        $sql = "SELECT LP.`learnPath_id` FROM `lp_learnPath` AS LP";
+        $learningPathList = db_query_fetch_all($sql);
+        $iterator = 1;
+        $globalprog = 0;
+
+        foreach ($learningPathList as $learningPath) {
+            // % progress
+            $prog = get_learnPath_progress($learningPath['learnPath_id'], $user['user_id']);
+            if ($prog >= 0) {
+                $globalprog += $prog;
+            }
+            $iterator++;
+        }
+        $total = round($globalprog / ($iterator - 1));
+        echo csv_escape(uid_to_name($user['user_id'])) .
+            ";" . csv_escape(uid_to_am($user['user_id'])) .
+            ";" . csv_escape(gid_to_name(user_group($user['user_id']))) .
+            ";" . $total . "%";
+    }
+    echo "$crlf";
 }  // end of initial if

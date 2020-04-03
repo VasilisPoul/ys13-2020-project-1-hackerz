@@ -7,7 +7,7 @@
  * @version $Id: db_table_exists.lib.php 12274 2009-03-03 12:11:20Z helmo $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -23,14 +23,14 @@ if (empty($is_db)) {
         $is_db = false;
     }
 
-    if (! $is_db) {
+    if (!$is_db) {
         // not a valid db name -> back to the welcome page
-        if (! defined('IS_TRANSFORMATION_WRAPPER')) {
+        if (!defined('IS_TRANSFORMATION_WRAPPER')) {
             $url_params = array('reload' => 1);
             if (isset($message)) {
                 $url_params['message'] = $message;
             }
-            if (! empty($sql_query)) {
+            if (!empty($sql_query)) {
                 $url_params['sql_query'] = $sql_query;
             }
             if (isset($show_as_php)) {
@@ -38,7 +38,7 @@ if (empty($is_db)) {
             }
             PMA_sendHeaderLocation(
                 $cfg['PmaAbsoluteUri'] . 'main.php'
-                    . PMA_generate_common_url($url_params, '&'));
+                . PMA_generate_common_url($url_params, '&'));
         }
         exit;
     }
@@ -50,7 +50,7 @@ if (empty($is_table) && !defined('PMA_SUBMIT_MULT')) {
     if (strlen($table)) {
         $is_table = isset(PMA_Table::$cache[$db][$table]);
 
-        if (! $is_table) {
+        if (!$is_table) {
             $_result = PMA_DBI_try_query(
                 'SHOW TABLES LIKE \'' . PMA_sqlAddslashes($table, true) . '\';',
                 null, PMA_DBI_QUERY_STORE);
@@ -61,8 +61,8 @@ if (empty($is_table) && !defined('PMA_SUBMIT_MULT')) {
         $is_table = false;
     }
 
-    if (! $is_table) {
-        if (! defined('IS_TRANSFORMATION_WRAPPER')) {
+    if (!$is_table) {
+        if (!defined('IS_TRANSFORMATION_WRAPPER')) {
             if (strlen($table)) {
                 // SHOW TABLES doesn't show temporary tables, so try select
                 // (as it can happen just in case temporary table, it should be
@@ -78,13 +78,13 @@ if (empty($is_table) && !defined('PMA_SUBMIT_MULT')) {
                 PMA_DBI_free_result($_result);
             }
 
-            if (! $is_table) {
+            if (!$is_table) {
                 require 'db_sql.php';
                 exit;
             }
         }
 
-        if (! $is_table) {
+        if (!$is_table) {
             exit;
         }
     }

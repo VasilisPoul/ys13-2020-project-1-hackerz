@@ -1,8 +1,8 @@
 .comment {
-  text-align: left;
+    text-align: left;
 }
 
-table.Documents{
+table.Documents {
     padding: 2px;
     border-top: 1px solid #edecdf;
     border-bottom: 1px solid #edecdf;
@@ -12,14 +12,14 @@ table.Documents{
 }
 
 .DocHead {
-   background-color: #fbfbfb;
-   color: #727266;
-   text-align: center !important;
+    background-color: #fbfbfb;
+    color: #727266;
+    text-align: center !important;
 }
 
 
 table.Documents th {
-    text-align: center!important;
+    text-align: center !important;
     border-top: 1px solid #edecdf;
     border-bottom: 1px solid #edecdf;
     border-left: 1px solid #edecdf;
@@ -28,11 +28,11 @@ table.Documents th {
 }
 
 table.Documents td {
-        font-size: 10px;
-        padding: 5px 4px 4px 4px;
-        text-align: center;
+    font-size: 10px;
+    padding: 5px 4px 4px 4px;
+    text-align: center;
 }
 
 table.Documents img {
-       vertical-align: middle; 
+    vertical-align: middle;
 }

@@ -30,8 +30,8 @@ $helpTopic = 'Conference';
 $tool_content = "";
 include '../../include/baseTheme.php';
 
-if(!isset($MCU))
-	$MCU="";
+if (!isset($MCU))
+    $MCU = "";
 
 /**** The following is added for statistics purposes ***/
 include('../../include/action.php');
@@ -44,7 +44,7 @@ $nameTools = $langConference;
 
 // guest user not allowed
 if (check_guest()) {
-	$tool_content .= "
+    $tool_content .= "
        <table width=\"99%\">
        <tbody>
        <tr>
@@ -52,11 +52,11 @@ if (check_guest()) {
        </tr>
        </tbody>
        </table>";
-	draw($tool_content, 2, 'conference');
+    draw($tool_content, 2, 'conference');
 }
 
 if (!($uid) or !($_SESSION['uid'])) {
-	$tool_content .= "
+    $tool_content .= "
        <table width=\"99%\">
        <tbody>
        <tr>
@@ -64,7 +64,7 @@ if (!($uid) or !($_SESSION['uid'])) {
        </tr>
        </tbody>
        </table>";
-	draw($tool_content, 2, 'conference');
+    draw($tool_content, 2, 'conference');
 }
 
 $head_content = '<script type="text/javascript">

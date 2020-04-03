@@ -8,7 +8,8 @@
 /**
  *
  */
-function PMA_transformation_text_plain__external_nowrap($options = array()) {
+function PMA_transformation_text_plain__external_nowrap($options = array())
+{
     if (!isset($options[3]) || $options[3] == '') {
         $nowrap = true;
     } elseif ($options[3] == '1' || $options[3] == 1) {
@@ -20,7 +21,8 @@ function PMA_transformation_text_plain__external_nowrap($options = array()) {
     return $nowrap;
 }
 
-function PMA_transformation_text_plain__external($buffer, $options = array(), $meta = '') {
+function PMA_transformation_text_plain__external($buffer, $options = array(), $meta = '')
+{
     // possibly use a global transform and feed it with special options:
     // include './libraries/transformations/global.inc.php';
 
@@ -47,7 +49,7 @@ function PMA_transformation_text_plain__external($buffer, $options = array(), $m
         return $buffer;
     }
 
-    if (!isset($options[0]) ||  $options[0] == '' || !isset($allowed_programs[$options[0]])) {
+    if (!isset($options[0]) || $options[0] == '' || !isset($allowed_programs[$options[0]])) {
         $program = $allowed_programs[0];
     } else {
         $program = $allowed_programs[$options[0]];
@@ -94,4 +96,5 @@ function PMA_transformation_text_plain__external($buffer, $options = array(), $m
 
     return $retstring;
 }
+
 ?>

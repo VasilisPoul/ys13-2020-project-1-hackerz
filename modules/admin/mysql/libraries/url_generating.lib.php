@@ -10,17 +10,17 @@
 /**
  * Generates text with hidden inputs.
  *
- * @see     PMA_generate_common_url()
- * @uses    PMA_getHiddenFields
- * @param   string   optional database name
+ * @param string   optional database name
  *                   (can also be an array of parameters)
- * @param   string   optional table name
- * @param   int      indenting level
- * @param   string   do not generate a hidden field for this parameter
+ * @param string   optional table name
+ * @param int      indenting level
+ * @param string   do not generate a hidden field for this parameter
  *                  (can be an array of strings)
  *
  * @return  string   string with input fields
  *
+ * @see     PMA_generate_common_url()
+ * @uses    PMA_getHiddenFields
  * @global  string   the current language
  * @global  string   the current conversion charset
  * @global  string   the current connection collation
@@ -35,11 +35,11 @@
 function PMA_generate_common_hidden_inputs($db = '', $table = '', $indent = 0, $skip = array())
 {
     if (is_array($db)) {
-        $params  =& $db;
+        $params =& $db;
         $_indent = empty($table) ? $indent : $table;
-        $_skip   = empty($indent) ? $skip : $indent;
-        $indent  =& $_indent;
-        $skip    =& $_skip;
+        $_skip = empty($indent) ? $skip : $indent;
+        $indent =& $_indent;
+        $skip =& $_skip;
     } else {
         $params = array();
         if (strlen($db)) {
@@ -50,26 +50,26 @@ function PMA_generate_common_hidden_inputs($db = '', $table = '', $indent = 0, $
         }
     }
 
-    if (! empty($GLOBALS['server'])
-    &&  $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']) {
+    if (!empty($GLOBALS['server'])
+        && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']) {
         $params['server'] = $GLOBALS['server'];
     }
     if (empty($_COOKIE['pma_lang'])
-    && ! empty($GLOBALS['lang'])) {
+        && !empty($GLOBALS['lang'])) {
         $params['lang'] = $GLOBALS['lang'];
     }
     if (empty($_COOKIE['pma_charset'])
-    && ! empty($GLOBALS['convcharset'])) {
+        && !empty($GLOBALS['convcharset'])) {
         $params['convcharset'] = $GLOBALS['convcharset'];
     }
     if (empty($_COOKIE['pma_collation_connection'])
-    && ! empty($GLOBALS['collation_connection'])) {
+        && !empty($GLOBALS['collation_connection'])) {
         $params['collation_connection'] = $GLOBALS['collation_connection'];
     }
 
     $params['token'] = $_SESSION[' PMA_token '];
 
-    if (! is_array($skip)) {
+    if (!is_array($skip)) {
         if (isset($params[$skip])) {
             unset($params[$skip]);
         }
@@ -118,8 +118,8 @@ function PMA_getHiddenFields($values, $pre = '')
     $fields = '';
 
     foreach ($values as $name => $value) {
-        if (! empty($pre)) {
-            $name = $pre. '[' . $name . ']';
+        if (!empty($pre)) {
+            $name = $pre . '[' . $name . ']';
         }
 
         if (is_array($value)) {
@@ -167,6 +167,21 @@ function PMA_getHiddenFields($values, $pre = '')
  * // script.php?server=1&amp;lang=en-utf-8
  * </code>
  *
+ * @param mixed    assoc. array with url params or optional string with database name
+ *                   if first param is an array there is also an ? prefixed to the url
+ *
+ * @param string   - if first param is array: 'html' to use htmlspecialchars()
+ *                   on the resulting URL (for a normal URL displayed in HTML)
+ *                   or something else to avoid using htmlspecialchars() (for
+ *                   a URL sent via a header); if not set,'html' is assumed
+ *                   - if first param is not array:  optional table name
+ *
+ * @param string   - if first param is array: optional character to
+ *                   use instead of '?'
+ *                   - if first param is not array: optional character to use
+ *                    instead of '&amp;' for dividing URL parameters
+ * @return  string   string with URL parameters
+ * @access  public
  * @uses    $GLOBALS['server']
  * @uses    $GLOBALS['cfg']['ServerDefault']
  * @uses    $_COOKIE['pma_lang']
@@ -182,21 +197,6 @@ function PMA_getHiddenFields($values, $pre = '')
  * @uses    htmlentities()
  * @uses    urlencode()
  * @uses    implode()
- * @param   mixed    assoc. array with url params or optional string with database name
- *                   if first param is an array there is also an ? prefixed to the url
- *
- * @param   string   - if first param is array: 'html' to use htmlspecialchars()
- *                   on the resulting URL (for a normal URL displayed in HTML)
- *                   or something else to avoid using htmlspecialchars() (for
- *                   a URL sent via a header); if not set,'html' is assumed
- *                   - if first param is not array:  optional table name
- *
- * @param   string   - if first param is array: optional character to
- *                   use instead of '?'
- *                   - if first param is not array: optional character to use
- *                    instead of '&amp;' for dividing URL parameters
- * @return  string   string with URL parameters
- * @access  public
  * @author  nijel
  */
 function PMA_generate_common_url()
@@ -242,21 +242,21 @@ function PMA_generate_common_url()
 
     if (isset($GLOBALS['server'])
         && $GLOBALS['server'] != $GLOBALS['cfg']['ServerDefault']
-            // avoid overwriting when creating navi panel links to servers
-        && ! isset($params['server'])) {
+        // avoid overwriting when creating navi panel links to servers
+        && !isset($params['server'])) {
         $params['server'] = $GLOBALS['server'];
     }
 
     if (empty($_COOKIE['pma_lang'])
-      && ! empty($GLOBALS['lang'])) {
+        && !empty($GLOBALS['lang'])) {
         $params['lang'] = $GLOBALS['lang'];
     }
     if (empty($_COOKIE['pma_charset'])
-      && ! empty($GLOBALS['convcharset'])) {
+        && !empty($GLOBALS['convcharset'])) {
         $params['convcharset'] = $GLOBALS['convcharset'];
     }
     if (empty($_COOKIE['pma_collation_connection'])
-      && ! empty($GLOBALS['collation_connection'])) {
+        && !empty($GLOBALS['collation_connection'])) {
         $params['collation_connection'] = $GLOBALS['collation_connection'];
     }
 
@@ -283,12 +283,12 @@ function PMA_generate_common_url()
  * extracted from arg_separator.input as set in php.ini
  * we do not use arg_separator.output to avoid problems with &amp; and &
  *
- * @uses    ini_get()
- * @uses    strpos()
- * @uses    strlen()
- * @param   string  whether to encode separator or not, currently 'none' or 'html'
+ * @param string  whether to encode separator or not, currently 'none' or 'html'
  * @return  string  character used for separating url parts usally ; or &
  * @access  public
+ * @uses    strlen()
+ * @uses    ini_get()
+ * @uses    strpos()
  * @author  nijel
  */
 function PMA_get_arg_separator($encode = 'none')

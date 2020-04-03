@@ -25,7 +25,7 @@
  * @version $Id: display_create_table.lib.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -38,28 +38,28 @@ $is_create_table_priv = true;
 
 ?>
 <form method="post" action="tbl_create.php"
-    onsubmit="return (emptyFormElements(this, 'table') &amp;&amp; checkFormElementInRange(this, 'num_fields', '<?php echo str_replace('\'', '\\\'', $GLOBALS['strInvalidFieldCount']); ?>', 1))">
-<fieldset>
-    <legend>
-<?php
-if ($GLOBALS['cfg']['PropertiesIconic']) {
-    echo '<img class="icon" src="' . $pmaThemeImage . 'b_newtbl.png" width="16" height="16" alt="" />';
-}
-echo sprintf($strCreateNewTable, PMA_getDbLink());
-?>
-    </legend>
-    <?php echo PMA_generate_common_hidden_inputs($db); ?>
-    <div class="formelement">
-        <?php echo $strName; ?>:
-        <input type="text" name="table" maxlength="64" size="30" />
-    </div>
-    <div class="formelement">
-        <?php echo $strNumberOfFields; ?>:
-        <input type="text" name="num_fields" size="2" />
-    </div>
-    <div class="clearfloat"></div>
-</fieldset>
-<fieldset class="tblFooters">
-    <input type="submit" value="<?php echo $strGo; ?>" />
-</fieldset>
+      onsubmit="return (emptyFormElements(this, 'table') &amp;&amp; checkFormElementInRange(this, 'num_fields', '<?php echo str_replace('\'', '\\\'', $GLOBALS['strInvalidFieldCount']); ?>', 1))">
+    <fieldset>
+        <legend>
+            <?php
+            if ($GLOBALS['cfg']['PropertiesIconic']) {
+                echo '<img class="icon" src="' . $pmaThemeImage . 'b_newtbl.png" width="16" height="16" alt="" />';
+            }
+            echo sprintf($strCreateNewTable, PMA_getDbLink());
+            ?>
+        </legend>
+        <?php echo PMA_generate_common_hidden_inputs($db); ?>
+        <div class="formelement">
+            <?php echo $strName; ?>:
+            <input type="text" name="table" maxlength="64" size="30"/>
+        </div>
+        <div class="formelement">
+            <?php echo $strNumberOfFields; ?>:
+            <input type="text" name="num_fields" size="2"/>
+        </div>
+        <div class="clearfloat"></div>
+    </fieldset>
+    <fieldset class="tblFooters">
+        <input type="submit" value="<?php echo $strGo; ?>"/>
+    </fieldset>
 </form>

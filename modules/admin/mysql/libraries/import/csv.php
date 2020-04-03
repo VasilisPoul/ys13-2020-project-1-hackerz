@@ -7,7 +7,7 @@
  * @version $Id: csv.php 12600 2009-06-27 11:41:51Z lem9 $
  * @package phpMyAdmin-Import
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -30,20 +30,20 @@ if (isset($plugin_list)) {
             array('type' => 'text', 'name' => 'escaped', 'text' => 'strFieldsEscapedBy', 'size' => 2, 'len' => 2),
             array('type' => 'text', 'name' => 'new_line', 'text' => 'strLinesTerminatedBy', 'size' => 2),
             array('type' => 'text', 'name' => 'columns', 'text' => 'strColumnNames'),
-            ),
+        ),
         'options_text' => 'strOptions',
-        );
+    );
     /* We do not define function when plugin is just queried for information above */
     return;
 }
 
 $replacements = array(
-    '\\n'   => "\n",
-    '\\t'   => "\t",
-    '\\r'   => "\r",
-    );
+    '\\n' => "\n",
+    '\\t' => "\t",
+    '\\r' => "\r",
+);
 $csv_terminated = strtr($csv_terminated, $replacements);
-$csv_enclosed = strtr($csv_enclosed,  $replacements);
+$csv_enclosed = strtr($csv_enclosed, $replacements);
 $csv_escaped = strtr($csv_escaped, $replacements);
 $csv_new_line = strtr($csv_new_line, $replacements);
 
@@ -91,7 +91,7 @@ if (empty($csv_columns)) {
 } else {
     $sql_template .= ' (';
     $fields = array();
-    $tmp   = split(',( ?)', $csv_columns);
+    $tmp = split(',( ?)', $csv_columns);
     foreach ($tmp as $key => $val) {
         if (count($fields) > 0) {
             $sql_template .= ', ';
@@ -191,9 +191,9 @@ while (!($finished && $i >= $len) && !$error && !$timeout_passed) {
             $fail = FALSE;
             $value = '';
             while (($need_end && $ch != $csv_enclosed)
-             || (!$need_end && !($ch == $csv_terminated
-               || $ch == $csv_new_line || ($csv_new_line == 'auto'
-                && ($ch == "\r" || $ch == "\n"))))) {
+                || (!$need_end && !($ch == $csv_terminated
+                        || $ch == $csv_new_line || ($csv_new_line == 'auto'
+                            && ($ch == "\r" || $ch == "\n"))))) {
                 if ($ch == $csv_escaped) {
                     if ($i == $len - 1) {
                         $fail = TRUE;

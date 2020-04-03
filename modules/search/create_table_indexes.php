@@ -36,7 +36,7 @@
 ==============================================================================*/
 
 if (!defined('ECLASS_VERSION')) {
-        exit;
+    exit;
 }
 
 mysql_select_db("$mysqlMainDb");

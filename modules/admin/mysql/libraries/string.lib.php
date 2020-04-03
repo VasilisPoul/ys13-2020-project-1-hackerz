@@ -21,7 +21,7 @@
  * @todo a .lib filename should not have code in main(), split or rename file
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -36,12 +36,12 @@ if ($GLOBALS['PMA_allow_mbstr']) {
  * Load proper code for handling input.
  */
 if (defined('PMA_MULTIBYTE_ENCODING') || $GLOBALS['PMA_allow_mbstr']) {
-    $GLOBALS['PMA_strpos']      = 'mb_strpos';
-    $GLOBALS['PMA_substr']      = 'mb_substr';
+    $GLOBALS['PMA_strpos'] = 'mb_strpos';
+    $GLOBALS['PMA_substr'] = 'mb_substr';
     require './libraries/string_mb.lib.php';
 } else {
-    $GLOBALS['PMA_strpos']      = 'strpos';
-    $GLOBALS['PMA_substr']      = 'substr';
+    $GLOBALS['PMA_strpos'] = 'strpos';
+    $GLOBALS['PMA_substr'] = 'substr';
     require './libraries/string_native.lib.php';
 }
 
@@ -63,14 +63,14 @@ if ($GLOBALS['PMA_allow_ctype']) {
 /**
  * Checks if a given character position in the string is escaped or not
  *
+ * @param string   string to check for
+ * @param integer  the character to check for
+ * @param integer  starting position in the string
+ * @return  boolean  whether the character is escaped or not
  * @uses    PMA_strlen()
  * @uses    PMA_substr()
  * @uses    max()
  * @uses    intval()
- * @param   string   string to check for
- * @param   integer  the character to check for
- * @param   integer  starting position in the string
- * @return  boolean  whether the character is escaped or not
  */
 function PMA_STR_charIsEscaped($string, $pos, $start = 0)
 {
@@ -85,7 +85,7 @@ function PMA_STR_charIsEscaped($string, $pos, $start = 0)
     }
 
     $pos--;
-    $escaped     = false;
+    $escaped = false;
     while ($pos >= $start && PMA_substr($string, $pos, 1) == '\\') {
         $escaped = !$escaped;
         $pos--;
@@ -98,9 +98,9 @@ function PMA_STR_charIsEscaped($string, $pos, $start = 0)
 /**
  * Checks if a number is in a range
  *
- * @param   integer  number to check for
- * @param   integer  lower bound
- * @param   integer  upper bound
+ * @param integer  number to check for
+ * @param integer  lower bound
+ * @param integer  upper bound
  * @return  boolean  whether the number is in the range or not
  */
 function PMA_STR_numberInRangeInclusive($num, $lower, $upper)
@@ -111,10 +111,10 @@ function PMA_STR_numberInRangeInclusive($num, $lower, $upper)
 /**
  * Checks if a character is an SQL identifier
  *
- * @uses    PMA_STR_isAlnum()
- * @param   string   character to check for
- * @param   boolean  whether the dot character is valid or not
+ * @param string   character to check for
+ * @param boolean  whether the dot character is valid or not
  * @return  boolean  whether the character is an SQL identifier or not
+ * @uses    PMA_STR_isAlnum()
  */
 function PMA_STR_isSqlIdentifier($c, $dot_is_valid = false)
 {
@@ -131,25 +131,25 @@ function PMA_STR_isSqlIdentifier($c, $dot_is_valid = false)
  *
  * $arr MUST be sorted, due to binary search
  *
- * @param   string   string to search for
- * @param   array    sorted array to search into
- * @param   integer  size of sorted array to search into
+ * @param string   string to search for
+ * @param array    sorted array to search into
+ * @param integer  size of sorted array to search into
  *
  * @return  boolean  whether the string has been found or not
  */
 function PMA_STR_binarySearchInArr($str, $arr, $arrsize)
 {
-    $top    = $arrsize - 1;
+    $top = $arrsize - 1;
     $bottom = 0;
-    $found  = false;
+    $found = false;
 
     while ($top >= $bottom && $found == false) {
-        $mid        = intval(($top + $bottom) / 2);
-        $res        = strcmp($str, $arr[$mid]);
+        $mid = intval(($top + $bottom) / 2);
+        $res = strcmp($str, $arr[$mid]);
         if ($res == 0) {
-            $found  = true;
+            $found = true;
         } elseif ($res < 0) {
-            $top    = $mid - 1;
+            $top = $mid - 1;
         } else {
             $bottom = $mid + 1;
         }

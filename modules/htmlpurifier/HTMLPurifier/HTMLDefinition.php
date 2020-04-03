@@ -98,7 +98,6 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
     public $doctype;
 
 
-
     // RAW CUSTOMIZATION STUFF --------------------------------------------
 
     /**
@@ -145,7 +144,7 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
      */
     public function addBlankElement($element_name)
     {
-        $module  = $this->getAnonymousModule();
+        $module = $this->getAnonymousModule();
         $element = $module->addBlankElement($element_name);
         return $element;
     }
@@ -381,11 +380,11 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
                             }
                             break;
                         }
-                        // otherwise fall through
+                    // otherwise fall through
                     case 1:
                         $attribute = htmlspecialchars($bits[0]);
                         trigger_error(
-                            "Global attribute '$attribute' is not ".
+                            "Global attribute '$attribute' is not " .
                             "supported in any elements $support",
                             E_USER_WARNING
                         );
@@ -396,7 +395,7 @@ class HTMLPurifier_HTMLDefinition extends HTMLPurifier_Definition
 
         // setup forbidden elements ---------------------------------------
 
-        $forbidden_elements   = $config->get('HTML.ForbiddenElements');
+        $forbidden_elements = $config->get('HTML.ForbiddenElements');
         $forbidden_attributes = $config->get('HTML.ForbiddenAttributes');
 
         foreach ($this->info as $tag => $info) {

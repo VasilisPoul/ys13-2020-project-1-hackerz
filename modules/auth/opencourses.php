@@ -36,7 +36,7 @@
 
 include '../../include/baseTheme.php';
 $nameTools = $langListCourses;
-$navigation[] = array ("url" => "listfaculte.php", "name" => $langListFac);
+$navigation[] = array("url" => "listfaculte.php", "name" => $langListFac);
 // parse the faculte id in a session
 // This is needed in case the user decides to switch language.
 if (isset($fc)) {
@@ -60,7 +60,7 @@ $tool_content = "";
 $icons = array(2 => "<img src='../../template/classic/img/OpenCourse.gif'   alt='" . $m['legopen'] . "' title='" . $m['legopen'] . "' width='16' height='16'>",
     1 => "<img src='../../template/classic/img/Registration.gif' alt='" . $m['legrestricted'] . "' title='" . $m['legrestricted'] . "' width='16' height='16'>",
     0 => "<img src='../../template/classic/img/ClosedCourse.gif' alt='" . $m['legclosed'] . "' title='" . $m['legclosed'] . "' width='16' height='16'>"
-    );
+);
 
 $tool_content .= "
   <table width=99% class='framed'>
@@ -85,7 +85,7 @@ if ($numoftypes > 1) {
         if ($counter != 1) {
             $tool_content .= " | ";
         }
-        $tool_content .= "<a href='#$t'>" . ${'lang'.$ts} . "</a>&nbsp;";
+        $tool_content .= "<a href='#$t'>" . ${'lang' . $ts} . "</a>&nbsp;";
         $counter++;
     }
     $tool_content .= "</div></td>
@@ -102,8 +102,8 @@ if ($numoftypes > 1) {
 // then we just select visible
 // and finally we do the secondary sort by course title and but teacher's name
 foreach (array("pre" => $langpres,
-        "post" => $langposts,
-        "other" => $langothers) as $type => $message) {
+             "post" => $langposts,
+             "other" => $langothers) as $type => $message) {
     $result = mysql_query("SELECT
 			cours.code k,
 			cours.fake_code c,
@@ -174,9 +174,9 @@ foreach (array("pre" => $langpres,
                 $tool_content .= $image;
             }
         }
-            $tool_content .= "</td>\n";
-            $tool_content .= "        </tr>";
-            $k++;
+        $tool_content .= "</td>\n";
+        $tool_content .= "        </tr>";
+        $k++;
 
         //$tool_content .= "\n        </tbody>\n        </table>\n        </td>\n    </tr>\n    </table>\n    <br />\n";
         $tool_content .= "";
@@ -191,4 +191,4 @@ foreach (array("pre" => $langpres,
 }
 $tool_content .= "\n    <br>";
 
-draw($tool_content, (isset($uid) and $uid)? 1: 0, 'auth');
+draw($tool_content, (isset($uid) and $uid) ? 1 : 0, 'auth');

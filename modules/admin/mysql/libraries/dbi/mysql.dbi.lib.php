@@ -6,7 +6,7 @@
  * @package phpMyAdmin-DBI-MySQL
  * @version $Id: mysql.dbi.lib.php 12283 2009-03-03 16:20:41Z nijel $
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -15,7 +15,7 @@ require_once './libraries/logging.lib.php';
 /**
  * MySQL client API
  */
-if (! defined('PMA_MYSQL_CLIENT_API')) {
+if (!defined('PMA_MYSQL_CLIENT_API')) {
     $client_api = explode('.', mysql_get_client_info());
     define('PMA_MYSQL_CLIENT_API', (int)sprintf('%d%02d%02d', $client_api[0], $client_api[1], intval($client_api[2])));
     unset($client_api);
@@ -46,17 +46,17 @@ function PMA_DBI_connect($user, $password, $is_controluser = false)
 {
     global $cfg, $php_errormsg;
 
-    $server_port   = (empty($cfg['Server']['port']))
-                   ? ''
-                   : ':' . $cfg['Server']['port'];
+    $server_port = (empty($cfg['Server']['port']))
+        ? ''
+        : ':' . $cfg['Server']['port'];
 
     if (strtolower($cfg['Server']['connect_type']) == 'tcp') {
         $cfg['Server']['socket'] = '';
     }
 
     $server_socket = (empty($cfg['Server']['socket']))
-                   ? ''
-                   : ':' . $cfg['Server']['socket'];
+        ? ''
+        : ':' . $cfg['Server']['socket'];
 
     $client_flags = 0;
 
@@ -168,8 +168,7 @@ function PMA_DBI_try_query($query, $link = null, $options = 0)
                 . (isset($trace_step['function']) ? $trace_step['function'] : '')
                 . '('
                 . (isset($trace_step['params']) ? implode(', ', $trace_step['params']) : '')
-                . ')'
-                ;
+                . ')';
         }
         $_SESSION['debug']['queries'][$hash]['trace'][] = $trace;
     }
@@ -182,7 +181,8 @@ function PMA_DBI_fetch_array($result)
     return mysql_fetch_array($result, MYSQL_BOTH);
 }
 
-function PMA_DBI_fetch_assoc($result) {
+function PMA_DBI_fetch_assoc($result)
+{
     return mysql_fetch_array($result, MYSQL_ASSOC);
 }
 
@@ -207,13 +207,13 @@ function PMA_DBI_data_seek($result, $offset)
 /**
  * Frees the memory associated with the results
  *
- * @param result    $result,...     one or more mysql result resources
+ * @param result $result,... one or more mysql result resources
  */
 function PMA_DBI_free_result()
 {
     foreach (func_get_args() as $result) {
         if (is_resource($result)
-         && get_resource_type($result) === 'mysql result') {
+            && get_resource_type($result) === 'mysql result') {
             mysql_free_result($result);
         }
     }
@@ -221,10 +221,10 @@ function PMA_DBI_free_result()
 
 /**
  * Returns a string representing the type of connection used
+ * @param resource $link mysql link
+ * @return  string          type of connection used
  * @uses    mysql_get_host_info()
  * @uses    $GLOBALS['userlink']    as default for $link
- * @param   resource        $link   mysql link
- * @return  string          type of connection used
  */
 function PMA_DBI_get_host_info($link = null)
 {
@@ -240,10 +240,10 @@ function PMA_DBI_get_host_info($link = null)
 
 /**
  * Returns the version of the MySQL protocol used
+ * @param resource $link mysql link
+ * @return  integer         version of the MySQL protocol used
  * @uses    mysql_get_proto_info()
  * @uses    $GLOBALS['userlink']    as default for $link
- * @param   resource        $link   mysql link
- * @return  integer         version of the MySQL protocol used
  */
 function PMA_DBI_get_proto_info($link = null)
 {
@@ -259,8 +259,8 @@ function PMA_DBI_get_proto_info($link = null)
 
 /**
  * returns a string that represents the client library version
- * @uses    mysql_get_client_info()
  * @return  string          MySQL client library version
+ * @uses    mysql_get_client_info()
  */
 function PMA_DBI_get_client_info()
 {
@@ -270,6 +270,8 @@ function PMA_DBI_get_client_info()
 /**
  * returns last error message or false if no errors occured
  *
+ * @param resource $link mysql link
+ * @return  string|boolean  $error or false
  * @uses    PMA_DBI_convert_message()
  * @uses    $GLOBALS['errno']
  * @uses    $GLOBALS['userlink']
@@ -280,8 +282,6 @@ function PMA_DBI_get_client_info()
  * @uses    mysql_error()
  * @uses    defined()
  * @uses    PMA_generate_common_url()
- * @param   resource        $link   mysql link
- * @return  string|boolean  $error or false
  */
 function PMA_DBI_getError($link = null)
 {
@@ -309,24 +309,24 @@ function PMA_DBI_getError($link = null)
     // keep the error number for further check after the call to PMA_DBI_getError()
     $GLOBALS['errno'] = $error_number;
 
-    if (! empty($error_message)) {
+    if (!empty($error_message)) {
         $error_message = PMA_DBI_convert_message($error_message);
     }
 
     // Some errors messages cannot be obtained by mysql_error()
     if ($error_number == 2002) {
-        $error = '#' . ((string) $error_number) . ' - ' . $GLOBALS['strServerNotResponding'] . ' ' . $GLOBALS['strSocketProblem'];
+        $error = '#' . ((string)$error_number) . ' - ' . $GLOBALS['strServerNotResponding'] . ' ' . $GLOBALS['strSocketProblem'];
     } elseif ($error_number == 2003) {
-        $error = '#' . ((string) $error_number) . ' - ' . $GLOBALS['strServerNotResponding'];
+        $error = '#' . ((string)$error_number) . ' - ' . $GLOBALS['strServerNotResponding'];
     } elseif ($error_number == 1005) {
         /* InnoDB contraints, see
          * http://dev.mysql.com/doc/refman/5.0/en/innodb-foreign-key-constraints.html
          */
-        $error = '#' . ((string) $error_number) . ' - ' . $error_message .
-            ' (<a href="server_engines.php' . PMA_generate_common_url(array('engine' => 'InnoDB', 'page' => 'Status')).
+        $error = '#' . ((string)$error_number) . ' - ' . $error_message .
+            ' (<a href="server_engines.php' . PMA_generate_common_url(array('engine' => 'InnoDB', 'page' => 'Status')) .
             '">' . $GLOBALS['strDetails'] . '</a>)';
     } else {
-        $error = '#' . ((string) $error_number) . ' - ' . $error_message;
+        $error = '#' . ((string)$error_number) . ' - ' . $error_message;
     }
     return $error;
 }
@@ -376,8 +376,8 @@ function PMA_DBI_affected_rows($link = null)
  */
 function PMA_DBI_get_fields_meta($result)
 {
-    $fields       = array();
-    $num_fields   = mysql_num_fields($result);
+    $fields = array();
+    $num_fields = mysql_num_fields($result);
     for ($i = 0; $i < $num_fields; $i++) {
         $fields[] = mysql_fetch_field($result, $i);
     }

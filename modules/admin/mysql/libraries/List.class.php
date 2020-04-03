@@ -28,10 +28,10 @@ abstract class PMA_List extends ArrayObject
     /**
      * returns item only if there is only one in the list
      *
-     * @uses    count()
+     * @return  single item
      * @uses    reset()
      * @uses    PMA_List::getEmpty() to return it
-     * @return  single item
+     * @uses    count()
      */
     public function getSingleItem()
     {
@@ -45,8 +45,8 @@ abstract class PMA_List extends ArrayObject
     /**
      * defines what is an empty item (0, '', false or null)
      *
-     * @uses    PMA_List::$item_empty as return value
      * @return  mixed   an empty item
+     * @uses    PMA_List::$item_empty as return value
      */
     public function getEmpty()
     {
@@ -57,17 +57,17 @@ abstract class PMA_List extends ArrayObject
      * checks if the given db names exists in the current list, if there is
      * missing at least one item it returns false otherwise true
      *
+     * @param string $db_name ,..     one or more mysql result resources
+     * @return  boolean true if all items exists, otheriwse false
+     * @uses    in_array() to check if given arguments exists in PMA_List::$items
      * @uses    PMA_List::$items to check for existence of specific item
      * @uses    func_get_args()
-     * @uses    in_array() to check if given arguments exists in PMA_List::$items
-     * @param   string  $db_name,..     one or more mysql result resources
-     * @return  boolean true if all items exists, otheriwse false
      */
     public function exists()
     {
         $this_elements = $this->getArrayCopy();
         foreach (func_get_args() as $result) {
-            if (! in_array($result, $this_elements)) {
+            if (!in_array($result, $this_elements)) {
                 return false;
             }
         }
@@ -78,12 +78,12 @@ abstract class PMA_List extends ArrayObject
     /**
      * returns HTML <option>-tags to be used inside <select></select>
      *
+     * @param mixed $selected the selected db or true for selecting current db
+     * @param boolean $include_information_schema
+     * @return  string  HTML option tags
      * @uses    PMA_List::$items to build up the option items
      * @uses    PMA_List::getDefault() to mark this as selected if requested
      * @uses    htmlspecialchars() to escape items
-     * @param   mixed   $selected   the selected db or true for selecting current db
-     * @param   boolean $include_information_schema
-     * @return  string  HTML option tags
      */
     public function getHtmlOptions($selected = '', $include_information_schema = true)
     {
@@ -109,8 +109,8 @@ abstract class PMA_List extends ArrayObject
     /**
      * returns default item
      *
-     * @uses    PMA_List::getEmpty() as fallback
      * @return  string  default item
+     * @uses    PMA_List::getEmpty() as fallback
      */
     public function getDefault()
     {
@@ -123,4 +123,5 @@ abstract class PMA_List extends ArrayObject
      */
     abstract public function build();
 }
+
 ?>

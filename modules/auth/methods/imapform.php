@@ -24,27 +24,24 @@
 ============================================================================*/
 $imapdata = $auth_data;
 
-if(!empty($imapdata))
-{
+if (!empty($imapdata)) {
     $imapsettings = $imapdata['auth_settings'];
     $imapinstructions = $imapdata['auth_instructions'];
-    $imaphost = str_replace("imaphost=","",$imapsettings);
-}
-else
-{
+    $imaphost = str_replace("imaphost=", "", $imapsettings);
+} else {
     $imapsettings = $imapdata['auth_settings'];
     $imapinstructions = $imapdata['auth_instructions'];
     $imaphost = $imapsettings;
 }
 
-$imaphost = isset($_POST['imaphost'])?$_POST['imaphost']:$imaphost;
-$imapinstructions = isset($_POST['imapinstructions'])?$_POST['imapinstructions']:$imapinstructions;
+$imaphost = isset($_POST['imaphost']) ? $_POST['imaphost'] : $imaphost;
+$imapinstructions = isset($_POST['imapinstructions']) ? $_POST['imapinstructions'] : $imapinstructions;
 
 $tool_content .= "
 
     <tr>
       <th class=\"left\">$langimaphost:</th>
-      <td><input class=\"FormData_InputText\" name=\"imaphost\" type=\"text\" size=\"30\" value=\"".$imaphost."\" /></td>
+      <td><input class=\"FormData_InputText\" name=\"imaphost\" type=\"text\" size=\"30\" value=\"" . $imaphost . "\" /></td>
     </tr>
     <tr>
       <th class=\"left\">$langimapport:</th>
@@ -52,7 +49,7 @@ $tool_content .= "
     </tr>
     <tr>
       <th class=\"left\">$langInstructionsAuth:</td>
-      <td><textarea class=\"FormData_InputText\" name=\"imapinstructions\" cols=\"30\" rows=\"10\" wrap=\"virtual\">".$imapinstructions."</textarea></td>
+      <td><textarea class=\"FormData_InputText\" name=\"imapinstructions\" cols=\"30\" rows=\"10\" wrap=\"virtual\">" . $imapinstructions . "</textarea></td>
     </tr>
 ";
 ?>

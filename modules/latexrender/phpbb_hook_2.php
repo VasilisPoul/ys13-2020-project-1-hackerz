@@ -46,30 +46,30 @@
  * @version v0.6
  * @package latexrender
  *
- */   
-    // --------------------------------------------------------------------------------------------------
-    // adjust this to match your system configuration    
-    $latexrender_path = "/var/www/phpbb/latexrender";
-    $latexrender_path_http = "/phpbb/latexrender";    
+ */
+// --------------------------------------------------------------------------------------------------
+// adjust this to match your system configuration
+$latexrender_path = "/var/www/phpbb/latexrender";
+$latexrender_path_http = "/phpbb/latexrender";
 
-    // --------------------------------------------------------------------------------------------------
-    include_once($latexrender_path."/class.latexrender.php");
+// --------------------------------------------------------------------------------------------------
+include_once($latexrender_path . "/class.latexrender.php");
 
-    preg_match_all("#\[tex:$uid\](.*?)\[/tex:$uid\]#si",$text,$tex_matches);
+preg_match_all("#\[tex:$uid\](.*?)\[/tex:$uid\]#si", $text, $tex_matches);
 
-    $latex = new LatexRender($latexrender_path."/pictures",$latexrender_path_http."/pictures");
+$latex = new LatexRender($latexrender_path . "/pictures", $latexrender_path_http . "/pictures");
 
-    for ($i=0; $i < count($tex_matches[0]); $i++) {
-        $pos = strpos($text, $tex_matches[0][$i]);
-        $latex_formula = $tex_matches[1][$i];
+for ($i = 0; $i < count($tex_matches[0]); $i++) {
+    $pos = strpos($text, $tex_matches[0][$i]);
+    $latex_formula = $tex_matches[1][$i];
 
-        $url = $latex->getFormulaURL($latex_formula);
+    $url = $latex->getFormulaURL($latex_formula);
 
-        if ($url != false) {
-            $text = substr_replace($text, "<img src='".$url."' align='absmiddle'>",$pos,strlen($tex_matches[0][$i]));
-        } else {
-            $text = substr_replace($text, "[unparseable or potentially dangerous latex formula]",$pos,strlen($tex_matches[0][$i]));
-        }
+    if ($url != false) {
+        $text = substr_replace($text, "<img src='" . $url . "' align='absmiddle'>", $pos, strlen($tex_matches[0][$i]));
+    } else {
+        $text = substr_replace($text, "[unparseable or potentially dangerous latex formula]", $pos, strlen($tex_matches[0][$i]));
     }
-    
+}
+
 ?>

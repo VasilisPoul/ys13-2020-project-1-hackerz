@@ -34,13 +34,13 @@ $cfg_db['_config_file_path'] = SETUP_CONFIG_FILE;
  * Use normal array, paths won't be expanded
  */
 $cfg_db['Servers'] = array(1 => array(
-    'port'         => 'integer',
+    'port' => 'integer',
     'connect_type' => array('tcp', 'socket'),
-    'extension'    => array('mysql', 'mysqli'),
-    'auth_type'    => array('config', 'http', 'signon', 'cookie'),
-    'AllowDeny'    => array(
-        'order'    => array('', 'deny,allow', 'allow,deny', 'explicit')),
-    'only_db'      => 'array'));
+    'extension' => array('mysql', 'mysqli'),
+    'auth_type' => array('config', 'http', 'signon', 'cookie'),
+    'AllowDeny' => array(
+        'order' => array('', 'deny,allow', 'allow,deny', 'explicit')),
+    'only_db' => 'array'));
 $cfg_db['RecodingEngine'] = array('auto', 'iconv', 'recode');
 $cfg_db['DefaultCharset'] = $GLOBALS['cfg']['AvailableCharsets'];
 $cfg_db['OBGzip'] = array('auto', true, false);
@@ -77,10 +77,10 @@ $cfg_db['DefaultTabTable'] = array(
     'tbl_change.php',    // insert row page
     'sql.php');          // browse page
 $cfg_db['QueryWindowDefTab'] = array(
-	'sql',     // SQL
-	'files',   // Import files
-	'history', // SQL history
-	'full');   // All (SQL and SQL history)
+    'sql',     // SQL
+    'files',   // Import files
+    'history', // SQL history
+    'full');   // All (SQL and SQL history)
 $cfg_db['Import']['format'] = array(
     'csv',    // CSV
     'docsql', // DocSQL

@@ -25,7 +25,7 @@ $export_page_title = $strViewDump;
 // When we have some query, we need to remove LIMIT from that and possibly
 // generate WHERE clause (if we are asked to export specific rows)
 
-if (! empty($sql_query)) {
+if (!empty($sql_query)) {
     // Parse query so we can work with tokens
     $parsed_sql = PMA_SQP_parse($sql_query);
     $analyzed_sql = PMA_SQP_analyze($parsed_sql);
@@ -49,11 +49,11 @@ if (! empty($sql_query)) {
         $wheres = array();
 
         if (isset($primary_key) && is_array($primary_key)
-         && count($primary_key) > 0) {
-            $wheres[] = '(' . implode(') OR (',$primary_key) . ')';
+            && count($primary_key) > 0) {
+            $wheres[] = '(' . implode(') OR (', $primary_key) . ')';
         }
 
-        if (!empty($analyzed_sql[0]['where_clause']))  {
+        if (!empty($analyzed_sql[0]['where_clause'])) {
             $wheres[] = $analyzed_sql[0]['where_clause'];
         }
 

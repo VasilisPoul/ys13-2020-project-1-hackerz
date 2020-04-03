@@ -27,31 +27,31 @@
 
 function display_video()
 {
-        global $id, $currentCourseID, $tool_content, $urlServer,
-               $langVideoTitle, $langDescr, $langDate, $langChoice,
-               $langAddModulesButton, $langNoVideo; 
+    global $id, $currentCourseID, $tool_content, $urlServer,
+           $langVideoTitle, $langDescr, $langDate, $langChoice,
+           $langAddModulesButton, $langNoVideo;
 
-        $table_started = false;
-        $count = 0;
-        foreach (array('video', 'videolinks') as $table) {
-                $result = db_query("SELECT * FROM $table", $currentCourseID);
-                $count += mysql_num_rows($result);
-                while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
-                        if (!$table_started) {
-                                $tool_content .= "<form action='insert.php' method='post'><input type='hidden' name='id' value='$id' />";
-                                $tool_content .= "<table class='Documents' width='100%'>";
-                        	$tool_content .= "<tr><th>$langVideoTitle</th><th>$langDescr</th><th>$langDate</th><th>$langChoice</th></tr>";
-                                $table_started = true;
-                        }
-                        $videolink = "<a href='" .
-                                video_url($table, $row['url'], @$row['path']) .
-                                "'>" . htmlspecialchars($row['titre']) . '</a>';
-                        $tool_content .= '<tr><td>' . $videolink . '</td><td>' . htmlspecialchars($row['description']) . '</td><td>' . format_date(strtotime($row['date'])) . "</td><td class='center'><input type='checkbox' name='video[]' value='$table:$row[id]' /></td></tr>\n";
-                }
+    $table_started = false;
+    $count = 0;
+    foreach (array('video', 'videolinks') as $table) {
+        $result = db_query("SELECT * FROM $table", $currentCourseID);
+        $count += mysql_num_rows($result);
+        while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+            if (!$table_started) {
+                $tool_content .= "<form action='insert.php' method='post'><input type='hidden' name='id' value='$id' />";
+                $tool_content .= "<table class='Documents' width='100%'>";
+                $tool_content .= "<tr><th>$langVideoTitle</th><th>$langDescr</th><th>$langDate</th><th>$langChoice</th></tr>";
+                $table_started = true;
+            }
+            $videolink = "<a href='" .
+                video_url($table, $row['url'], @$row['path']) .
+                "'>" . htmlspecialchars($row['titre']) . '</a>';
+            $tool_content .= '<tr><td>' . $videolink . '</td><td>' . htmlspecialchars($row['description']) . '</td><td>' . format_date(strtotime($row['date'])) . "</td><td class='center'><input type='checkbox' name='video[]' value='$table:$row[id]' /></td></tr>\n";
         }
-        if ($count > 0) {
-                $tool_content .= "<tr><td colspan='4' class='right'><input type='submit' name='submit_video' value='$langAddModulesButton' /></td></tr></table></form>";
-        } else {
-                $tool_content .= "<p class='alert1'>$langNoVideo</p>";
-        }
+    }
+    if ($count > 0) {
+        $tool_content .= "<tr><td colspan='4' class='right'><input type='submit' name='submit_video' value='$langAddModulesButton' /></td></tr></table></form>";
+    } else {
+        $tool_content .= "<p class='alert1'>$langNoVideo</p>";
+    }
 }

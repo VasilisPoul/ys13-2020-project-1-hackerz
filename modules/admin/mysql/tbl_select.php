@@ -24,8 +24,8 @@ $GLOBALS['js_include'][] = 'mootools.js';
 if ($GLOBALS['cfg']['PropertiesIconic'] == true) {
     $titles['Browse'] =
         '<img class="icon" width="16" height="16" src="' . $pmaThemeImage
-        .'b_browse.png" alt="' . $strBrowseForeignValues . '" title="'
-        .$strBrowseForeignValues . '" />';
+        . 'b_browse.png" alt="' . $strBrowseForeignValues . '" title="'
+        . $strBrowseForeignValues . '" />';
 
     if ($GLOBALS['cfg']['PropertiesIconic'] === 'both') {
         $titles['Browse'] .= $strBrowseForeignValues;
@@ -57,16 +57,16 @@ if (!isset($param) || $param[0] == '') {
         $goto = $GLOBALS['cfg']['DefaultTabTable'];
     }
     // Defines the url to return to in case of error in the next sql statement
-    $err_url   = $goto . '?' . PMA_generate_common_url($db, $table);
+    $err_url = $goto . '?' . PMA_generate_common_url($db, $table);
 
     // Gets the list and number of fields
-    $result     = PMA_DBI_query('SHOW FULL FIELDS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ';', null, PMA_DBI_QUERY_STORE);
+    $result = PMA_DBI_query('SHOW FULL FIELDS FROM ' . PMA_backquote($table) . ' FROM ' . PMA_backquote($db) . ';', null, PMA_DBI_QUERY_STORE);
     $fields_cnt = PMA_DBI_num_rows($result);
     // rabue: we'd better ensure, that all arrays are empty.
     $fields_list = $fields_null = $fields_type = $fields_collation = array();
     while ($row = PMA_DBI_fetch_assoc($result)) {
         $fields_list[] = $row['Field'];
-        $type          = $row['Type'];
+        $type = $row['Type'];
         // reformat mysql query output - staybyte - 9. June 2001
         if (strncasecmp($type, 'set', 3) == 0
             || strncasecmp($type, 'enum', 4) == 0) {
@@ -89,8 +89,8 @@ if (!isset($param) || $param[0] == '') {
         $fields_null[] = $row['Null'];
         $fields_type[] = $type;
         $fields_collation[] = !empty($row['Collation']) && $row['Collation'] != 'NULL'
-                          ? $row['Collation']
-                          : '';
+            ? $row['Collation']
+            : '';
     } // end while
     PMA_DBI_free_result($result);
     unset($result, $type);
@@ -101,227 +101,228 @@ if (!isset($param) || $param[0] == '') {
     // foreign keys from innodb)
     $foreigners = PMA_getForeigners($db, $table);
     ?>
-<script type="text/javascript">
-// <![CDATA[
-function PMA_tbl_select_operator(f, index, multiple) {
-    switch (f.elements["func[" + index + "]"].options[f.elements["func[" + index + "]"].selectedIndex].value) {
-<?php
-reset($GLOBALS['cfg']['UnaryOperators']);
-while (list($operator) = each($GLOBALS['cfg']['UnaryOperators'])) {
-    echo '        case "' . $operator . "\":\r\n";
-}
-?>
-            bDisabled = true;
-            break;
-
-        default:
-            bDisabled = false;
-    }
-    f.elements["fields[" + index + "]" + ((multiple) ? "[]": "")].disabled = bDisabled;
-}
-// ]]>
-</script>
-<form method="post" action="tbl_select.php" name="insertForm">
-<?php echo PMA_generate_common_hidden_inputs($db, $table); ?>
-<input type="hidden" name="goto" value="<?php echo $goto; ?>" />
-<input type="hidden" name="back" value="tbl_select.php" />
-
-<fieldset id="fieldset_table_search">
-
-<fieldset id="fieldset_table_qbe">
-    <legend><?php echo $strDoAQuery; ?></legend>
-    <table class="data">
-    <thead>
-    <tr><th><?php echo $strField; ?></th>
-        <th><?php echo $strType; ?></th>
-        <th><?php echo $strCollation; ?></th>
-        <th><?php echo $strOperator; ?></th>
-        <th><?php echo $strValue; ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php
-    $odd_row = true;
-
-    for ($i = 0; $i < $fields_cnt; $i++) {
-        ?>
-        <tr class="<?php echo $odd_row ? 'odd' : 'even'; $odd_row = ! $odd_row; ?>">
-            <th><?php echo htmlspecialchars($fields_list[$i]); ?></th>
-            <td><?php echo $fields_type[$i]; ?></td>
-            <td><?php echo $fields_collation[$i]; ?></td>
-            <td><select name="func[]">
-        <?php
-        if (strncasecmp($fields_type[$i], 'enum', 4) == 0) {
-            foreach ($GLOBALS['cfg']['EnumOperators'] as $fc) {
-                echo "\n" . '                        '
-                   . '<option value="' . htmlspecialchars($fc) . '">'
-                   . htmlspecialchars($fc) . '</option>';
-            }
-        } elseif (preg_match('@char|blob|text|set@i', $fields_type[$i])) {
-            foreach ($GLOBALS['cfg']['TextOperators'] as $fc) {
-            echo "\n" . '                        '
-               . '<option value="' . htmlspecialchars($fc) . '">'
-               . htmlspecialchars($fc) . '</option>';
-            }
-        } else {
-            foreach ($GLOBALS['cfg']['NumOperators'] as $fc) {
-                echo "\n" . '                        '
-                   . '<option value="' .  htmlspecialchars($fc) . '">'
-                   . htmlspecialchars($fc) . '</option>';
-            }
-        } // end if... else...
-        if ($fields_null[$i]) {
-            foreach ($GLOBALS['cfg']['NullOperators'] as $fc) {
-                echo "\n" . '                        '
-                   . '<option value="' .  htmlspecialchars($fc) . '">'
-                   . htmlspecialchars($fc) . '</option>';
-            }
-        }
-        ?>
-
-                </select>
-            </td>
-            <td>
-        <?php
-        // <markus@noga.de>
-        $field = $fields_list[$i];
-
-        $foreignData = PMA_getForeignData($foreigners, $field, false, '', '');
-
-        if ($foreigners && isset($foreigners[$field]) && is_array($foreignData['disp_row'])) {
-            // f o r e i g n    k e y s
-            echo '            <select name="fields[' . $i . ']">' . "\n";
-            // go back to first row
-
-            // here, the 4th parameter is empty because there is no current
-            // value of data for the dropdown (the search page initial values
-            // are displayed empty)
-            echo PMA_foreignDropdown($foreignData['disp_row'],
-                $foreignData['foreign_field'],
-                $foreignData['foreign_display'],
-                '', $GLOBALS['cfg']['ForeignKeyMaxLimit']);
-            echo '            </select>' . "\n";
-        } elseif ($foreignData['foreign_link'] == true) {
-            ?>
-            <input type="text" name="fields[<?php echo $i; ?>]"
-                id="field_<?php echo md5($field); ?>[<?php echo $i; ?>]"
-                class="textfield" />
-            <script type="text/javascript">
-            // <![CDATA[
-                document.writeln('<a target="_blank" onclick="window.open(this.href, \'foreigners\', \'width=640,height=240,scrollbars=yes\'); return false" href="browse_foreigners.php?<?php echo PMA_generate_common_url($db, $table); ?>&amp;field=<?php echo urlencode($field); ?>&amp;fieldkey=<?php echo $i; ?>"><?php echo str_replace("'", "\'", $titles['Browse']); ?></a>');
-            // ]]>
-            </script>
+    <script type="text/javascript">
+        // <![CDATA[
+        function PMA_tbl_select_operator(f, index, multiple) {
+            switch (f.elements["func[" + index + "]"].options[f.elements["func[" + index + "]"].selectedIndex].value) {
             <?php
-        } elseif (strncasecmp($fields_type[$i], 'enum', 4) == 0) {
-            // e n u m s
-            $enum_value=explode(', ', str_replace("'", '', substr($fields_type[$i], 5, -1)));
-            $cnt_enum_value = count($enum_value);
-            echo '            <select name="fields[' . $i . '][]"'
-                .' multiple="multiple" size="' . min(3, $cnt_enum_value) . '">' . "\n";
-            for ($j = 0; $j < $cnt_enum_value; $j++) {
-                echo '                <option value="' . $enum_value[$j] . '">'
-                    . $enum_value[$j] . '</option>';
-            } // end for
-            echo '            </select>' . "\n";
-        } else {
-            // o t h e r   c a s e s
-            echo '            <input type="text" name="fields[' . $i . ']"'
-                .' size="40" class="textfield" id="field_' . $i . '" />' .  "\n";
-        };
-        $type = $fields_type[$i];
-        if ($type == 'date' || $type == 'datetime' || substr($type, 0, 9) == 'timestamp') {
-        ?>
-                    <script type="text/javascript">
-                    //<![CDATA[
-                    document.write('<a title="<?php echo $strCalendar;?>" href="javascript:openCalendar(\'<?php echo PMA_generate_common_url();?>\', \'insertForm\', \'field_<?php echo ($i); ?>\', \'<?php echo (substr($type, 0, 9) == 'timestamp') ? 'datetime' : substr($type, 0, 9); ?>\', \'\')"><img class="calendar" src="<?php echo $pmaThemeImage; ?>b_calendar.png" alt="<?php echo $strCalendar; ?>"/></a>');
-                    //]]>
-                    </script>
-        <?php
+                reset($GLOBALS['cfg']['UnaryOperators']);
+                while (list($operator) = each($GLOBALS['cfg']['UnaryOperators'])) {
+                    echo '        case "' . $operator . "\":\r\n";
+                }
+                ?>
+                bDisabled
+                    = true;
+                    break;
+
+                default:
+                    bDisabled = false;
+            }
+            f.elements["fields[" + index + "]" + ((multiple) ? "[]" : "")].disabled = bDisabled;
         }
-        ?>
-            <input type="hidden" name="names[<?php echo $i; ?>]"
-                value="<?php echo htmlspecialchars($fields_list[$i]); ?>" />
-            <input type="hidden" name="types[<?php echo $i; ?>]"
-                value="<?php echo $fields_type[$i]; ?>" />
-            <input type="hidden" name="collations[<?php echo $i; ?>]"
-                value="<?php echo $fields_collation[$i]; ?>" />
-        </td>
-    </tr>
-        <?php
-    } // end for
-    ?>
-    </tbody>
-    </table>
-</fieldset>
-<?php
-    PMA_generate_slider_effect('searchoptions', $strOptions);
-?>
-<fieldset id="fieldset_select_fields">
-    <legend><?php echo $strSelectFields; ?></legend>
-    <select name="param[]" size="<?php echo min($fields_cnt, 10); ?>"
-        multiple="multiple">
-    <?php
-    // Displays the list of the fields
-    foreach ($fields_list as $each_field) {
-        echo '        '
-            .'<option value="' . htmlspecialchars($each_field) . '"'
-            .' selected="selected">' . htmlspecialchars($each_field)
-            .'</option>' . "\n";
-    }
-    ?>
-    </select>
-    <input type="checkbox" name="distinct" value="DISTINCT" id="oDistinct" />
-    <label for="oDistinct">DISTINCT</label>
-</fieldset>
 
-<fieldset id="fieldset_search_conditions">
-    <legend><?php echo '<em>' . $strOr . '</em> ' .$strAddSearchConditions; ?></legend>
-<?php echo PMA_showMySQLDocu('SQL-Syntax', 'Functions'); ?>
+        // ]]>
+    </script>
+    <form method="post" action="tbl_select.php" name="insertForm">
+        <?php echo PMA_generate_common_hidden_inputs($db, $table); ?>
+        <input type="hidden" name="goto" value="<?php echo $goto; ?>"/>
+        <input type="hidden" name="back" value="tbl_select.php"/>
 
-<input type="text" name="where" class="textfield" size="64" />
-</fieldset>
+        <fieldset id="fieldset_table_search">
 
-<fieldset id="fieldset_limit_rows">
-    <legend><?php echo $strLimitNumRows; ?></legend>
-    <input type="text" size="4" name="session_max_rows"
-        value="<?php echo $GLOBALS['cfg']['MaxRows']; ?>" class="textfield" />
-</fieldset>
+            <fieldset id="fieldset_table_qbe">
+                <legend><?php echo $strDoAQuery; ?></legend>
+                <table class="data">
+                    <thead>
+                    <tr>
+                        <th><?php echo $strField; ?></th>
+                        <th><?php echo $strType; ?></th>
+                        <th><?php echo $strCollation; ?></th>
+                        <th><?php echo $strOperator; ?></th>
+                        <th><?php echo $strValue; ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                    $odd_row = true;
 
-<fieldset id="fieldset_display_order">
-    <legend><?php echo $strDisplayOrder; ?></legend>
-    <select name="orderField" style="vertical-align: middle">
-        <option value="--nil--"></option>
-    <?php
-    foreach ($fields_list as $each_field) {
-        echo '        '
-            .'<option value="' . htmlspecialchars($each_field) . '">'
-            .htmlspecialchars($each_field) . '</option>' . "\n";
-    } // end for
-    ?>
-    </select>
-<?php
-    $choices = array(
-        'ASC'  => $strAscending,
-        'DESC' => $strDescending
-    );
-    PMA_generate_html_radio('order', $choices, 'ASC', false, true, "formelement");
-    unset($choices);
-?>
-</fieldset>
-</div>
-</fieldset>
-<fieldset class="tblFooters">
-    <input type="hidden" name="max_number_of_fields"
-        value="<?php echo $fields_cnt; ?>" />
-    <input type="submit" name="submit" value="<?php echo $strGo; ?>" />
-</fieldset>
-</form>
+                    for ($i = 0; $i < $fields_cnt; $i++) {
+                        ?>
+                        <tr class="<?php echo $odd_row ? 'odd' : 'even';
+                        $odd_row = !$odd_row; ?>">
+                            <th><?php echo htmlspecialchars($fields_list[$i]); ?></th>
+                            <td><?php echo $fields_type[$i]; ?></td>
+                            <td><?php echo $fields_collation[$i]; ?></td>
+                            <td><select name="func[]">
+                                    <?php
+                                    if (strncasecmp($fields_type[$i], 'enum', 4) == 0) {
+                                        foreach ($GLOBALS['cfg']['EnumOperators'] as $fc) {
+                                            echo "\n" . '                        '
+                                                . '<option value="' . htmlspecialchars($fc) . '">'
+                                                . htmlspecialchars($fc) . '</option>';
+                                        }
+                                    } elseif (preg_match('@char|blob|text|set@i', $fields_type[$i])) {
+                                        foreach ($GLOBALS['cfg']['TextOperators'] as $fc) {
+                                            echo "\n" . '                        '
+                                                . '<option value="' . htmlspecialchars($fc) . '">'
+                                                . htmlspecialchars($fc) . '</option>';
+                                        }
+                                    } else {
+                                        foreach ($GLOBALS['cfg']['NumOperators'] as $fc) {
+                                            echo "\n" . '                        '
+                                                . '<option value="' . htmlspecialchars($fc) . '">'
+                                                . htmlspecialchars($fc) . '</option>';
+                                        }
+                                    } // end if... else...
+                                    if ($fields_null[$i]) {
+                                        foreach ($GLOBALS['cfg']['NullOperators'] as $fc) {
+                                            echo "\n" . '                        '
+                                                . '<option value="' . htmlspecialchars($fc) . '">'
+                                                . htmlspecialchars($fc) . '</option>';
+                                        }
+                                    }
+                                    ?>
+
+                                </select>
+                            </td>
+                            <td>
+                                <?php
+                                // <markus@noga.de>
+                                $field = $fields_list[$i];
+
+                                $foreignData = PMA_getForeignData($foreigners, $field, false, '', '');
+
+                                if ($foreigners && isset($foreigners[$field]) && is_array($foreignData['disp_row'])) {
+                                    // f o r e i g n    k e y s
+                                    echo '            <select name="fields[' . $i . ']">' . "\n";
+                                    // go back to first row
+
+                                    // here, the 4th parameter is empty because there is no current
+                                    // value of data for the dropdown (the search page initial values
+                                    // are displayed empty)
+                                    echo PMA_foreignDropdown($foreignData['disp_row'],
+                                        $foreignData['foreign_field'],
+                                        $foreignData['foreign_display'],
+                                        '', $GLOBALS['cfg']['ForeignKeyMaxLimit']);
+                                    echo '            </select>' . "\n";
+                                } elseif ($foreignData['foreign_link'] == true) {
+                                    ?>
+                                    <input type="text" name="fields[<?php echo $i; ?>]"
+                                           id="field_<?php echo md5($field); ?>[<?php echo $i; ?>]"
+                                           class="textfield"/>
+                                    <script type="text/javascript">
+                                        // <![CDATA[
+                                        document.writeln('<a target="_blank" onclick="window.open(this.href, \'foreigners\', \'width=640,height=240,scrollbars=yes\'); return false" href="browse_foreigners.php?<?php echo PMA_generate_common_url($db, $table); ?>&amp;field=<?php echo urlencode($field); ?>&amp;fieldkey=<?php echo $i; ?>"><?php echo str_replace("'", "\'", $titles['Browse']); ?></a>');
+                                        // ]]>
+                                    </script>
+                                    <?php
+                                } elseif (strncasecmp($fields_type[$i], 'enum', 4) == 0) {
+                                    // e n u m s
+                                    $enum_value = explode(', ', str_replace("'", '', substr($fields_type[$i], 5, -1)));
+                                    $cnt_enum_value = count($enum_value);
+                                    echo '            <select name="fields[' . $i . '][]"'
+                                        . ' multiple="multiple" size="' . min(3, $cnt_enum_value) . '">' . "\n";
+                                    for ($j = 0; $j < $cnt_enum_value; $j++) {
+                                        echo '                <option value="' . $enum_value[$j] . '">'
+                                            . $enum_value[$j] . '</option>';
+                                    } // end for
+                                    echo '            </select>' . "\n";
+                                } else {
+                                    // o t h e r   c a s e s
+                                    echo '            <input type="text" name="fields[' . $i . ']"'
+                                        . ' size="40" class="textfield" id="field_' . $i . '" />' . "\n";
+                                };
+                                $type = $fields_type[$i];
+                                if ($type == 'date' || $type == 'datetime' || substr($type, 0, 9) == 'timestamp') {
+                                    ?>
+                                    <script type="text/javascript">
+                                        //<![CDATA[
+                                        document.write('<a title="<?php echo $strCalendar;?>" href="javascript:openCalendar(\'<?php echo PMA_generate_common_url();?>\', \'insertForm\', \'field_<?php echo($i); ?>\', \'<?php echo (substr($type, 0, 9) == 'timestamp') ? 'datetime' : substr($type, 0, 9); ?>\', \'\')"><img class="calendar" src="<?php echo $pmaThemeImage; ?>b_calendar.png" alt="<?php echo $strCalendar; ?>"/></a>');
+                                        //]]>
+                                    </script>
+                                    <?php
+                                }
+                                ?>
+                                <input type="hidden" name="names[<?php echo $i; ?>]"
+                                       value="<?php echo htmlspecialchars($fields_list[$i]); ?>"/>
+                                <input type="hidden" name="types[<?php echo $i; ?>]"
+                                       value="<?php echo $fields_type[$i]; ?>"/>
+                                <input type="hidden" name="collations[<?php echo $i; ?>]"
+                                       value="<?php echo $fields_collation[$i]; ?>"/>
+                            </td>
+                        </tr>
+                        <?php
+                    } // end for
+                    ?>
+                    </tbody>
+                </table>
+            </fieldset>
+            <?php
+            PMA_generate_slider_effect('searchoptions', $strOptions);
+            ?>
+            <fieldset id="fieldset_select_fields">
+                <legend><?php echo $strSelectFields; ?></legend>
+                <select name="param[]" size="<?php echo min($fields_cnt, 10); ?>"
+                        multiple="multiple">
+                    <?php
+                    // Displays the list of the fields
+                    foreach ($fields_list as $each_field) {
+                        echo '        '
+                            . '<option value="' . htmlspecialchars($each_field) . '"'
+                            . ' selected="selected">' . htmlspecialchars($each_field)
+                            . '</option>' . "\n";
+                    }
+                    ?>
+                </select>
+                <input type="checkbox" name="distinct" value="DISTINCT" id="oDistinct"/>
+                <label for="oDistinct">DISTINCT</label>
+            </fieldset>
+
+            <fieldset id="fieldset_search_conditions">
+                <legend><?php echo '<em>' . $strOr . '</em> ' . $strAddSearchConditions; ?></legend>
+                <?php echo PMA_showMySQLDocu('SQL-Syntax', 'Functions'); ?>
+
+                <input type="text" name="where" class="textfield" size="64"/>
+            </fieldset>
+
+            <fieldset id="fieldset_limit_rows">
+                <legend><?php echo $strLimitNumRows; ?></legend>
+                <input type="text" size="4" name="session_max_rows"
+                       value="<?php echo $GLOBALS['cfg']['MaxRows']; ?>" class="textfield"/>
+            </fieldset>
+
+            <fieldset id="fieldset_display_order">
+                <legend><?php echo $strDisplayOrder; ?></legend>
+                <select name="orderField" style="vertical-align: middle">
+                    <option value="--nil--"></option>
+                    <?php
+                    foreach ($fields_list as $each_field) {
+                        echo '        '
+                            . '<option value="' . htmlspecialchars($each_field) . '">'
+                            . htmlspecialchars($each_field) . '</option>' . "\n";
+                    } // end for
+                    ?>
+                </select>
+                <?php
+                $choices = array(
+                    'ASC' => $strAscending,
+                    'DESC' => $strDescending
+                );
+                PMA_generate_html_radio('order', $choices, 'ASC', false, true, "formelement");
+                unset($choices);
+                ?>
+            </fieldset>
+            </div>
+        </fieldset>
+        <fieldset class="tblFooters">
+            <input type="hidden" name="max_number_of_fields"
+                   value="<?php echo $fields_cnt; ?>"/>
+            <input type="submit" name="submit" value="<?php echo $strGo; ?>"/>
+        </fieldset>
+    </form>
     <?php
     require_once './libraries/footer.inc.php';
-}
-
-
-/**
+} /**
  * Selection criteria have been submitted -> do the work
  */
 else {
@@ -366,17 +367,17 @@ else {
                     }
                     $enum_selected_count = count($fields[$i]);
                     if ($func_type == '=' && $enum_selected_count > 1) {
-                        $func_type    = $func[$i] = 'IN';
-                        $parens_open  = '(';
+                        $func_type = $func[$i] = 'IN';
+                        $parens_open = '(';
                         $parens_close = ')';
 
                     } elseif ($func_type == '!=' && $enum_selected_count > 1) {
-                        $func_type    = $func[$i] = 'NOT IN';
-                        $parens_open  = '(';
+                        $func_type = $func[$i] = 'NOT IN';
+                        $parens_open = '(';
                         $parens_close = ')';
 
                     } else {
-                        $parens_open  = '';
+                        $parens_open = '';
                         $parens_close = '';
                     }
                     $enum_where = '\'' . PMA_sqlAddslashes($fields[$i][0]) . '\'';

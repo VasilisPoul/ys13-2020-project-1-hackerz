@@ -137,9 +137,9 @@ class HTMLPurifier_HTMLModule
      * @param array|string $attr_includes What attribute collections to register to
      *              element?
      * @param array $attr What unique attributes does the element define?
-     * @see HTMLPurifier_ElementDef:: for in-depth descriptions of these parameters.
      * @return HTMLPurifier_ElementDef Created element definition object, so you
      *         can set advanced parameters
+     * @see HTMLPurifier_ElementDef:: for in-depth descriptions of these parameters.
      */
     public function addElement($element, $type, $contents, $attr_includes = array(), $attr = array())
     {

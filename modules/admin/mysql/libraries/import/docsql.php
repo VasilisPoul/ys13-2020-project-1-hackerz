@@ -6,7 +6,7 @@
  * @version $Id: docsql.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin-Import
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -20,7 +20,7 @@ $cfgRelation = PMA_getRelationsParam();
  * We need relations enabled and we work only on database
  */
 if ($plugin_param !== 'database' || $GLOBALS['num_tables'] < 1
- || ! $cfgRelation['relwork'] || ! $cfgRelation['commwork']) {
+    || !$cfgRelation['relwork'] || !$cfgRelation['commwork']) {
     return;
 }
 
@@ -32,7 +32,7 @@ if (isset($plugin_list)) {
             array('type' => 'text', 'name' => 'table', 'text' => 'strTableName'),
         ),
         'options_text' => 'strOptions', // text to describe plugin options (must be set if options are used)
-        );
+    );
     /* We do not define function when plugin is just queried for information above */
     return;
 }
@@ -60,7 +60,7 @@ if ($data === TRUE && !$error && !$timeout_passed) {
     $lines = explode("\n", $buffer);
     foreach ($lines AS $lkey => $line) {
         //echo '<p>' . $line . '</p>';
-        $inf     = explode('|', $line);
+        $inf = explode('|', $line);
         if (!empty($inf[1]) && strlen(trim($inf[1])) > 0) {
             $qry = '
                  INSERT INTO

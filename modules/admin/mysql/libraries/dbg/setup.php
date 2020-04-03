@@ -4,7 +4,7 @@
  * @version $Id: setup.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin-DBG
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -18,7 +18,7 @@ if ($GLOBALS['cfg']['DBG']['php']) {
     /**
      * Loads the DBG extension if needed
      */
-    if (! @extension_loaded('dbg') ) {
+    if (!@extension_loaded('dbg')) {
         $message = PMA_Message::error('strCantLoad');
         $message->addParam('DBG');
         $message->addMessage('<a href="./Documentation.html#faqdbg" target="documentation">', false);

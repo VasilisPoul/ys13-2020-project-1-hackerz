@@ -48,42 +48,42 @@ include 'duration_query.php';
 
 $tool_content = '';
 if (isset($_GET['format']) and $_GET['format'] == 'csv') {
-        $format = 'csv';
+    $format = 'csv';
 
-        if (isset($_GET['enc']) and $_GET['enc'] == '1253') {
-                $charset = 'Windows-1253';
-        } else {
-                $charset = 'UTF-8';
-        }
-        $crlf="\r\n";
+    if (isset($_GET['enc']) and $_GET['enc'] == '1253') {
+        $charset = 'Windows-1253';
+    } else {
+        $charset = 'UTF-8';
+    }
+    $crlf = "\r\n";
 
-        header("Content-Type: text/csv; charset=$charset");
-        header("Content-Disposition: attachment; filename=usersduration.csv");
-        
-        echo join(';', array_map("csv_escape",
-                                 array($langSurnameName, $langAm, $langGroup, $langDuration))),
-             $crlf, $crlf;
+    header("Content-Type: text/csv; charset=$charset");
+    header("Content-Disposition: attachment; filename=usersduration.csv");
+
+    echo join(';', array_map("csv_escape",
+        array($langSurnameName, $langAm, $langGroup, $langDuration))),
+    $crlf, $crlf;
 
 } else {
-        $format = 'html';
+    $format = 'html';
 
-        $tool_content .= "
+    $tool_content .= "
           <div id='operations_container'>
             <ul id='opslist'>
-              <li><a href='usage.php'>".$langUsageVisits."</a></li>
-              <li><a href='favourite.php?first='>".$langFavourite."</a></li>
-              <li><a href='userduration.php'>".$langUserDuration."</a></li>
+              <li><a href='usage.php'>" . $langUsageVisits . "</a></li>
+              <li><a href='favourite.php?first='>" . $langFavourite . "</a></li>
+              <li><a href='userduration.php'>" . $langUserDuration . "</a></li>
               <li>$langDumpUserDurationToFile&nbsp;(<a href='userduration.php?format=csv'>$langCodeUTF</a>&nbsp;<a href='userduration.php?format=csv&amp;enc=1253'>$langCodeWin</a>)</li>
             </ul>
           </div>";
 
-        $nameTools = $langUsage;
-        $local_style = '
+    $nameTools = $langUsage;
+    $local_style = '
             .month { font-weight : bold; color: #FFFFFF; background-color: #000066;
              padding-left: 15px; padding-right : 15px; }
             .content {position: relative; left: 25px; }';
 
-        $tool_content .= "<table class='FormData' width='99%' align='left'><thead>
+    $tool_content .= "<table class='FormData' width='99%' align='left'><thead>
                 <tr>
                 <th class='left'>$langSurname $langName</th>
                 <th>$langAm</th>
@@ -97,30 +97,30 @@ if (isset($_GET['format']) and $_GET['format'] == 'csv') {
 $result = user_duration_query($currentCourseID, $cours_id);
 
 if ($result) {
-        $i = 0;
-        while ($row = mysql_fetch_assoc($result)) {
-                $i++;
-                if ($format == 'html') {
-                        if ($i%2 == 0) {
-                                $tool_content .= "\n    <tr>";
-                        } else {
-                                $tool_content .= "\n    <tr class='odd'>";
-                        }
-                        $tool_content .= "<td width='30%'><img style='border:0px; padding-top:3px;' src='${urlServer}/template/classic/img/arrow_grey.gif' /> $row[nom] $row[prenom]</td><td width='30%'>$row[am]</td><td align='center'>" . gid_to_name(user_group($row['user_id'])) . "</td><td>" . format_time_duration(0 + $row['duration']) . "</td></tr>";
-                } else {
-                        echo csv_escape($row['nom'] . ' ' . $row['prenom']), ';',
-                             csv_escape($row['am']), ';',
-                             csv_escape(gid_to_name(user_group($row['user_id']))), ';',
-                             csv_escape(format_time_duration(0 + $row['duration'])), $crlf;
-                }
-        }
+    $i = 0;
+    while ($row = mysql_fetch_assoc($result)) {
+        $i++;
         if ($format == 'html') {
-                $tool_content .= "</table>";
+            if ($i % 2 == 0) {
+                $tool_content .= "\n    <tr>";
+            } else {
+                $tool_content .= "\n    <tr class='odd'>";
+            }
+            $tool_content .= "<td width='30%'><img style='border:0px; padding-top:3px;' src='${urlServer}/template/classic/img/arrow_grey.gif' /> $row[nom] $row[prenom]</td><td width='30%'>$row[am]</td><td align='center'>" . gid_to_name(user_group($row['user_id'])) . "</td><td>" . format_time_duration(0 + $row['duration']) . "</td></tr>";
+        } else {
+            echo csv_escape($row['nom'] . ' ' . $row['prenom']), ';',
+            csv_escape($row['am']), ';',
+            csv_escape(gid_to_name(user_group($row['user_id']))), ';',
+            csv_escape(format_time_duration(0 + $row['duration'])), $crlf;
         }
+    }
+    if ($format == 'html') {
+        $tool_content .= "</table>";
+    }
 }
 
 user_duration_query_end();
 
 if ($format == 'html') {
-        draw($tool_content, 2);
+    draw($tool_content, 2);
 }

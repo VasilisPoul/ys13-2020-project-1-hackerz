@@ -9,25 +9,25 @@
  * @version $Id: grab_globals.lib.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
 /**
  * copy values from one array to another, usually from a superglobal into $GLOBALS
  *
+ * @param array $array values from
+ * @param array $target values to
+ * @param boolean $sanitize prevent importing key names in $_import_blacklist
+ * @uses    array_unique()
+ * @uses    stripslashes()
  * @uses    $GLOBALS['_import_blacklist']
  * @uses    preg_replace()
  * @uses    array_keys()
- * @uses    array_unique()
- * @uses    stripslashes()
- * @param   array   $array      values from
- * @param   array   $target     values to
- * @param   boolean $sanitize   prevent importing key names in $_import_blacklist
  */
 function PMA_recursive_extract($array, &$target, $sanitize = true)
 {
-    if (! is_array($array)) {
+    if (!is_array($array)) {
         return false;
     }
 
@@ -84,15 +84,15 @@ $_import_blacklist = array(
     //'/^PMA_.*$/i',      // other PMA variables
 );
 
-if (! empty($_GET)) {
+if (!empty($_GET)) {
     PMA_recursive_extract($_GET, $GLOBALS);
 }
 
-if (! empty($_POST)) {
+if (!empty($_POST)) {
     PMA_recursive_extract($_POST, $GLOBALS);
 }
 
-if (! empty($_FILES)) {
+if (!empty($_FILES)) {
     $_valid_variables = preg_replace($GLOBALS['_import_blacklist'], '', array_keys($_FILES));
     foreach ($_valid_variables as $name) {
         if (strlen($name) != 0) {
@@ -114,8 +114,8 @@ foreach ($server_vars as $current) {
     // it's even better than a XSS capable string
     if (PMA_getenv($current) && false === strpos(PMA_getenv($current), '<')) {
         $$current = PMA_getenv($current);
-    // already imported by register_globals?
-    } elseif (! isset($$current) || false !== strpos($$current, '<')) {
+        // already imported by register_globals?
+    } elseif (!isset($$current) || false !== strpos($$current, '<')) {
         $$current = '';
     }
 }

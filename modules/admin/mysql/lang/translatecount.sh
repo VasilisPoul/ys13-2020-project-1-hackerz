@@ -16,16 +16,16 @@ added=0
 if [ -z "${srcfilelist}" ]; then
   srcfilelist="*.inc.php"
   added=1
-fi;
-for i in ${srcfilelist}; do 
+fi
+for i in ${srcfilelist}; do
   if [ ! -e ${i} ]; then
-    $i=`eval ${i}*php3`
+    $i=$(eval ${i}*php3)
   fi
   if [ -e ${i} ]; then
     destfilelist="${destfilelist} ${i}"
-  fi;
-done;
-destfilelist=`echo ${destfilelist} | xargs -n1 | egrep '.inc.php$'` 
+  fi
+done
+destfilelist=$(echo ${destfilelist} | xargs -n1 | egrep '.inc.php$')
 if [ ! -z "${destfilelist}" ]; then
-  grep -c -- "${translationmatch}" ${destfilelist} | sort -t':' -n +1  | sed -e "s/${suffixtoremove}//g" | xargs -n1 | egrep -v ':0$' 
-fi;
+  grep -c -- "${translationmatch}" ${destfilelist} | sort -t':' -n +1 | sed -e "s/${suffixtoremove}//g" | xargs -n1 | egrep -v ':0$'
+fi

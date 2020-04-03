@@ -8,13 +8,13 @@
  */
 
 /**
-  * Gets zip file contents
-  *
-  * @param   string  $file
-  * @return  array  ($error_message, $file_data); $error_message
-  *                  is empty if no error
-  * @author lem9
-  */
+ * Gets zip file contents
+ *
+ * @param string $file
+ * @return  array  ($error_message, $file_data); $error_message
+ *                  is empty if no error
+ * @author lem9
+ */
 
 function PMA_getZipContents($file)
 {
@@ -39,11 +39,11 @@ function PMA_getZipContents($file)
 
 
 /**
-  * Gets zip error message
-  *
-  * @param   integer  error code
-  * @return  string  error message
-  * @author lem9
+ * Gets zip error message
+ *
+ * @param integer  error code
+ * @return  string  error message
+ * @author lem9
  */
 function PMA_getZipError($code)
 {
@@ -51,22 +51,23 @@ function PMA_getZipError($code)
     switch ($code) {
         case ZIPARCHIVE::ER_MULTIDISK:
             $message = 'Multi-disk zip archives not supported';
-             break;
+            break;
         case ZIPARCHIVE::ER_READ:
             $message = 'Read error';
-             break;
+            break;
         case ZIPARCHIVE::ER_CRC:
             $message = 'CRC error';
-             break;
+            break;
         case ZIPARCHIVE::ER_NOZIP:
             $message = 'Not a zip archive';
-             break;
+            break;
         case ZIPARCHIVE::ER_INCONS:
             $message = 'Zip archive inconsistent';
-             break;
+            break;
         default:
             $message = $code;
     }
     return $message;
 }
+
 ?>

@@ -11,8 +11,8 @@
 /**
  * Returns array of filtered file names
  *
- * @param   string  directory to list
- * @param   string  regular expression to match files
+ * @param string  directory to list
+ * @param string  regular expression to match files
  * @returns array   sorted file list on success, FALSE on failure
  */
 function PMA_getDirContent($dir, $expression = '')
@@ -23,8 +23,8 @@ function PMA_getDirContent($dir, $expression = '')
             $dir .= '/';
         }
         while ($file = @readdir($handle)) {
-        // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
-        // and verifying '..' or '.'
+            // for PHP < 5.2.4, is_file() gives a warning when using open_basedir
+            // and verifying '..' or '.'
             if ('.' != $file && '..' != $file && is_file($dir . $file) && ($expression == '' || preg_match($expression, $file))) {
                 $result[] = $file;
             }
@@ -40,9 +40,9 @@ function PMA_getDirContent($dir, $expression = '')
 /**
  * Returns options of filtered file names
  *
- * @param   string  directory to list
- * @param   string  regullar expression to match files
- * @param   string  currently active choice
+ * @param string  directory to list
+ * @param string  regullar expression to match files
+ * @param string  currently active choice
  * @returns array   sorted file list on success, FALSE on failure
  */
 function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
@@ -53,7 +53,7 @@ function PMA_getFileSelectOptions($dir, $extensions = '', $active = '')
     }
     $result = '';
     foreach ($list as $key => $val) {
-        $result .= '<option value="'. htmlspecialchars($val) . '"';
+        $result .= '<option value="' . htmlspecialchars($val) . '"';
         if ($val == $active) {
             $result .= ' selected="selected"';
         }

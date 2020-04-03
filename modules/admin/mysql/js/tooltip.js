@@ -29,8 +29,7 @@ var myTooltipContainer = null;
 /**
  * initialize tooltip
  */
-function PMA_TT_init()
-{
+function PMA_TT_init() {
     // get all 'light bubbles' on page
     var tooltip_icons = window.parent.getElementsByClassName('footnotemarker', document, 'sup');
     var tooltip_count = tooltip_icons.length;
@@ -60,8 +59,7 @@ function PMA_TT_init()
  *
  * @param string theText tooltip content
  */
-function PMA_TT_setText(theText)
-{
+function PMA_TT_setText(theText) {
     if (ttDOM || ttIE4) {                   // document.getEelementById || document.all
         myTooltipContainer.innerHTML = "";  // we should empty it first
         myTooltipContainer.innerHTML = theText;
@@ -82,8 +80,7 @@ var ttTimerID = 0;
  *
  * @param boolean stat view status
  */
-function swapTooltip(stat)
-{
+function swapTooltip(stat) {
     if (ttHoldIt != 1) {
         if (stat == 'true') {
             showTooltip(true);
@@ -94,8 +91,8 @@ function swapTooltip(stat)
         }
     } else {
         if (ttTimerID) {
-           clearTimeout(ttTimerID);
-           ttTimerID = 0;
+            clearTimeout(ttTimerID);
+            ttTimerID = 0;
         }
         showTooltip(true);
     }
@@ -106,8 +103,7 @@ function swapTooltip(stat)
  *
  * @param boolean stat view status
  */
-function showTooltip(stat)
-{
+function showTooltip(stat) {
     if (stat == false) {
         if (ttNS4)
             myTooltipContainer.visibility = "hide";
@@ -126,8 +122,7 @@ function showTooltip(stat)
 /**
  * hold it, if we create or move the mouse over the tooltip
  */
-function holdTooltip()
-{
+function holdTooltip() {
     ttHoldIt = 1;
     swapTooltip('true');
     ttHoldIt = 0;
@@ -139,14 +134,13 @@ function holdTooltip()
  * @param integer posX    horiz. position
  * @param integer posY    vert. position
  */
-function moveTooltip(posX, posY)
-{
+function moveTooltip(posX, posY) {
     if (ttDOM || ttIE4) {
         myTooltipContainer.style.left = posX + "px";
-        myTooltipContainer.style.top  = posY + "px";
+        myTooltipContainer.style.top = posY + "px";
     } else if (ttNS4) {
         myTooltipContainer.left = posX;
-        myTooltipContainer.top  = posY;
+        myTooltipContainer.top = posY;
     }
 }
 
@@ -156,13 +150,12 @@ function moveTooltip(posX, posY)
  *
  * @param    string    theText    tooltip content
  */
-function pmaTooltip(e)
-{
+function pmaTooltip(e) {
     var theText = document.getElementById('footnote_' + this.innerHTML).innerHTML;
 
     var plusX = 0, plusY = 0, docX = 0, docY = 0;
     var divHeight = myTooltipContainer.clientHeight;
-    var divWidth  = myTooltipContainer.clientWidth;
+    var divWidth = myTooltipContainer.clientWidth;
 
     if (navigator.appName.indexOf("Explorer") != -1) {
         // IE ...
@@ -201,7 +194,7 @@ function pmaTooltip(e)
  * @param    event    e
  */
 function mouseMove(e) {
-    if ( typeof( event ) != 'undefined' ) {
+    if (typeof (event) != 'undefined') {
         ttXpos = event.x;
         ttYpos = event.y;
     } else {

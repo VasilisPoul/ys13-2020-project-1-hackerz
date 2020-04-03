@@ -205,11 +205,11 @@ class HTMLPurifier
         // purified HTML
         $html =
             $this->generator->generateFromTokens(
-                // list of tokens
+            // list of tokens
                 $this->strategy->execute(
-                    // list of un-purified tokens
+                // list of un-purified tokens
                     $lexer->tokenizeHTML(
-                        // un-purified HTML
+                    // un-purified HTML
                         $html,
                         $config,
                         $context
@@ -240,7 +240,7 @@ class HTMLPurifier
     public function purifyArray($array_of_html, $config = null)
     {
         $context_array = array();
-        foreach($array_of_html as $key=>$value){
+        foreach ($array_of_html as $key => $value) {
             if (is_array($value)) {
                 $array[$key] = $this->purifyArray($value, $config);
             } else {

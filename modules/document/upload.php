@@ -42,17 +42,17 @@ $require_login = true;
 include "../../include/baseTheme.php";
 $tool_content = "";
 
-if($is_adminOfCourse) {
+if ($is_adminOfCourse) {
 
-	if(!isset($_REQUEST['uploadPath'])) {
-		$_REQUEST['uploadPath'] = "";
-	}
-	
-	$nameTools = $langDownloadFile;
-	$navigation[]= array ("url"=>"document.php", "name"=> $langDoc);
-	$tool_content .= "
+    if (!isset($_REQUEST['uploadPath'])) {
+        $_REQUEST['uploadPath'] = "";
+    }
+
+    $nameTools = $langDownloadFile;
+    $navigation[] = array("url" => "document.php", "name" => $langDoc);
+    $tool_content .= "
 	<form action='document.php' method='post' enctype='multipart/form-data'>
-	<input type='hidden' name='uploadPath' value='".htmlspecialchars($_REQUEST['uploadPath'])."' />
+	<input type='hidden' name='uploadPath' value='" . htmlspecialchars($_REQUEST['uploadPath']) . "' />
 	<table width='99%'>
 	<tbody>
 	<tr>
@@ -139,15 +139,15 @@ if($is_adminOfCourse) {
 	</tr>
 	<tr>
 	<th class='left'>&nbsp;</th>
-	<td colspan='2'><input type='submit' value='$langUpload' /><p align='right'><small>$langNotRequired<br />$langMaxFileSize ".
-        ini_get('upload_max_filesize')."</small></p></td>
+	<td colspan='2'><input type='submit' value='$langUpload' /><p align='right'><small>$langNotRequired<br />$langMaxFileSize " .
+        ini_get('upload_max_filesize') . "</small></p></td>
 	</tr>
 	</tbody>
 	</table>
 	<br/>";
-	$tool_content .=  "</form>";
+    $tool_content .= "</form>";
 } else {
-	$tool_content .= "<span class='caution_small'>$langNotAllowed</span>";
+    $tool_content .= "<span class='caution_small'>$langNotAllowed</span>";
 }
 
 draw($tool_content, '2');

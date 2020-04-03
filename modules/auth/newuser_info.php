@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System
@@ -44,7 +44,7 @@ include '../../include/baseTheme.php';
 include 'auth.inc.php';
 
 $nameTools = $reguser;
-$tool_content = "";		// Initialise $tool_content
+$tool_content = "";        // Initialise $tool_content
 
 // Main body
 $auth = get_auth_active_methods();
@@ -53,24 +53,19 @@ $e = 1;
 // check for close user registration 
 if (isset($close_user_registration) and $close_user_registration == TRUE)
     $newuser = "formuser.php";
-  else
+else
     $newuser = "newuser.php";
 
-$tool_content .= "$langSelection<br><a href=\"$newuser\">$langNewUser".get_auth_info($e)."</a>";
+$tool_content .= "$langSelection<br><a href=\"$newuser\">$langNewUser" . get_auth_info($e) . "</a>";
 
-if(!empty($auth))
-{
-	foreach($auth as $k=>$v)
-	{
-		if($v!=1)
-		{
-			$tool_content .= "<a href=\"ldapnewuser.php?auth=".$v."\">$langNewUser".get_auth_info($v)."</a>";
-		}
-		else
-		{
-			continue;
-		}
-	}
+if (!empty($auth)) {
+    foreach ($auth as $k => $v) {
+        if ($v != 1) {
+            $tool_content .= "<a href=\"ldapnewuser.php?auth=" . $v . "\">$langNewUser" . get_auth_info($v) . "</a>";
+        } else {
+            continue;
+        }
+    }
 }
 $tool_content .= "";
-draw($tool_content,0,'auth');
+draw($tool_content, 0, 'auth');

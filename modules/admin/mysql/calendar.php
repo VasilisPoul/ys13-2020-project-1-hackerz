@@ -18,11 +18,11 @@ $GLOBALS['js_include'][] = 'tbl_change.js';
 require './libraries/header_scripts.inc.php';
 ?>
 <script type="text/javascript">
-//<![CDATA[
-var month_names = new Array("<?php echo implode('","', $month); ?>");
-var day_names = new Array("<?php echo implode('","', $day_of_week); ?>");
-var submit_text = "<?php echo $strGo . ' (' . $strTime . ')'; ?>";
-//]]>
+    //<![CDATA[
+    var month_names = new Array("<?php echo implode('","', $month); ?>");
+    var day_names = new Array("<?php echo implode('","', $day_of_week); ?>");
+    var submit_text = "<?php echo $strGo . ' (' . $strTime . ')'; ?>";
+    //]]>
 </script>
 </head>
 <body onload="initCalendar();">

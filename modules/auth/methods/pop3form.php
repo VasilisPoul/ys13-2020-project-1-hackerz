@@ -25,26 +25,23 @@
 
 $pop3data = $auth_data;
 
-if(!empty($pop3data))
-{
+if (!empty($pop3data)) {
     $pop3settings = $pop3data['auth_settings'];
     $pop3instructions = $pop3data['auth_instructions'];
-    $pop3host = str_replace("pop3host=","",$pop3settings);
-}
-else
-{
+    $pop3host = str_replace("pop3host=", "", $pop3settings);
+} else {
     $pop3settings = $pop3data['auth_settings'];
     $pop3instructions = $pop3data['auth_instructions'];
     $pop3host = $pop3settings;
 }
 
-$pop3host = isset($_POST['pop3host'])?$_POST['pop3host']:$pop3host;
-$pop3instructions = isset($_POST['pop3instructions'])?$_POST['pop3instructions']:$pop3instructions;
+$pop3host = isset($_POST['pop3host']) ? $_POST['pop3host'] : $pop3host;
+$pop3instructions = isset($_POST['pop3instructions']) ? $_POST['pop3instructions'] : $pop3instructions;
 
 $tool_content .= "
     <tr>
       <th class=\"left\">$langpop3host:</th>
-      <td><input class=\"FormData_InputText\" name=\"pop3host\" type=\"text\" size=\"30\" value=\"".$pop3host."\" /></td>
+      <td><input class=\"FormData_InputText\" name=\"pop3host\" type=\"text\" size=\"30\" value=\"" . $pop3host . "\" /></td>
     </tr>
     <tr>
       <th class=\"left\">$langpop3port:</th>
@@ -52,6 +49,6 @@ $tool_content .= "
     </tr>
     <tr>
       <th class=\"left\">$langInstructionsAuth:</th>
-      <td><textarea class=\"FormData_InputText\" name=\"pop3instructions\" cols=\"30\" rows=\"10\" wrap=\"virtual\">".$pop3instructions."</textarea></td>
+      <td><textarea class=\"FormData_InputText\" name=\"pop3instructions\" cols=\"30\" rows=\"10\" wrap=\"virtual\">" . $pop3instructions . "</textarea></td>
     </tr>";
 ?>

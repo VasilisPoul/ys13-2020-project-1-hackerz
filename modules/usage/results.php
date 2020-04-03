@@ -33,7 +33,7 @@
  */
 
 require_once '../../include/libchart/libchart.php';
-$usage_defaults = array (
+$usage_defaults = array(
     'u_stats_value' => 'visits',
     'u_interval' => 'daily',
     'u_module_id' => -1,
@@ -58,154 +58,154 @@ if ($u_module_id != -1) {
 //$date_fmt = '%Y-%m-%d';
 $date_fmt = '%d-%m-%Y';
 $date_where = "(date_time BETWEEN '$u_date_start 00:00:00' AND '$u_date_end 23:59:59') ";
-$date_what  = "DATE_FORMAT(MIN(date_time), '$date_fmt') AS date_start, DATE_FORMAT(MAX(date_time), '$date_fmt') AS date_end ";
+$date_what = "DATE_FORMAT(MIN(date_time), '$date_fmt') AS date_start, DATE_FORMAT(MAX(date_time), '$date_fmt') AS date_end ";
 
 switch ($u_interval) {
     case "summary":
         $date_group = '1';
-        $date_what ='1';
-    break;
+        $date_what = '1';
+        break;
     case "daily":
         $date_what .= ", DATE_FORMAT(date_time, '$date_fmt') AS date ";
         $date_group = " DATE(date_time) ";
-    break;
+        break;
     case "weekly":
-        $date_what .= ", DATE_FORMAT(date_time - INTERVAL WEEKDAY(date_time) DAY, '$date_fmt') AS week_start ".
-                      ", DATE_FORMAT(date_time + INTERVAL (6 - WEEKDAY(date_time)) DAY, '$date_fmt') AS week_end ";
+        $date_what .= ", DATE_FORMAT(date_time - INTERVAL WEEKDAY(date_time) DAY, '$date_fmt') AS week_start " .
+            ", DATE_FORMAT(date_time + INTERVAL (6 - WEEKDAY(date_time)) DAY, '$date_fmt') AS week_end ";
         $date_group = " WEEK(date_time)";
-    break;
+        break;
     case "monthly":
         $date_what .= ", MONTH(date_time) AS month ";
         $date_group = " MONTH(date_time)";
-    break;
+        break;
     case "yearly":
         $date_what .= ", YEAR(date_time) AS year ";
         $date_group = " YEAR(date_time) ";
-    break;
+        break;
 }
 
 
 #check if statistics exist
-$chart_content=0;
+$chart_content = 0;
 
 switch ($u_stats_value) {
     case "visits":
 
-     $chart = new VerticalChart(300, 300);
-	$query = "SELECT ".$date_what.", COUNT(*) AS cnt FROM actions
+        $chart = new VerticalChart(300, 300);
+        $query = "SELECT " . $date_what . ", COUNT(*) AS cnt FROM actions
 		WHERE $date_where AND $mod_where GROUP BY $date_group ORDER BY date_time ASC";
-            $result = db_query($query, $currentCourseID);
+        $result = db_query($query, $currentCourseID);
 
         switch ($u_interval) {
             case "summary":
-                 while ($row = mysql_fetch_assoc($result)) {
+                while ($row = mysql_fetch_assoc($result)) {
                     $chart->addPoint(new Point($langSummary, $row['cnt']));
                     $chart->width += 25;
-                    $chart_content=1;
-                    }
-            break;
+                    $chart_content = 1;
+                }
+                break;
             case "daily":
-                    while ($row = mysql_fetch_assoc($result)) {
-                        $chart->addPoint(new Point($row['date'], $row['cnt']));
-                        $chart->width += 25;
-                        $chart_content=1;
-                    }
-            break;
+                while ($row = mysql_fetch_assoc($result)) {
+                    $chart->addPoint(new Point($row['date'], $row['cnt']));
+                    $chart->width += 25;
+                    $chart_content = 1;
+                }
+                break;
             case "weekly":
                 while ($row = mysql_fetch_assoc($result)) {
                     $chart->setLabelMarginBottom(110);
                     $chart->setLabelMarginRight(80);
-                    $chart->addPoint(new Point($row['week_start'].' - '.$row['week_end'], $row['cnt']));
+                    $chart->addPoint(new Point($row['week_start'] . ' - ' . $row['week_end'], $row['cnt']));
                     $chart->width += 25;
-                    $chart_content=1;
+                    $chart_content = 1;
                 }
-            break;
+                break;
             case "monthly":
                 while ($row = mysql_fetch_assoc($result)) {
                     $chart->addPoint(new Point($langMonths[$row['month']], $row['cnt']));
                     $chart->width += 25;
-                    $chart_content=1;
+                    $chart_content = 1;
                 }
-            break;
+                break;
             case "yearly":
                 while ($row = mysql_fetch_assoc($result)) {
                     $chart->addPoint(new Point($row['year'], $row['cnt']));
                     $chart->width += 25;
-                    $chart_content=1;
+                    $chart_content = 1;
                 }
-            break;
+                break;
         }
         $chart->setTitle("$langVisits");
 
 
-    break;
+        break;
     case "duration":
-        $query = "SELECT ".$date_what." , SUM(duration) AS tot_dur, ".
-            " accueil.rubrique AS name FROM actions LEFT JOIN accueil ON actions.module_id = accueil.id ".
-            " WHERE $date_where AND $mod_where GROUP BY ".$date_group." ORDER BY date_time ASC";
+        $query = "SELECT " . $date_what . " , SUM(duration) AS tot_dur, " .
+            " accueil.rubrique AS name FROM actions LEFT JOIN accueil ON actions.module_id = accueil.id " .
+            " WHERE $date_where AND $mod_where GROUP BY " . $date_group . " ORDER BY date_time ASC";
 
         $result = db_query($query, $currentCourseID);
         $chart = new VerticalChart(200, 300);
-	switch ($u_interval) {
+        switch ($u_interval) {
             case "summary":
                 while ($row = mysql_fetch_assoc($result)) {
-		    $row['tot_dur'] = round($row['tot_dur'] / 60);
-		    $chart->addPoint(new Point($langSummary, $row['tot_dur']));
+                    $row['tot_dur'] = round($row['tot_dur'] / 60);
+                    $chart->addPoint(new Point($langSummary, $row['tot_dur']));
                     $chart->width += 25;
-                    $chart_content=1;
+                    $chart_content = 1;
                 }
-          break;
-          case "daily":
-             while ($row = mysql_fetch_assoc($result)) {
-		 $row['tot_dur'] = round($row['tot_dur'] / 60);
-                 $chart->addPoint(new Point($row['date'], $row['tot_dur']));
-                 $chart->width += 25;
-                 $chart_content=1;
-             }
-         break;
-         case "weekly":
-             while ($row = mysql_fetch_assoc($result)) {
-		$row['tot_dur'] = round($row['tot_dur'] / 60);
-		$chart->setLabelMarginBottom(110);
-                $chart->setLabelMarginRight(80);
-                $chart->addPoint(new Point($row['week_start'].' - '.$row['week_end'], $row['tot_dur']));
-                $chart->width += 25;
-                $chart_content=1;
-             }
-         break;
-         case "monthly":
-            while ($row = mysql_fetch_assoc($result)) {
-		$row['tot_dur'] = round($row['tot_dur'] / 60);
-                $chart->addPoint(new Point($langMonths[$row['month']], $row['tot_dur']));
-                $chart->width += 25;
-                $chart_content=1;
-            }
-         break;
-         case "yearly":
-            while ($row = mysql_fetch_assoc($result)) {
-		$row['tot_dur'] = round($row['tot_dur'] / 60);
-                $chart->addPoint(new Point($row['year'], $row['tot_dur']));
-                $chart->width += 25;
-                $chart_content=1;
-            }
-         break;
-       }
+                break;
+            case "daily":
+                while ($row = mysql_fetch_assoc($result)) {
+                    $row['tot_dur'] = round($row['tot_dur'] / 60);
+                    $chart->addPoint(new Point($row['date'], $row['tot_dur']));
+                    $chart->width += 25;
+                    $chart_content = 1;
+                }
+                break;
+            case "weekly":
+                while ($row = mysql_fetch_assoc($result)) {
+                    $row['tot_dur'] = round($row['tot_dur'] / 60);
+                    $chart->setLabelMarginBottom(110);
+                    $chart->setLabelMarginRight(80);
+                    $chart->addPoint(new Point($row['week_start'] . ' - ' . $row['week_end'], $row['tot_dur']));
+                    $chart->width += 25;
+                    $chart_content = 1;
+                }
+                break;
+            case "monthly":
+                while ($row = mysql_fetch_assoc($result)) {
+                    $row['tot_dur'] = round($row['tot_dur'] / 60);
+                    $chart->addPoint(new Point($langMonths[$row['month']], $row['tot_dur']));
+                    $chart->width += 25;
+                    $chart_content = 1;
+                }
+                break;
+            case "yearly":
+                while ($row = mysql_fetch_assoc($result)) {
+                    $row['tot_dur'] = round($row['tot_dur'] / 60);
+                    $chart->addPoint(new Point($row['year'], $row['tot_dur']));
+                    $chart->width += 25;
+                    $chart_content = 1;
+                }
+                break;
+        }
 
-    $chart->setTitle("$langDurationVisits");
-    $tool_content .= "<p>$langDurationExpl</p>";
+        $chart->setTitle("$langDurationVisits");
+        $tool_content .= "<p>$langDurationExpl</p>";
 
-    break;
+        break;
 }
 mysql_free_result($result);
 
 
-$chart_path = 'courses/'.$currentCourseID.'/temp/chart_'.md5(serialize($chart)).'.png';
-$chart->render($webDir.$chart_path);
+$chart_path = 'courses/' . $currentCourseID . '/temp/chart_' . md5(serialize($chart)) . '.png';
+$chart->render($webDir . $chart_path);
 
- if ($chart_content) {
-  $tool_content .= '<p align="center"><img src="'.$urlServer.$chart_path.'" /></p>';
+if ($chart_content) {
+    $tool_content .= '<p align="center"><img src="' . $urlServer . $chart_path . '" /></p>';
 } elseif (isset($btnUsage) and $chart_content == 0) {
-  $tool_content .='<p class="alert1">'.$langNoStatistics.'</p>';
- }
+    $tool_content .= '<p class="alert1">' . $langNoStatistics . '</p>';
+}
 
 ?>

@@ -49,88 +49,88 @@
  */
 function getUserForumPosts($param, $type)
 {
-	global $mysqlMainDb, $uid, $dbname, $currentCourseID;
+    global $mysqlMainDb, $uid, $dbname, $currentCourseID;
 
-	$uid				= $param['uid'];
-	$lesson_code		= $param['lesson_code'];
-	$max_repeat_val		= $param['max_repeat_val'];
-	$lesson_title		= $param['lesson_titles'];
-	$lesson_code		= $param['lesson_code'];
-	$lesson_professor	= $param['lesson_professor'];
+    $uid = $param['uid'];
+    $lesson_code = $param['lesson_code'];
+    $max_repeat_val = $param['max_repeat_val'];
+    $lesson_title = $param['lesson_titles'];
+    $lesson_code = $param['lesson_code'];
+    $lesson_professor = $param['lesson_professor'];
 
-	$usr_lst_login	= $param['usr_lst_login'];
+    $usr_lst_login = $param['usr_lst_login'];
 
-	$usr_memory = $param['usr_memory'];
+    $usr_memory = $param['usr_memory'];
 
-	//		Generate SQL code for all queries
-	//		----------------------------------------
+    //		Generate SQL code for all queries
+    //		----------------------------------------
 
-	$forum_query_new 	= createForumQueries($usr_lst_login);
-	$forum_query_memo 	= createForumQueries($usr_memory);
+    $forum_query_new = createForumQueries($usr_lst_login);
+    $forum_query_memo = createForumQueries($usr_memory);
 
-	$forumPosts = array();
-	$getNewPosts = false;
-	for ($i=0;$i<$max_repeat_val;$i++) {
+    $forumPosts = array();
+    $getNewPosts = false;
+    for ($i = 0; $i < $max_repeat_val; $i++) {
 
-		$mysql_query_result = db_query($forum_query_new, $lesson_code[$i]);
+        $mysql_query_result = db_query($forum_query_new, $lesson_code[$i]);
 
-		if ($num_rows = mysql_num_rows($mysql_query_result) > 0) {
-			$getNewPosts = true;
+        if ($num_rows = mysql_num_rows($mysql_query_result) > 0) {
+            $getNewPosts = true;
 
-			$forumData = array();
-			$forumSubData = array();
-			$forumContent = array();
+            $forumData = array();
+            $forumSubData = array();
+            $forumContent = array();
 
-			array_push($forumData, $lesson_title[$i]);
-			array_push($forumData, $lesson_code[$i]);
-		}
+            array_push($forumData, $lesson_title[$i]);
+            array_push($forumData, $lesson_code[$i]);
+        }
 
-		while ($myForumPosts = mysql_fetch_row($mysql_query_result)) {
-			if ($myForumPosts){
-				array_push($forumContent, $myForumPosts);
-			}
-		}
+        while ($myForumPosts = mysql_fetch_row($mysql_query_result)) {
+            if ($myForumPosts) {
+                array_push($forumContent, $myForumPosts);
+            }
+        }
 
-		if ($num_rows > 0) {
-			array_push($forumSubData, $forumContent);
-			array_push($forumData, $forumSubData);
-			array_push($forumPosts, $forumData);
-		}
-	}
+        if ($num_rows > 0) {
+            array_push($forumSubData, $forumContent);
+            array_push($forumData, $forumSubData);
+            array_push($forumPosts, $forumData);
+        }
+    }
 
-	if ($getNewPosts) {
-		$sqlNowDate = eregi_replace(" ", "-",$usr_lst_login);
-		$sql = "UPDATE `user` SET `forum_flag` = '$sqlNowDate' WHERE `user_id` = $uid ";
-		db_query($sql, $mysqlMainDb);
-	} elseif (!$getNewPosts) {
-		//if there are no new announcements, get the last announcements the user had
-		//so that we always have something to display
-		for ($i=0; $i < $max_repeat_val; $i++){
-			$mysql_query_result = db_query($forum_query_memo, $lesson_code[$i]);
-			if (mysql_num_rows($mysql_query_result) >0) {
-				$forumData = array();
-				$forumSubData = array();
-				$forumContent = array();
+    if ($getNewPosts) {
+        $sqlNowDate = eregi_replace(" ", "-", $usr_lst_login);
+        $sql = "UPDATE `user` SET `forum_flag` = '$sqlNowDate' WHERE `user_id` = $uid ";
+        db_query($sql, $mysqlMainDb);
+    } elseif (!$getNewPosts) {
+        //if there are no new announcements, get the last announcements the user had
+        //so that we always have something to display
+        for ($i = 0; $i < $max_repeat_val; $i++) {
+            $mysql_query_result = db_query($forum_query_memo, $lesson_code[$i]);
+            if (mysql_num_rows($mysql_query_result) > 0) {
+                $forumData = array();
+                $forumSubData = array();
+                $forumContent = array();
 
-				array_push($forumData, $lesson_title[$i]);
-				array_push($forumData, $lesson_code[$i]);
+                array_push($forumData, $lesson_title[$i]);
+                array_push($forumData, $lesson_code[$i]);
 
-				while ($myForumPosts = mysql_fetch_row($mysql_query_result)) {
-					array_push($forumContent, $myForumPosts);
-				}
+                while ($myForumPosts = mysql_fetch_row($mysql_query_result)) {
+                    array_push($forumContent, $myForumPosts);
+                }
 
-				array_push($forumSubData, $forumContent);
-				array_push($forumData, $forumSubData);
-				array_push($forumPosts, $forumData);
-			}
-		}
-	}
+                array_push($forumSubData, $forumContent);
+                array_push($forumData, $forumSubData);
+                array_push($forumPosts, $forumData);
+            }
+        }
+    }
 
-	if($type == "html") {
-		return forumHtmlInterface($forumPosts);
-	} elseif ($type == "data") {
-		return $forumPosts;
-	}
+    if ($type == "html") {
+        return forumHtmlInterface($forumPosts);
+    } elseif ($type == "data") {
+        return $forumPosts;
+    }
 }
 
 
@@ -145,33 +145,33 @@ function getUserForumPosts($param, $type)
  */
 function forumHtmlInterface($data)
 {
-	global $langNoPosts, $langMore, $langSender, $urlServer;
+    global $langNoPosts, $langMore, $langSender, $urlServer;
 
-	$content = "";
+    $content = "";
 
-	if($numOfLessons = count($data) > 0) {
-		$content .= <<<fCont
+    if ($numOfLessons = count($data) > 0) {
+        $content .= <<<fCont
     <div class="datacontainer">
       <ul class="datalist">
 fCont;
-		$numOfLessons = count($data);
-		for ($i=0; $i <$numOfLessons; $i++) {
-			$content .= "\n          <li class='category'>".$data[$i][0]."</li>";
-			$iterator =  count($data[$i][2][0]);
-			for ($j=0; $j < $iterator; $j++){
-				$url = $urlServer."index.php?perso=5&amp;c=".$data[$i][1]."&amp;t=".$data[$i][2][0][$j][2]."&amp;f=".$data[$i][2][0][$j][0]."&amp;s=".$data[$i][2][0][$j][4];
-                                $data[$i][2][0][$j][8] = ellipsize($data[$i][2][0][$j][8], 150,
-                                        "... <strong><span class='announce_date'>$langMore</span></strong>");
-				$content .= "\n          <li><a class='square_bullet' href='$url'><strong class='title_pos'>".$data[$i][2][0][$j][3]." (".nice_format(date("Y-m-d", strtotime($data[$i][2][0][$j][5]))).")</strong></a><p class='content_pos'>".$data[$i][2][0][$j][8]."<br /><cite class='content_pos'>".$data[$i][2][0][$j][6]." ".$data[$i][2][0][$j][7]."</cite></p></li>";
-			}
-			//if ($i+1 <$numOfLessons) $content .= "<br>";
-		}
-		$content .= "</ul></div>";
-	} else {
-		$content .= "<p>$langNoPosts</p>";
-	}
+        $numOfLessons = count($data);
+        for ($i = 0; $i < $numOfLessons; $i++) {
+            $content .= "\n          <li class='category'>" . $data[$i][0] . "</li>";
+            $iterator = count($data[$i][2][0]);
+            for ($j = 0; $j < $iterator; $j++) {
+                $url = $urlServer . "index.php?perso=5&amp;c=" . $data[$i][1] . "&amp;t=" . $data[$i][2][0][$j][2] . "&amp;f=" . $data[$i][2][0][$j][0] . "&amp;s=" . $data[$i][2][0][$j][4];
+                $data[$i][2][0][$j][8] = ellipsize($data[$i][2][0][$j][8], 150,
+                    "... <strong><span class='announce_date'>$langMore</span></strong>");
+                $content .= "\n          <li><a class='square_bullet' href='$url'><strong class='title_pos'>" . $data[$i][2][0][$j][3] . " (" . nice_format(date("Y-m-d", strtotime($data[$i][2][0][$j][5]))) . ")</strong></a><p class='content_pos'>" . $data[$i][2][0][$j][8] . "<br /><cite class='content_pos'>" . $data[$i][2][0][$j][6] . " " . $data[$i][2][0][$j][7] . "</cite></p></li>";
+            }
+            //if ($i+1 <$numOfLessons) $content .= "<br>";
+        }
+        $content .= "</ul></div>";
+    } else {
+        $content .= "<p>$langNoPosts</p>";
+    }
 
-	return $content;
+    return $content;
 }
 
 
@@ -183,9 +183,10 @@ fCont;
  * @param string $dateVar
  * @return string SQL query
  */
-function createForumQueries($dateVar){
+function createForumQueries($dateVar)
+{
 
-        $forum_query = 'SELECT forums.forum_id,
+    $forum_query = 'SELECT forums.forum_id,
                                forums.forum_name,
                                topics.topic_id,
                                topics.topic_title,
@@ -204,10 +205,10 @@ function createForumQueries($dateVar){
                                AND posts.forum_id = forums.forum_id
                                AND posts.post_id = posts_text.post_id
                                AND posts.topic_id = topics.topic_id
-                               AND DATE_FORMAT(posts.post_time, \'%Y %m %d\') >= "'.$dateVar.'"
+                               AND DATE_FORMAT(posts.post_time, \'%Y %m %d\') >= "' . $dateVar . '"
                                AND accueil.visible = 1
                                AND accueil.id = 9
                         ORDER BY posts.post_time';
 
-	return $forum_query;
+    return $forum_query;
 }

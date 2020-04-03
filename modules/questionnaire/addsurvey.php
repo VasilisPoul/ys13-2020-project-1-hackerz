@@ -71,49 +71,49 @@ if ($language == 'greek') {
     $lang = 'en';
 }
 
-$jscalendar = new DHTML_Calendar($urlServer.'include/jscalendar/', $lang, 'calendar-blue2', false);
+$jscalendar = new DHTML_Calendar($urlServer . 'include/jscalendar/', $lang, 'calendar-blue2', false);
 $local_head = $jscalendar->get_load_files_code();
 
 $u_date_start = strftime('%Y-%m-%d %H:%M:%S', strtotime('now -0 day'));
 $u_date_end = strftime('%Y-%m-%d %H:%M:%S', strtotime('now +1 year'));
 
 $start_cal_Survey = $jscalendar->make_input_field(
-           array('showsTime'      => true,
-                 'showOthers'     => true,
-                 'ifFormat'       => '%Y-%m-%d %H:%M:%S',
-                 'timeFormat'     => '24'),
-           array('style'       => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
-                 'name'        => 'SurveyStart',
-                 'value'       => $u_date_start));
+    array('showsTime' => true,
+        'showOthers' => true,
+        'ifFormat' => '%Y-%m-%d %H:%M:%S',
+        'timeFormat' => '24'),
+    array('style' => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
+        'name' => 'SurveyStart',
+        'value' => $u_date_start));
 
 $end_cal_Survey = $jscalendar->make_input_field(
-           array('showsTime'      => true,
-                 'showOthers'     => true,
-                 'ifFormat'       => '%Y-%m-%d %H:%M:%S',
-                 'timeFormat'     => '24'),
-           array('style'       => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
-                 'name'        => 'SurveyEnd',
-                 'value'       => $u_date_end));
+    array('showsTime' => true,
+        'showOthers' => true,
+        'ifFormat' => '%Y-%m-%d %H:%M:%S',
+        'timeFormat' => '24'),
+    array('style' => 'width: 15em; color: #840; background-color: #ff8; border: 1px solid #000; text-align: center',
+        'name' => 'SurveyEnd',
+        'value' => $u_date_end));
 
 $nameTools = $langCreate;
-$navigation[] = array("url"=>"questionnaire.php", "name"=> $langQuestionnaire);
+$navigation[] = array("url" => "questionnaire.php", "name" => $langQuestionnaire);
 
 $tool_content = "";
 
-if(!isset($_REQUEST['UseCase'])) $_REQUEST['UseCase'] = "";
+if (!isset($_REQUEST['UseCase'])) $_REQUEST['UseCase'] = "";
 
 switch ($_REQUEST['UseCase']) {
-case 1:
-   // handle multi choice surveys
-   printMCQuestionForm();
-   break;
-case 2:
-   // handle text input surveys
-   printTFQuestionForm();
-   break;
-default:
-   // print new survey form
-   printSurveyCreationForm();
+    case 1:
+        // handle multi choice surveys
+        printMCQuestionForm();
+        break;
+    case 2:
+        // handle text input surveys
+        printTFQuestionForm();
+        break;
+    default:
+        // print new survey form
+        printSurveyCreationForm();
 }
 
 // Get JS  ******************************************************
@@ -296,22 +296,23 @@ function removeEvent() {
 </script>
 hContent;
 
-if ($_REQUEST['UseCase'] ==1)
-	draw($tool_content, 2, 'survey', $head_content); 
-else	
-	draw($tool_content, 2, '', $local_head, '');
+if ($_REQUEST['UseCase'] == 1)
+    draw($tool_content, 2, 'survey', $head_content);
+else
+    draw($tool_content, 2, '', $local_head, '');
 
 /*****************************************************************************
-		Prints the new survey creation form
-******************************************************************************/
-function printSurveyCreationForm() {
-	global $tool_content, $langTitle, $langPollStart, 
-		$langPollEnd, $langType, $langSurveyMC, $langSurveyFillText, 
-		$langCreate, $langSurveyContinue,  $start_cal_Survey, $end_cal_Survey;
-	
-	$CurrentDate = date("Y-m-d H:i:s");
-	$CurrentDate = htmlspecialchars($CurrentDate);
-	$tool_content .= <<<cData
+ * Prints the new survey creation form
+ ******************************************************************************/
+function printSurveyCreationForm()
+{
+    global $tool_content, $langTitle, $langPollStart,
+           $langPollEnd, $langType, $langSurveyMC, $langSurveyFillText,
+           $langCreate, $langSurveyContinue, $start_cal_Survey, $end_cal_Survey;
+
+    $CurrentDate = date("Y-m-d H:i:s");
+    $CurrentDate = htmlspecialchars($CurrentDate);
+    $tool_content .= <<<cData
 	<form action="addsurvey.php" id="survey" method="post">
 	<input type="hidden" value="0" name="MoreQuestions">
 	<table><thead></thead>
@@ -338,27 +339,28 @@ cData;
 }
 
 /*****************************************************************************
-		Prints new multiple choice question and 2 answers
-******************************************************************************/
-function printMCQuestionForm() {
+ * Prints new multiple choice question and 2 answers
+ ******************************************************************************/
+function printMCQuestionForm()
+{
 
-	global $tool_content, $langTitle, $langSurveyStart, $langSurveyEnd, 
-		$langType, $langSurveyMC, $langSurveyFillText, 
-		$langQuestion, $langCreate, $langSurveyMoreQuestions, 
-		$langSurveyCreated, $MoreQuestions, $langAnswer, 
-		$langSurveyMoreAnswers, $langSurveyInfo,
-		$langQuestion1, $langQuestion2, $langQuestion3, $langQuestion4, $langQuestion5, $langQuestion6,
-		$langQuestion7, $langQuestion8,$langQuestion9, $langQuestion10;
-		
-		if(isset($_POST['SurveyName'])) $SurveyName = htmlspecialchars($_POST['SurveyName']);
-		if(isset($_POST['SurveyEnd'])) $SurveyEnd = htmlspecialchars($_POST['SurveyEnd']);
-		if(isset($_POST['SurveyStart'])) $SurveyStart = htmlspecialchars($_POST['SurveyStart']);
-		
+    global $tool_content, $langTitle, $langSurveyStart, $langSurveyEnd,
+           $langType, $langSurveyMC, $langSurveyFillText,
+           $langQuestion, $langCreate, $langSurveyMoreQuestions,
+           $langSurveyCreated, $MoreQuestions, $langAnswer,
+           $langSurveyMoreAnswers, $langSurveyInfo,
+           $langQuestion1, $langQuestion2, $langQuestion3, $langQuestion4, $langQuestion5, $langQuestion6,
+           $langQuestion7, $langQuestion8, $langQuestion9, $langQuestion10;
+
+    if (isset($_POST['SurveyName'])) $SurveyName = htmlspecialchars($_POST['SurveyName']);
+    if (isset($_POST['SurveyEnd'])) $SurveyEnd = htmlspecialchars($_POST['SurveyEnd']);
+    if (isset($_POST['SurveyStart'])) $SurveyStart = htmlspecialchars($_POST['SurveyStart']);
+
 //	if ($MoreQuestions == 2) { // Create survey ******************************************************
-	if ($MoreQuestions == $langCreate) { // Create survey
-		createMCSurvey();
-	} elseif(count($_POST)<7) { // Just entered MC survey creation dialiog ****************************
-		$tool_content .= <<<cData
+    if ($MoreQuestions == $langCreate) { // Create survey
+        createMCSurvey();
+    } elseif (count($_POST) < 7) { // Just entered MC survey creation dialiog ****************************
+        $tool_content .= <<<cData
 		<table><thead></thead>
 	<tr><td colspan=2>$langSurveyInfo</td></tr></table>
 	<form action="addsurvey.php" id="survey" method="post" name="SurveyForm" onSubmit="return checkrequired(this, 'question1')">
@@ -397,10 +399,10 @@ function printMCQuestionForm() {
 		<input type="hidden" value="1" name="NumOfQuestions">
 		</form>
 cData;
-	} elseif ($MoreQuestions == $langSurveyMoreAnswers) {  // Print more answers 
-		$NumOfQuestions = $_POST['NumOfQuestions'];
-		
-		$tool_content .= <<<cData
+    } elseif ($MoreQuestions == $langSurveyMoreAnswers) {  // Print more answers
+        $NumOfQuestions = $_POST['NumOfQuestions'];
+
+        $tool_content .= <<<cData
 		<form action="addsurvey.php" id="survey" method="post">
 		<input type="hidden" value="1" name="UseCase">
 		<table>
@@ -410,8 +412,8 @@ cData;
 			
 cData;
 
-		printAllQA();
-		$tool_content .= <<<cData
+        printAllQA();
+        $tool_content .= <<<cData
 					<tr><td>$langAnswer</td><td colspan="2"><input type="text" size="10" name="answer" value=""></td></tr>
 						<tr>
 			  <td>
@@ -428,11 +430,11 @@ cData;
 		<input type="hidden" value="{$NumOfQuestions}" name="NumOfQuestions">
 		</form>
 cData;
-	} else {  // Print more questions ******************************************************
-		$NumOfQuestions = $_POST['NumOfQuestions'];
-		++$NumOfQuestions;
-		
-		$tool_content .= <<<cData
+    } else {  // Print more questions ******************************************************
+        $NumOfQuestions = $_POST['NumOfQuestions'];
+        ++$NumOfQuestions;
+
+        $tool_content .= <<<cData
 		<form action="addsurvey.php" id="survey" method="post" name="SurveyForm"  onSubmit="return checkrequired(this, 'questionx')">
 		<input type="hidden" value="1" name="UseCase">
 		<table>
@@ -444,10 +446,10 @@ cData;
 					<input type="text" size="20" name="SurveyEnd" value="$SurveyEnd"></td></tr>
 			
 cData;
-		
-		printAllQA();
-		
-		$tool_content .= <<<cData
+
+        printAllQA();
+
+        $tool_content .= <<<cData
 		<tr><td colspan=3><hr></td></tr>
 			<tr><td colspan=3>
 				<SELECT NAME="questionx" onChange="addEvent(this.selectedIndex);this.parentNode.removeChild(this);" id="QuestionSelector">
@@ -465,13 +467,13 @@ cData;
 				</SELECT>
 			</td></tr>
 cData;
-		
-		$tool_content .= "<tr> <td>" . 
-				$langQuestion . "	</td><td><input type='text' name='questionx' size='70' id='NewQuestion'></td></tr>".
-				"<tr><td>$langAnswer 1</td><td><input type='text' name='answerx.1' size='70' id='NewAnswer1'></td></tr>".
-				"<tr><td>$langAnswer 2</td><td><input type='text' name='answerx.2' size='70' id='NewAnswer2'></td></tr>";
-			
-		$tool_content .= <<<cData
+
+        $tool_content .= "<tr> <td>" .
+            $langQuestion . "	</td><td><input type='text' name='questionx' size='70' id='NewQuestion'></td></tr>" .
+            "<tr><td>$langAnswer 1</td><td><input type='text' name='answerx.1' size='70' id='NewAnswer1'></td></tr>" .
+            "<tr><td>$langAnswer 2</td><td><input type='text' name='answerx.2' size='70' id='NewAnswer2'></td></tr>";
+
+        $tool_content .= <<<cData
 				<tr id="NextLine"><td colspan=3><hr></td></tr>
 				<tr>
 			  <td>
@@ -488,28 +490,29 @@ cData;
 		<input type="hidden" value="{$NumOfQuestions}" name="NumOfQuestions">
 		</form>
 cData;
-	}
+    }
 }
 
 
 /*****************************************************************************
-		Prints new text fill question
-******************************************************************************/
-function printTFQuestionForm() {
-	global $tool_content, $langTitle, $langSurveyStart, $langSurveyEnd, 
-		$langType, $langSurveyMC, $langSurveyFillText, 
-		$langQuestion, $langCreate, $langSurveyMoreQuestions, 
-		$langSurveyCreated, $MoreQuestions;
-		
-		if(isset($_POST['SurveyName'])) $SurveyName = htmlspecialchars($_POST['SurveyName']);
-		if(isset($_POST['SurveyEnd'])) $SurveyEnd = htmlspecialchars($_POST['SurveyEnd']);
-		if(isset($_POST['SurveyStart'])) $SurveyStart = htmlspecialchars($_POST['SurveyStart']);
-		
+ * Prints new text fill question
+ ******************************************************************************/
+function printTFQuestionForm()
+{
+    global $tool_content, $langTitle, $langSurveyStart, $langSurveyEnd,
+           $langType, $langSurveyMC, $langSurveyFillText,
+           $langQuestion, $langCreate, $langSurveyMoreQuestions,
+           $langSurveyCreated, $MoreQuestions;
+
+    if (isset($_POST['SurveyName'])) $SurveyName = htmlspecialchars($_POST['SurveyName']);
+    if (isset($_POST['SurveyEnd'])) $SurveyEnd = htmlspecialchars($_POST['SurveyEnd']);
+    if (isset($_POST['SurveyStart'])) $SurveyStart = htmlspecialchars($_POST['SurveyStart']);
+
 //	if ($MoreQuestions == 2) {
-	if ($MoreQuestions == $langCreate) {
-		createTFSurvey();
-	} else {
-		$tool_content .= <<<cData
+    if ($MoreQuestions == $langCreate) {
+        createTFSurvey();
+    } else {
+        $tool_content .= <<<cData
 		<form action="addsurvey.php" id="survey" method="post">
 		<input type="hidden" value="2" name="UseCase">
 		<table>
@@ -517,16 +520,16 @@ function printTFQuestionForm() {
 			<tr><td>$langSurveyStart</td><td colspan="2"><input type="text" size="20" name="SurveyStart" value="$SurveyStart"></td></tr>
 			<tr><td>$langSurveyEnd</td><td colspan="2"><input type="text" size="20" name="SurveyEnd" value="$SurveyEnd"></td></tr>
 cData;
-		$counter = 0;
-		foreach (array_keys($_POST) as $key) {
-			++$counter;
-		  $$key = $_POST[$key];
-		  if (($counter > 4 )&($counter < count($_POST)-1)) {
-				$tool_content .= "<tr><td>$langQuestion</td><td><input type='text' name='question{$counter}' value='${$key}'></td></tr>"; 
-			}
-		}
-			
-		$tool_content .= <<<cData
+        $counter = 0;
+        foreach (array_keys($_POST) as $key) {
+            ++$counter;
+            $$key = $_POST[$key];
+            if (($counter > 4) & ($counter < count($_POST) - 1)) {
+                $tool_content .= "<tr><td>$langQuestion</td><td><input type='text' name='question{$counter}' value='${$key}'></td></tr>";
+            }
+        }
+
+        $tool_content .= <<<cData
 			<tr><td>$langQuestion</td><td><input type='text' name='question'></td></tr>
 			<tr>
 			  <td>
@@ -539,139 +542,145 @@ cData;
 		</table>
 		</form>
 cData;
-	}
+    }
 }
 
-function createTFSurvey() {
-	$counter = 0;
-	foreach (array_keys($_POST) as $key) {
-		++$counter;
-		$$key = $_POST[$key];
-		
-		if ($counter == 2) {
-			$SurveyName = $$key;
-		} elseif ($counter == 3) {
-			$CreationDate = date("Y-m-d H:i:s");
-			$StartDate = $$key;
-		} elseif ($counter == 4) {
-			$EndDate = $$key;
-			$SurveyType = 2;
-			$SurveyActive = 1;
-			$sid = date("YmdHms"); 
-			mysql_select_db($GLOBALS['currentCourseID']);
-			$result1 = db_query("INSERT INTO survey VALUES ('".
-				mysql_real_escape_string($sid). "','".
-				$GLOBALS['uid']. "','".
-				$GLOBALS['currentCourseID']. "','".
-				mysql_real_escape_string($SurveyName) 	. "','".
-				mysql_real_escape_string($CreationDate) . "','".
-				mysql_real_escape_string($StartDate) 		. "','".
-				mysql_real_escape_string($EndDate) 			. "','".
-				mysql_real_escape_string($SurveyType) 	. "','".
-				mysql_real_escape_string($SurveyActive) ."')");
-		} elseif (($counter > 4)&&($counter <= count($_POST)-2)) {
-			$QuestionText = $$key;
-			$sqid = "";
-			$pattern = "1234567890";
-			for($i=0;$i<12;$i++)
-				$sqid .= $pattern{rand(0,9)};
-			mysql_select_db($GLOBALS['currentCourseID']);
-			$result2 = db_query("INSERT INTO survey_question VALUES ('".
-				$sqid. "','".
-				mysql_real_escape_string($sid). "','".
-				mysql_real_escape_string($QuestionText) ."')");
-		}
-	}	  
-    
-	$GLOBALS["tool_content"] .= $GLOBALS["langSurveyCreated"];
+function createTFSurvey()
+{
+    $counter = 0;
+    foreach (array_keys($_POST) as $key) {
+        ++$counter;
+        $$key = $_POST[$key];
+
+        if ($counter == 2) {
+            $SurveyName = $$key;
+        } elseif ($counter == 3) {
+            $CreationDate = date("Y-m-d H:i:s");
+            $StartDate = $$key;
+        } elseif ($counter == 4) {
+            $EndDate = $$key;
+            $SurveyType = 2;
+            $SurveyActive = 1;
+            $sid = date("YmdHms");
+            mysql_select_db($GLOBALS['currentCourseID']);
+            $result1 = db_query("INSERT INTO survey VALUES ('" .
+                mysql_real_escape_string($sid) . "','" .
+                $GLOBALS['uid'] . "','" .
+                $GLOBALS['currentCourseID'] . "','" .
+                mysql_real_escape_string($SurveyName) . "','" .
+                mysql_real_escape_string($CreationDate) . "','" .
+                mysql_real_escape_string($StartDate) . "','" .
+                mysql_real_escape_string($EndDate) . "','" .
+                mysql_real_escape_string($SurveyType) . "','" .
+                mysql_real_escape_string($SurveyActive) . "')");
+        } elseif (($counter > 4) && ($counter <= count($_POST) - 2)) {
+            $QuestionText = $$key;
+            $sqid = "";
+            $pattern = "1234567890";
+            for ($i = 0; $i < 12; $i++)
+                $sqid .= $pattern{rand(0, 9)};
+            mysql_select_db($GLOBALS['currentCourseID']);
+            $result2 = db_query("INSERT INTO survey_question VALUES ('" .
+                $sqid . "','" .
+                mysql_real_escape_string($sid) . "','" .
+                mysql_real_escape_string($QuestionText) . "')");
+        }
+    }
+
+    $GLOBALS["tool_content"] .= $GLOBALS["langSurveyCreated"];
 }
-function createMCSurvey() {
-	
-	global $tool_content, $langQuestion, $langAnswer;
 
-	// insert into survey as above
-	
-		$counter = 0;
-		$CurrentQuestion = 0;
-		$CurrentAnswer = 0;
-		foreach (array_keys($_POST) as $key) {
-			$$key = $_POST[$key];
-			++$counter;
-			
-			// Populate survey table first
-			if ($counter == 2) {
-				$SurveyName = $$key;
-			} elseif ($counter == 3) {
-				$CreationDate = date("Y-m-d H:m:s");
-				$StartDate = $$key;
-			} elseif ($counter == 4) {
-				$EndDate = $$key;
-				$SurveyType = 1;
-				$SurveyActive = 1;
-				$sid = date("YmdHms"); 
-				mysql_select_db($GLOBALS['currentCourseID']);
-				$result3 = db_query("INSERT INTO survey VALUES ('".
-					mysql_real_escape_string($sid). "','".
-					$GLOBALS['uid']. "','".
-					$GLOBALS['currentCourseID']. "','".
-					mysql_real_escape_string($SurveyName) 	. "','".
-					mysql_real_escape_string($CreationDate) . "','".
-					mysql_real_escape_string($StartDate) 		. "','".
-					mysql_real_escape_string($EndDate) 			. "','".
-					mysql_real_escape_string($SurveyType) 	. "','".
-					mysql_real_escape_string($SurveyActive) ."')");
-			}	
-			if (($counter >= 5) && ($counter <= (count($_POST)-2) )) { // question or anwser
-				if (substr($key, 0, 8) == "question") { //question
-					$QuestionText = $$key;
-					$sqid = "";
-					$pattern = "1234567890";
-					for($i=0;$i<12;$i++)
-						$sqid .= $pattern{rand(0,9)};
-					mysql_select_db($GLOBALS['currentCourseID']);
-					$result4 = db_query("INSERT INTO survey_question VALUES ('".
-					$sqid . "','".
-					mysql_real_escape_string($sid) . "','".
-					mysql_real_escape_string($QuestionText) ."')");
+function createMCSurvey()
+{
 
-				} else { //answer
-					if ($$key != '') {
-						$AnwserText = $$key;	
-						mysql_select_db($GLOBALS['currentCourseID']);
-						$result5 = db_query("INSERT INTO survey_question_answer VALUES ('0','".
-							$sqid. "','".
-							mysql_real_escape_string($AnwserText) ."')");
-					}
-				}
-			}
-	}
-	$GLOBALS["tool_content"] .= $GLOBALS["langSurveyCreated"];
+    global $tool_content, $langQuestion, $langAnswer;
+
+    // insert into survey as above
+
+    $counter = 0;
+    $CurrentQuestion = 0;
+    $CurrentAnswer = 0;
+    foreach (array_keys($_POST) as $key) {
+        $$key = $_POST[$key];
+        ++$counter;
+
+        // Populate survey table first
+        if ($counter == 2) {
+            $SurveyName = $$key;
+        } elseif ($counter == 3) {
+            $CreationDate = date("Y-m-d H:m:s");
+            $StartDate = $$key;
+        } elseif ($counter == 4) {
+            $EndDate = $$key;
+            $SurveyType = 1;
+            $SurveyActive = 1;
+            $sid = date("YmdHms");
+            mysql_select_db($GLOBALS['currentCourseID']);
+            $result3 = db_query("INSERT INTO survey VALUES ('" .
+                mysql_real_escape_string($sid) . "','" .
+                $GLOBALS['uid'] . "','" .
+                $GLOBALS['currentCourseID'] . "','" .
+                mysql_real_escape_string($SurveyName) . "','" .
+                mysql_real_escape_string($CreationDate) . "','" .
+                mysql_real_escape_string($StartDate) . "','" .
+                mysql_real_escape_string($EndDate) . "','" .
+                mysql_real_escape_string($SurveyType) . "','" .
+                mysql_real_escape_string($SurveyActive) . "')");
+        }
+        if (($counter >= 5) && ($counter <= (count($_POST) - 2))) { // question or anwser
+            if (substr($key, 0, 8) == "question") { //question
+                $QuestionText = $$key;
+                $sqid = "";
+                $pattern = "1234567890";
+                for ($i = 0; $i < 12; $i++)
+                    $sqid .= $pattern{rand(0, 9)};
+                mysql_select_db($GLOBALS['currentCourseID']);
+                $result4 = db_query("INSERT INTO survey_question VALUES ('" .
+                    $sqid . "','" .
+                    mysql_real_escape_string($sid) . "','" .
+                    mysql_real_escape_string($QuestionText) . "')");
+
+            } else { //answer
+                if ($$key != '') {
+                    $AnwserText = $$key;
+                    mysql_select_db($GLOBALS['currentCourseID']);
+                    $result5 = db_query("INSERT INTO survey_question_answer VALUES ('0','" .
+                        $sqid . "','" .
+                        mysql_real_escape_string($AnwserText) . "')");
+                }
+            }
+        }
+    }
+    $GLOBALS["tool_content"] .= $GLOBALS["langSurveyCreated"];
 }
-function printAllQA() {
 
-	global $tool_content, $langQuestion, $langAnswer;
+function printAllQA()
+{
 
-		$counter = 0;
-		$CurrentQuestion = 0;
-		$CurrentAnswer = 0;
-		foreach (array_keys($_POST) as $key) {
-			$$key = $_POST[$key];
-			++$counter;
-			if (($counter >= 5)&&($counter <= (count($_POST)-3) )) { // question or anwser
-				if (substr($key, 0, 8) == "question") { //question
-					++$CurrentQuestion;
-					$tool_content .= "<tr><td colspan=3><hr></td></tr> <tr><td>" . $langQuestion . 
-						" </td><td><input type='text' size='70' name='question{$CurrentQuestion}' value='".
-						$$key."'></td></tr>\n";
-				} else { //answer
-					if ($$key != '') {
-						++$CurrentAnswer;
-						$tool_content .= " <tr><td>" . $langAnswer . 
-						" </td><td><input type='text' size='70' name='answer{$CurrentQuestion}.{$CurrentAnswer}' ".
-						"value='{$$key}'></td></tr>\n";
-					}
-				}
-			}
-	 }
+    global $tool_content, $langQuestion, $langAnswer;
+
+    $counter = 0;
+    $CurrentQuestion = 0;
+    $CurrentAnswer = 0;
+    foreach (array_keys($_POST) as $key) {
+        $$key = $_POST[$key];
+        ++$counter;
+        if (($counter >= 5) && ($counter <= (count($_POST) - 3))) { // question or anwser
+            if (substr($key, 0, 8) == "question") { //question
+                ++$CurrentQuestion;
+                $tool_content .= "<tr><td colspan=3><hr></td></tr> <tr><td>" . $langQuestion .
+                    " </td><td><input type='text' size='70' name='question{$CurrentQuestion}' value='" .
+                    $$key . "'></td></tr>\n";
+            } else { //answer
+                if ($$key != '') {
+                    ++$CurrentAnswer;
+                    $tool_content .= " <tr><td>" . $langAnswer .
+                        " </td><td><input type='text' size='70' name='answer{$CurrentQuestion}.{$CurrentAnswer}' " .
+                        "value='{$$key}'></td></tr>\n";
+                }
+            }
+        }
+    }
 }
+
 ?>

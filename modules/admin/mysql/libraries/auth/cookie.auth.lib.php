@@ -9,7 +9,7 @@
  * @version $Id: cookie.auth.lib.php 12396 2009-05-07 07:56:13Z helmo $
  */
 
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -32,12 +32,12 @@ if (function_exists('mcrypt_encrypt')) {
      * per server so I don't put the server number in the cookie name.
      */
     if (empty($_COOKIE['pma_mcrypt_iv'])
-     || false === ($iv = base64_decode($_COOKIE['pma_mcrypt_iv'], true))) {
-        srand((double) microtime() * 1000000);
-         $td = mcrypt_module_open(MCRYPT_BLOWFISH, '', MCRYPT_MODE_CBC, '');   
-         if ($td === false) {
+        || false === ($iv = base64_decode($_COOKIE['pma_mcrypt_iv'], true))) {
+        srand((double)microtime() * 1000000);
+        $td = mcrypt_module_open(MCRYPT_BLOWFISH, '', MCRYPT_MODE_CBC, '');
+        if ($td === false) {
             trigger_error(PMA_sanitize(sprintf($strCantLoad, 'mcrypt')), E_USER_WARNING);
-         }
+        }
         $iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
         PMA_setCookie('pma_mcrypt_iv', base64_encode($iv));
     }
@@ -45,8 +45,8 @@ if (function_exists('mcrypt_encrypt')) {
     /**
      * Encryption using blowfish algorithm (mcrypt)
      *
-     * @param   string  original data
-     * @param   string  the secret
+     * @param string  original data
+     * @param string  the secret
      *
      * @return  string  the encrypted result
      *
@@ -63,8 +63,8 @@ if (function_exists('mcrypt_encrypt')) {
     /**
      * Decryption using blowfish algorithm (mcrypt)
      *
-     * @param   string  encrypted data
-     * @param   string  the secret
+     * @param string  encrypted data
+     * @param string  the secret
      *
      * @return  string  original data
      *
@@ -92,7 +92,8 @@ if (function_exists('mcrypt_encrypt')) {
  *
  * @access  public
  */
-function PMA_get_blowfish_secret() {
+function PMA_get_blowfish_secret()
+{
     if (empty($GLOBALS['cfg']['blowfish_secret'])) {
         if (empty($_SESSION['auto_blowfish_secret'])) {
             $_SESSION['auto_blowfish_secret'] = uniqid('', true);
@@ -155,22 +156,22 @@ function PMA_auth()
     global $conn_error;
 
     /* Perform logout to custom URL */
-    if (! empty($_REQUEST['old_usr'])
-     && ! empty($GLOBALS['cfg']['Server']['LogoutURL'])) {
+    if (!empty($_REQUEST['old_usr'])
+        && !empty($GLOBALS['cfg']['Server']['LogoutURL'])) {
         PMA_sendHeaderLocation($GLOBALS['cfg']['Server']['LogoutURL']);
         exit;
     }
 
     /* No recall if blowfish secret is not configured as it would produce garbage */
     if ($GLOBALS['cfg']['LoginCookieRecall'] && !empty($GLOBALS['cfg']['blowfish_secret'])) {
-        $default_user   = $GLOBALS['PHP_AUTH_USER'];
+        $default_user = $GLOBALS['PHP_AUTH_USER'];
         $default_server = $GLOBALS['pma_auth_server'];
-        $autocomplete   = '';
+        $autocomplete = '';
     } else {
-        $default_user   = '';
+        $default_user = '';
         $default_server = '';
         // skip the IE autocomplete feature.
-        $autocomplete   = ' autocomplete="off"';
+        $autocomplete = ' autocomplete="off"';
     }
 
     $cell_align = ($GLOBALS['text_dir'] == 'ltr') ? 'left' : 'right';
@@ -184,173 +185,177 @@ function PMA_auth()
     $page_title = 'phpMyAdmin ';
     require './libraries/header_meta_style.inc.php';
     ?>
-<script type="text/javascript">
-//<![CDATA[
-// show login form in top frame
-if (top != self) {
-    window.top.location.href=location;
-}
-//]]>
-</script>
-</head>
+    <script type="text/javascript">
+        //<![CDATA[
+        // show login form in top frame
+        if (top != self) {
+            window.top.location.href = location;
+        }
+        //]]>
+    </script>
+    </head>
 
-<body class="loginform">
+    <body class="loginform">
 
     <?php
     if (file_exists('./config.header.inc.php')) {
-          require './config.header.inc.php';
+        require './config.header.inc.php';
     }
     ?>
 
-<div class="container">
-<a href="http://www.phpmyadmin.net" target="_blank" class="logo"><?php
-    $logo_image = $GLOBALS['pmaThemeImage'] . 'logo_right.png';
-    if (@file_exists($logo_image)) {
-        echo '<img src="' . $logo_image . '" id="imLogo" name="imLogo" alt="phpMyAdmin" border="0" />';
-    } else {
-        echo '<img name="imLogo" id="imLogo" src="' . $GLOBALS['pmaThemeImage'] . 'pma_logo.png' . '" '
-           . 'border="0" width="88" height="31" alt="phpMyAdmin" />';
-    }
-    ?></a>
-<h1>
-    <?php
-    echo sprintf($GLOBALS['strWelcome'],
-        '<bdo dir="ltr" xml:lang="en">' . $page_title . '</bdo>');
-    ?>
-</h1>
-    <?php
-
-    // Show error message
-    if (! empty($conn_error)) {
-        PMA_Message::rawError($conn_error)->display();
-    }
-
-    // Displays the languages form
-    if (empty($GLOBALS['cfg']['Lang'])) {
-        require_once './libraries/display_select_lang.lib.php';
-        // use fieldset, don't show doc link
-        PMA_select_language(true, false);
-    }
-
-    ?>
-<br />
-<!-- Login form -->
-<form method="post" action="index.php" name="login_form"<?php echo $autocomplete; ?> target="_top" class="login">
-    <fieldset>
-    <legend>
-<?php
-    echo $GLOBALS['strLogin'];
-    echo '<a href="./Documentation.html" target="documentation" ' .
-        'title="' . $GLOBALS['strPmaDocumentation'] . '">';
-    if ($GLOBALS['cfg']['ReplaceHelpImg']) {
-        echo '<img class="icon" src="' . $GLOBALS['pmaThemeImage'] . 'b_help.png" width="11" height="11" alt="' . $GLOBALS['strPmaDocumentation'] . '" />';
-    } else {
-        echo '(*)';
-    }
-    echo '</a>';
-?>
-</legend>
-
-<?php if ($GLOBALS['cfg']['AllowArbitraryServer']) { ?>
-        <div class="item">
-            <label for="input_servername" title="<?php echo $GLOBALS['strLogServerHelp']; ?>"><?php echo $GLOBALS['strLogServer']; ?></label>
-            <input type="text" name="pma_servername" id="input_servername" value="<?php echo htmlspecialchars($default_server); ?>" size="24" class="textfield" title="<?php echo $GLOBALS['strLogServerHelp']; ?>" />
-        </div>
-<?php } ?>
-        <div class="item">
-            <label for="input_username"><?php echo $GLOBALS['strLogUsername']; ?></label>
-            <input type="text" name="pma_username" id="input_username" value="<?php echo htmlspecialchars($default_user); ?>" size="24" class="textfield"/>
-        </div>
-        <div class="item">
-            <label for="input_password"><?php echo $GLOBALS['strLogPassword']; ?></label>
-            <input type="password" name="pma_password" id="input_password" value="" size="24" class="textfield" />
-        </div>
-    <?php
-    if (count($GLOBALS['cfg']['Servers']) > 1) {
-        ?>
-        <div class="item">
-            <label for="select_server"><?php echo $GLOBALS['strServerChoice']; ?>:</label>
-            <select name="server" id="select_server"
+    <div class="container">
+        <a href="http://www.phpmyadmin.net" target="_blank" class="logo"><?php
+            $logo_image = $GLOBALS['pmaThemeImage'] . 'logo_right.png';
+            if (@file_exists($logo_image)) {
+                echo '<img src="' . $logo_image . '" id="imLogo" name="imLogo" alt="phpMyAdmin" border="0" />';
+            } else {
+                echo '<img name="imLogo" id="imLogo" src="' . $GLOBALS['pmaThemeImage'] . 'pma_logo.png' . '" '
+                    . 'border="0" width="88" height="31" alt="phpMyAdmin" />';
+            }
+            ?></a>
+        <h1>
+            <?php
+            echo sprintf($GLOBALS['strWelcome'],
+                '<bdo dir="ltr" xml:lang="en">' . $page_title . '</bdo>');
+            ?>
+        </h1>
         <?php
-        if ($GLOBALS['cfg']['AllowArbitraryServer']) {
-            echo ' onchange="document.forms[\'login_form\'].elements[\'pma_servername\'].value = \'\'" ';
+
+        // Show error message
+        if (!empty($conn_error)) {
+            PMA_Message::rawError($conn_error)->display();
         }
-        echo '>';
 
-        require_once './libraries/select_server.lib.php';
-        PMA_select_server(false, false);
+        // Displays the languages form
+        if (empty($GLOBALS['cfg']['Lang'])) {
+            require_once './libraries/display_select_lang.lib.php';
+            // use fieldset, don't show doc link
+            PMA_select_language(true, false);
+        }
 
-        echo '</select></div>';
-    } else {
-        echo '    <input type="hidden" name="server" value="' . $GLOBALS['server'] . '" />';
-    } // end if (server choice)
-    ?>
-    </fieldset>
-    <fieldset class="tblFooters">
-        <input value="<?php echo $GLOBALS['strGo']; ?>" type="submit" id="input_go" />
-    <?php
-    $_form_params = array();
-    if (! empty($GLOBALS['target'])) {
-        $_form_params['target'] = $GLOBALS['target'];
-    }
-    if (! empty($GLOBALS['db'])) {
-        $_form_params['db'] = $GLOBALS['db'];
-    }
-    if (! empty($GLOBALS['table'])) {
-        $_form_params['table'] = $GLOBALS['table'];
-    }
-    // do not generate a "server" hidden field as we want the "server"
-    // drop-down to have priority
-    echo PMA_generate_common_hidden_inputs($_form_params, '', 0, 'server');
-    ?>
-    </fieldset>
-</form>
+        ?>
+        <br/>
+        <!-- Login form -->
+        <form method="post" action="index.php" name="login_form"<?php echo $autocomplete; ?> target="_top"
+              class="login">
+            <fieldset>
+                <legend>
+                    <?php
+                    echo $GLOBALS['strLogin'];
+                    echo '<a href="./Documentation.html" target="documentation" ' .
+                        'title="' . $GLOBALS['strPmaDocumentation'] . '">';
+                    if ($GLOBALS['cfg']['ReplaceHelpImg']) {
+                        echo '<img class="icon" src="' . $GLOBALS['pmaThemeImage'] . 'b_help.png" width="11" height="11" alt="' . $GLOBALS['strPmaDocumentation'] . '" />';
+                    } else {
+                        echo '(*)';
+                    }
+                    echo '</a>';
+                    ?>
+                </legend>
 
-    <?php
+                <?php if ($GLOBALS['cfg']['AllowArbitraryServer']) { ?>
+                    <div class="item">
+                        <label for="input_servername"
+                               title="<?php echo $GLOBALS['strLogServerHelp']; ?>"><?php echo $GLOBALS['strLogServer']; ?></label>
+                        <input type="text" name="pma_servername" id="input_servername"
+                               value="<?php echo htmlspecialchars($default_server); ?>" size="24" class="textfield"
+                               title="<?php echo $GLOBALS['strLogServerHelp']; ?>"/>
+                    </div>
+                <?php } ?>
+                <div class="item">
+                    <label for="input_username"><?php echo $GLOBALS['strLogUsername']; ?></label>
+                    <input type="text" name="pma_username" id="input_username"
+                           value="<?php echo htmlspecialchars($default_user); ?>" size="24" class="textfield"/>
+                </div>
+                <div class="item">
+                    <label for="input_password"><?php echo $GLOBALS['strLogPassword']; ?></label>
+                    <input type="password" name="pma_password" id="input_password" value="" size="24"
+                           class="textfield"/>
+                </div>
+                <?php
+                if (count($GLOBALS['cfg']['Servers']) > 1) {
+                    ?>
+                    <div class="item">
+                        <label for="select_server"><?php echo $GLOBALS['strServerChoice']; ?>:</label>
+                        <select name="server" id="select_server"
+                    <?php
+                    if ($GLOBALS['cfg']['AllowArbitraryServer']) {
+                        echo ' onchange="document.forms[\'login_form\'].elements[\'pma_servername\'].value = \'\'" ';
+                    }
+                    echo '>';
 
-    // BEGIN Swekey Integration
-    Swekey_login('input_username', 'input_go');
-    // END Swekey Integration
+                    require_once './libraries/select_server.lib.php';
+                    PMA_select_server(false, false);
 
-    // show the "Cookies required" message only if cookies are disabled
-    // (we previously tried to set some cookies)
-    if (empty($_COOKIE)) {
-        trigger_error($GLOBALS['strCookiesRequired'], E_USER_NOTICE);
-    }
-    if ($GLOBALS['error_handler']->hasDisplayErrors()) {
-        echo '<div>';
-        $GLOBALS['error_handler']->dispErrors();
-        echo '</div>';
-    }
-    ?>
-</div>
-<script type="text/javascript">
-// <![CDATA[
-function PMA_focusInput()
-{
-    var input_username = document.getElementById('input_username');
-    var input_password = document.getElementById('input_password');
-    if (input_username.value == '') {
-        input_username.focus();
-    } else {
-        input_password.focus();
-    }
-}
+                    echo '</select></div>';
+                } else {
+                    echo '    <input type="hidden" name="server" value="' . $GLOBALS['server'] . '" />';
+                } // end if (server choice)
+                ?>
+            </fieldset>
+            <fieldset class="tblFooters">
+                <input value="<?php echo $GLOBALS['strGo']; ?>" type="submit" id="input_go"/>
+                <?php
+                $_form_params = array();
+                if (!empty($GLOBALS['target'])) {
+                    $_form_params['target'] = $GLOBALS['target'];
+                }
+                if (!empty($GLOBALS['db'])) {
+                    $_form_params['db'] = $GLOBALS['db'];
+                }
+                if (!empty($GLOBALS['table'])) {
+                    $_form_params['table'] = $GLOBALS['table'];
+                }
+                // do not generate a "server" hidden field as we want the "server"
+                // drop-down to have priority
+                echo PMA_generate_common_hidden_inputs($_form_params, '', 0, 'server');
+                ?>
+            </fieldset>
+        </form>
 
-window.setTimeout('PMA_focusInput()', 500);
-// ]]>
-</script>
+        <?php
+
+        // BEGIN Swekey Integration
+        Swekey_login('input_username', 'input_go');
+        // END Swekey Integration
+
+        // show the "Cookies required" message only if cookies are disabled
+        // (we previously tried to set some cookies)
+        if (empty($_COOKIE)) {
+            trigger_error($GLOBALS['strCookiesRequired'], E_USER_NOTICE);
+        }
+        if ($GLOBALS['error_handler']->hasDisplayErrors()) {
+            echo '<div>';
+            $GLOBALS['error_handler']->dispErrors();
+            echo '</div>';
+        }
+        ?>
+    </div>
+    <script type="text/javascript">
+        // <![CDATA[
+        function PMA_focusInput() {
+            var input_username = document.getElementById('input_username');
+            var input_password = document.getElementById('input_password');
+            if (input_username.value == '') {
+                input_username.focus();
+            } else {
+                input_password.focus();
+            }
+        }
+
+        window.setTimeout('PMA_focusInput()', 500);
+        // ]]>
+    </script>
     <?php
     if (file_exists('./config.footer.inc.php')) {
-         require './config.footer.inc.php';
+        require './config.footer.inc.php';
     }
     ?>
-</body>
-</html>
+    </body>
+    </html>
     <?php
     exit;
 } // end of the 'PMA_auth()' function
-
 
 
 /**
@@ -367,6 +372,9 @@ window.setTimeout('PMA_focusInput()', 500);
  *
  * it directly switches to PMA_auth_fails() if user inactivity timout is reached
  *
+ * @return  boolean   whether we get authentication settings or not
+ *
+ * @access  public
  * @todo    AllowArbitraryServer on does not imply that the user wants an
  *          arbitrary server, or? so we should also check if this is filled and
  *          not only if allowed
@@ -390,15 +398,12 @@ window.setTimeout('PMA_focusInput()', 500);
  * @uses    PMA_auth_fails()
  * @uses    time()
  *
- * @return  boolean   whether we get authentication settings or not
- *
- * @access  public
  */
 function PMA_auth_check()
 {
     // Initialization
     /**
-     * @global $GLOBALS['pma_auth_server'] the user provided server to connect to
+     * @global $GLOBALS ['pma_auth_server'] the user provided server to connect to
      */
     $GLOBALS['pma_auth_server'] = '';
 
@@ -406,13 +411,13 @@ function PMA_auth_check()
     $GLOBALS['from_cookie'] = false;
 
     // BEGIN Swekey Integration
-    if (! Swekey_auth_check()) {
+    if (!Swekey_auth_check()) {
         return false;
     }
     // END Swekey Integration
 
     if (defined('PMA_CLEAR_COOKIES')) {
-        foreach($GLOBALS['cfg']['Servers'] as $key => $val) {
+        foreach ($GLOBALS['cfg']['Servers'] as $key => $val) {
             PMA_removeCookie('pmaPass-' . $key);
             PMA_removeCookie('pmaServer-' . $key);
             PMA_removeCookie('pmaUser-' . $key);
@@ -420,7 +425,7 @@ function PMA_auth_check()
         return false;
     }
 
-    if (! empty($_REQUEST['old_usr'])) {
+    if (!empty($_REQUEST['old_usr'])) {
         // The user wants to be logged out
         // -> delete his choices that were stored in session
 
@@ -432,7 +437,7 @@ function PMA_auth_check()
         session_destroy();
         // -> delete password cookie(s)
         if ($GLOBALS['cfg']['LoginCookieDeleteAll']) {
-            foreach($GLOBALS['cfg']['Servers'] as $key => $val) {
+            foreach ($GLOBALS['cfg']['Servers'] as $key => $val) {
                 PMA_removeCookie('pmaPass-' . $key);
                 if (isset($_COOKIE['pmaPass-' . $key])) {
                     unset($_COOKIE['pmaPass-' . $key]);
@@ -446,10 +451,10 @@ function PMA_auth_check()
         }
     }
 
-    if (! empty($_REQUEST['pma_username'])) {
+    if (!empty($_REQUEST['pma_username'])) {
         // The user just logged in
         $GLOBALS['PHP_AUTH_USER'] = $_REQUEST['pma_username'];
-        $GLOBALS['PHP_AUTH_PW']   = empty($_REQUEST['pma_password']) ? '' : $_REQUEST['pma_password'];
+        $GLOBALS['PHP_AUTH_PW'] = empty($_REQUEST['pma_password']) ? '' : $_REQUEST['pma_password'];
         if ($GLOBALS['cfg']['AllowArbitraryServer'] && isset($_REQUEST['pma_servername'])) {
             $GLOBALS['pma_auth_server'] = $_REQUEST['pma_servername'];
         }
@@ -461,7 +466,7 @@ function PMA_auth_check()
 
     // servername
     if ($GLOBALS['cfg']['AllowArbitraryServer']
-     && ! empty($_COOKIE['pmaServer-' . $GLOBALS['server']])) {
+        && !empty($_COOKIE['pmaServer-' . $GLOBALS['server']])) {
         $GLOBALS['pma_auth_server'] = $_COOKIE['pmaServer-' . $GLOBALS['server']];
     }
 
@@ -513,6 +518,9 @@ function PMA_auth_check()
 /**
  * Set the user and password after last checkings if required
  *
+ * @return  boolean   always true
+ *
+ * @access  public
  * @uses    $GLOBALS['PHP_AUTH_USER']
  * @uses    $GLOBALS['PHP_AUTH_PW']
  * @uses    $GLOBALS['server']
@@ -530,9 +538,6 @@ function PMA_auth_check()
  * @uses    PMA_sendHeaderLocation()
  * @uses    time()
  * @uses    define()
- * @return  boolean   always true
- *
- * @access  public
  */
 function PMA_auth_set_user()
 {
@@ -543,20 +548,20 @@ function PMA_auth_set_user()
     if ($cfg['Server']['user'] != $GLOBALS['PHP_AUTH_USER']) {
         foreach ($cfg['Servers'] as $idx => $current) {
             if ($current['host'] == $cfg['Server']['host']
-             && $current['port'] == $cfg['Server']['port']
-             && $current['socket'] == $cfg['Server']['socket']
-             && $current['ssl'] == $cfg['Server']['ssl']
-             && $current['connect_type'] == $cfg['Server']['connect_type']
-             && $current['user'] == $GLOBALS['PHP_AUTH_USER']) {
+                && $current['port'] == $cfg['Server']['port']
+                && $current['socket'] == $cfg['Server']['socket']
+                && $current['ssl'] == $cfg['Server']['ssl']
+                && $current['connect_type'] == $cfg['Server']['connect_type']
+                && $current['user'] == $GLOBALS['PHP_AUTH_USER']) {
                 $GLOBALS['server'] = $idx;
-                $cfg['Server']     = $current;
+                $cfg['Server'] = $current;
                 break;
             }
         } // end foreach
     } // end if
 
     if ($GLOBALS['cfg']['AllowArbitraryServer']
-     && ! empty($GLOBALS['pma_auth_server'])) {
+        && !empty($GLOBALS['pma_auth_server'])) {
         /* Allow to specify 'host port' */
         $parts = explode(' ', $GLOBALS['pma_auth_server']);
         if (count($parts) == 2) {
@@ -574,7 +579,7 @@ function PMA_auth_set_user()
         }
         unset($tmp_host, $tmp_port, $parts);
     }
-    $cfg['Server']['user']     = $GLOBALS['PHP_AUTH_USER'];
+    $cfg['Server']['user'] = $GLOBALS['PHP_AUTH_USER'];
     $cfg['Server']['password'] = $GLOBALS['PHP_AUTH_PW'];
 
     $_SESSION['last_access_time'] = time();
@@ -594,9 +599,9 @@ function PMA_auth_set_user()
 
     // Set server cookies if required (once per session) and, in this case, force
     // reload to ensure the client accepts cookies
-    if (! $GLOBALS['from_cookie']) {
+    if (!$GLOBALS['from_cookie']) {
         if ($GLOBALS['cfg']['AllowArbitraryServer']) {
-            if (! empty($GLOBALS['pma_auth_server'])) {
+            if (!empty($GLOBALS['pma_auth_server'])) {
                 // Duration = one month for servername
                 PMA_setCookie('pmaServer-' . $GLOBALS['server'], $cfg['Server']['host']);
             } else {
@@ -617,7 +622,7 @@ function PMA_auth_set_user()
             $url_params['table'] = $GLOBALS['table'];
         }
         // any target to pass?
-        if (! empty($GLOBALS['target']) && $GLOBALS['target'] != 'index.php') {
+        if (!empty($GLOBALS['target']) && $GLOBALS['target'] != 'index.php') {
             $url_params['target'] = $GLOBALS['target'];
         }
 
@@ -666,11 +671,11 @@ function PMA_auth_fails()
     // Deletes password cookie and displays the login form
     PMA_removeCookie('pmaPass-' . $GLOBALS['server']);
 
-    if (! empty($GLOBALS['login_without_password_is_forbidden'])) {
+    if (!empty($GLOBALS['login_without_password_is_forbidden'])) {
         $conn_error = $GLOBALS['strLoginWithoutPassword'];
-    } elseif (! empty($GLOBALS['allowDeny_forbidden'])) {
+    } elseif (!empty($GLOBALS['allowDeny_forbidden'])) {
         $conn_error = $GLOBALS['strAccessDenied'];
-    } elseif (! empty($GLOBALS['no_activity'])) {
+    } elseif (!empty($GLOBALS['no_activity'])) {
         $conn_error = sprintf($GLOBALS['strNoActivity'], $GLOBALS['cfg']['LoginCookieValidity']);
         // Remember where we got timeout to return on same place
         if (PMA_getenv('SCRIPT_NAME')) {

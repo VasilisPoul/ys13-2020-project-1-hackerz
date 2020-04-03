@@ -22,12 +22,12 @@ $show_query = '1';
 require_once './libraries/header.inc.php';
 
 // Any message to display?
-if (! empty($message)) {
+if (!empty($message)) {
     PMA_showMessage($message);
     unset($message);
 }
 
-$common_url_query =  PMA_generate_common_url('', '');
+$common_url_query = PMA_generate_common_url('', '');
 
 // when $server > 0, a server has been chosen so we can display
 // all MySQL-related information
@@ -39,7 +39,7 @@ if ($server > 0) {
     // Use the verbose name of the server instead of the hostname
     // if a value is set
     $server_info = '';
-    if (! empty($cfg['Server']['verbose'])) {
+    if (!empty($cfg['Server']['verbose'])) {
         $server_info .= htmlspecialchars($cfg['Server']['verbose']);
         if ($GLOBALS['cfg']['ShowServerInfo']) {
             $server_info .= ' (';
@@ -48,22 +48,22 @@ if ($server > 0) {
     if ($GLOBALS['cfg']['ShowServerInfo'] || empty($cfg['Server']['verbose'])) {
         $server_info .= PMA_DBI_get_host_info();
     }
-    if (! empty($cfg['Server']['verbose']) && $GLOBALS['cfg']['ShowServerInfo']) {
-    $server_info .= ')';
+    if (!empty($cfg['Server']['verbose']) && $GLOBALS['cfg']['ShowServerInfo']) {
+        $server_info .= ')';
     }
     $mysql_cur_user_and_host = PMA_DBI_fetch_value('SELECT USER();');
 
     // should we add the port info here?
     $short_server_info = (!empty($GLOBALS['cfg']['Server']['verbose'])
-                    ? $GLOBALS['cfg']['Server']['verbose']
-                    : $GLOBALS['cfg']['Server']['host']);
+        ? $GLOBALS['cfg']['Server']['verbose']
+        : $GLOBALS['cfg']['Server']['host']);
 }
 
 echo '<div id="maincontainer">' . "\n";
 echo '<div id="main_pane_left">';
 
 if ($server > 0
- || (! $cfg['LeftDisplayServers'] && count($cfg['Servers']) > 1)) {
+    || (!$cfg['LeftDisplayServers'] && count($cfg['Servers']) > 1)) {
     echo '<div class="group">';
     echo '<h2>' . $strActions . '</h2>';
     echo '<ul>';
@@ -71,8 +71,8 @@ if ($server > 0
     /**
      * Displays the MySQL servers choice form
      */
-    if (! $cfg['LeftDisplayServers']
-     && (count($cfg['Servers']) > 1 || $server == 0 && count($cfg['Servers']) == 1)) {
+    if (!$cfg['LeftDisplayServers']
+        && (count($cfg['Servers']) > 1 || $server == 0 && count($cfg['Servers']) == 1)) {
         echo '<li id="li_select_server">';
         require_once './libraries/select_server.lib.php';
         PMA_select_server(true, true);
@@ -93,9 +93,9 @@ if ($server > 0
             }
 
             $http_logout = ($cfg['Server']['auth_type'] == 'http')
-                         ? '<a href="./Documentation.html#login_bug" target="documentation">'
-                            . ($cfg['ReplaceHelpImg'] ? '<img class="icon" src="' . $pmaThemeImage . 'b_info.png" width="11" height="11" alt="Info" />' : '(*)') . '</a>'
-                         : '';
+                ? '<a href="./Documentation.html#login_bug" target="documentation">'
+                . ($cfg['ReplaceHelpImg'] ? '<img class="icon" src="' . $pmaThemeImage . 'b_info.png" width="11" height="11" alt="Info" />' : '(*)') . '</a>'
+                : '';
             PMA_printListItem('<strong>' . $strLogout . '</strong> ' . $http_logout,
                 'li_log_out',
                 './index.php?' . $common_url_query . '&amp;old_usr=' . urlencode($PHP_AUTH_USER), null, '_parent');
@@ -120,16 +120,16 @@ if ($server > 0) {
 
     echo '    <li id="li_select_mysql_collation">';
     echo '        <form method="post" action="index.php" target="_parent">' . "\n"
-       . PMA_generate_common_hidden_inputs(null, null, 4, 'collation_connection')
-       . '            <label for="select_collation_connection">' . "\n"
-       . '                ' . $strMySQLConnectionCollation . ': ' . "\n"
-       . '            </label>' . "\n"
-       . PMA_generateCharsetDropdownBox(PMA_CSDROPDOWN_COLLATION, 'collation_connection', 'select_collation_connection', $collation_connection, true, 4, true)
-       . '            <noscript><input type="submit" value="' . $strGo . '" /></noscript>' . "\n"
-       // put the doc link in the form so that it appears on the same line
-       . PMA_showMySQLDocu('MySQL_Database_Administration', 'Charset-connection') . "\n"
-       . '        </form>' . "\n"
-       . '    </li>' . "\n";
+        . PMA_generate_common_hidden_inputs(null, null, 4, 'collation_connection')
+        . '            <label for="select_collation_connection">' . "\n"
+        . '                ' . $strMySQLConnectionCollation . ': ' . "\n"
+        . '            </label>' . "\n"
+        . PMA_generateCharsetDropdownBox(PMA_CSDROPDOWN_COLLATION, 'collation_connection', 'select_collation_connection', $collation_connection, true, 4, true)
+        . '            <noscript><input type="submit" value="' . $strGo . '" /></noscript>' . "\n"
+        // put the doc link in the form so that it appears on the same line
+        . PMA_showMySQLDocu('MySQL_Database_Administration', 'Charset-connection') . "\n"
+        . '        </form>' . "\n"
+        . '    </li>' . "\n";
 
     echo '  </ul>';
     echo ' </div>';
@@ -154,20 +154,20 @@ if ($GLOBALS['cfg']['ThemeManager']) {
     echo '<li id="li_select_theme">';
     echo $_SESSION['PMA_Theme_Manager']->getHtmlSelectBox();
     echo '</li>';
-?>
+    ?>
     <script type="text/javascript">
-    //<![CDATA[
-    document.write('<li id="li_custom_color">');
-    document.write('<?php echo PMA_escapeJsString($strCustomColor) . ': '; ?>');
-    document.write('<img id="myRainbow" src="js/mooRainbow/images/rainbow.png" alt="[r]" width="16" height="16" />');
-    document.write('<form name="rainbowform" id="rainbowform" method="post" action="index.php" target="_parent">');
-    document.write('<?php echo PMA_generate_common_hidden_inputs(); ?>');
-    document.write('<input type="hidden" name="custom_color" />');
-    document.write('<input type="hidden" name="custom_color_rgb" />');
-    document.write('<input type="submit" name="custom_color_reset" value="<?php echo $strReset; ?>" />');
-    document.write('</form>');
-    document.write('</li>');
-    //]]>
+        //<![CDATA[
+        document.write('<li id="li_custom_color">');
+        document.write('<?php echo PMA_escapeJsString($strCustomColor) . ': '; ?>');
+        document.write('<img id="myRainbow" src="js/mooRainbow/images/rainbow.png" alt="[r]" width="16" height="16" />');
+        document.write('<form name="rainbowform" id="rainbowform" method="post" action="index.php" target="_parent">');
+        document.write('<?php echo PMA_generate_common_hidden_inputs(); ?>');
+        document.write('<input type="hidden" name="custom_color" />');
+        document.write('<input type="hidden" name="custom_color_rgb" />');
+        document.write('<input type="submit" name="custom_color_reset" value="<?php echo $strReset; ?>" />');
+        document.write('</form>');
+        document.write('</li>');
+        //]]>
     </script>
     <?php
 }
@@ -198,11 +198,11 @@ if ($server > 0) {
 
     echo '    <li id="li_select_mysql_charset">';
     echo '        ' . $strMySQLCharset . ': '
-       . '        <span xml:lang="en" dir="ltr">'
-       . '           ' . $mysql_charsets_descriptions[$mysql_charset_map[strtolower($charset)]] . "\n"
-       . '           (' . $mysql_charset_map[strtolower($charset)] . ')' . "\n"
-       . '        </span>' . "\n"
-       . '    </li>' . "\n";
+        . '        <span xml:lang="en" dir="ltr">'
+        . '           ' . $mysql_charsets_descriptions[$mysql_charset_map[strtolower($charset)]] . "\n"
+        . '           (' . $mysql_charset_map[strtolower($charset)] . ')' . "\n"
+        . '        </span>' . "\n"
+        . '    </li>' . "\n";
     echo '  </ul>';
     echo ' </div>';
 }
@@ -236,16 +236,16 @@ PMA_printListItem($strWiki, 'li_pma_wiki', 'http://wiki.phpmyadmin.net', null, '
 // does not work if no target specified, don't know why
 PMA_printListItem($strHomepageOfficial, 'li_pma_homepage', 'http://www.phpMyAdmin.net/', null, '_blank');
 ?>
-    <li><bdo xml:lang="en" dir="ltr">
+<li><bdo xml:lang="en" dir="ltr">
         [<a href="changelog.php" target="_blank">ChangeLog</a>]
         [<a href="http://phpmyadmin.svn.sourceforge.net/viewvc/phpmyadmin/"
             target="_blank">Subversion</a>]
         [<a href="http://sourceforge.net/mail/?group_id=23067"
             target="_blank">Lists</a>]
-        </bdo>
-    </li>
-    </ul>
- </div>
+    </bdo>
+</li>
+</ul>
+</div>
 
 </div>
 
@@ -255,8 +255,8 @@ PMA_printListItem($strHomepageOfficial, 'li_pma_homepage', 'http://www.phpMyAdmi
  * full height of the inner divs
  */
 ?>
-<br class="clearfloat" />
-<br class="clearfloat" />
+<br class="clearfloat"/>
+<br class="clearfloat"/>
 </div>
 
 <?php
@@ -265,8 +265,8 @@ PMA_printListItem($strHomepageOfficial, 'li_pma_homepage', 'http://www.phpMyAdmi
  * modified: 2004-05-05 mkkeck
  */
 if ($server != 0
- && $cfg['Server']['user'] == 'root'
- && $cfg['Server']['password'] == '') {
+    && $cfg['Server']['user'] == 'root'
+    && $cfg['Server']['password'] == '') {
     trigger_error($strInsecureMySQL, E_USER_WARNING);
 }
 
@@ -282,7 +282,7 @@ if (@extension_loaded('mbstring') && @ini_get('mbstring.func_overload') > 1) {
  * Nijel: mbstring is used for handling multibyte inside parser, so it is good
  * to tell user something might be broken without it, see bug #1063149.
  */
-if (! @extension_loaded('mbstring')) {
+if (!@extension_loaded('mbstring')) {
     trigger_error($strMbExtensionMissing, E_USER_WARNING);
 }
 
@@ -290,7 +290,7 @@ if (! @extension_loaded('mbstring')) {
  * Check whether session.gc_maxlifetime limits session validity.
  */
 $gc_time = (int)@ini_get('session.gc_maxlifetime');
-if ($gc_time < $GLOBALS['cfg']['LoginCookieValidity'] ) {
+if ($gc_time < $GLOBALS['cfg']['LoginCookieValidity']) {
     trigger_error(PMA_Message::decodeBB($strSessionGCWarning), E_USER_WARNING);
 }
 
@@ -298,7 +298,7 @@ if ($gc_time < $GLOBALS['cfg']['LoginCookieValidity'] ) {
  * Check if user does not have defined blowfish secret and it is being used.
  */
 if (!empty($_SESSION['auto_blowfish_secret']) &&
-        empty($GLOBALS['cfg']['blowfish_secret'])) {
+    empty($GLOBALS['cfg']['blowfish_secret'])) {
     trigger_error($strSecretRequired, E_USER_WARNING);
 }
 
@@ -316,7 +316,7 @@ if (file_exists('./config')) {
 if ($server > 0) {
     require_once './libraries/relation.lib.php';
     $cfgRelation = PMA_getRelationsParam();
-    if(!$cfgRelation['allworks'] && $cfg['PmaNoRelation_DisableWarning'] == false) {
+    if (!$cfgRelation['allworks'] && $cfg['PmaNoRelation_DisableWarning'] == false) {
         $message = PMA_Message::notice('strRelationNotWorking');
         $message->addParam('<a href="' . $cfg['PmaAbsoluteUri'] . 'chk_rel.php?' . $common_url_query . '">', false);
         $message->addParam('</a>', false);
@@ -339,8 +339,8 @@ if (function_exists('PMA_DBI_get_client_info')) {
     $_client_info = PMA_DBI_get_client_info();
     if ($server > 0 && strpos($_client_info, 'mysqlnd') === false && substr(PMA_MYSQL_CLIENT_API, 0, 3) != substr(PMA_MYSQL_INT_VERSION, 0, 3)) {
         trigger_error(PMA_sanitize(sprintf($strMysqlLibDiffersServerVersion,
-                $_client_info,
-                substr(PMA_MYSQL_STR_VERSION, 0, strpos(PMA_MYSQL_STR_VERSION . '-', '-')))),
+            $_client_info,
+            substr(PMA_MYSQL_STR_VERSION, 0, strpos(PMA_MYSQL_STR_VERSION . '-', '-')))),
             E_USER_NOTICE);
     }
     unset($_client_info);
@@ -351,16 +351,16 @@ if (function_exists('PMA_DBI_get_client_info')) {
  */
 if ($cfg['SuhosinDisableWarning'] == false && @ini_get('suhosin.request.max_value_length')) {
     trigger_error(PMA_sanitize(sprintf($strSuhosin, '[a@./Documentation.html#faq1_38@_blank]', '[/a]')), E_USER_WARNING);
-    }
+}
 
 /**
  * prints list item for main page
  *
- * @param   string  $name   displayed text
- * @param   string  $id     id, used for css styles
- * @param   string  $url    make item as link with $url as target
- * @param   string  $mysql_help_page  display a link to MySQL's manual
- * @param   string  $target special target for $url
+ * @param string $name displayed text
+ * @param string $id id, used for css styles
+ * @param string $url make item as link with $url as target
+ * @param string $mysql_help_page display a link to MySQL's manual
+ * @param string $target special target for $url
  */
 function PMA_printListItem($name, $id = null, $url = null, $mysql_help_page = null, $target = null)
 {
@@ -368,7 +368,7 @@ function PMA_printListItem($name, $id = null, $url = null, $mysql_help_page = nu
     if (null !== $url) {
         echo '<a href="' . $url . '"';
         if (null !== $target) {
-           echo ' target="' . $target . '"';
+            echo ' target="' . $target . '"';
         }
         echo '>';
     }

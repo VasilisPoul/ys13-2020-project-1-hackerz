@@ -25,11 +25,12 @@ var query_to_load = '';
  * @param string event type (load, mouseover, focus, ...)
  * @param function to be attached
  */
-function addEvent(obj, type, fn)
-{
+function addEvent(obj, type, fn) {
     if (obj.attachEvent) {
         obj['e' + type + fn] = fn;
-        obj[type + fn] = function() {obj['e' + type + fn](window.event);}
+        obj[type + fn] = function () {
+            obj['e' + type + fn](window.event);
+        }
         obj.attachEvent('on' + type, obj[type + fn]);
     } else {
         obj.addEventListener(type, fn, false);
@@ -43,8 +44,7 @@ function addEvent(obj, type, fn)
  * @param event type (load, mouseover, focus, ...)
  * @param function naem of function to be attached
  */
-function removeEvent(obj, type, fn)
-{
+function removeEvent(obj, type, fn) {
     if (obj.detachEvent) {
         obj.detachEvent('on' + type, obj[type + fn]);
         obj[type + fn] = null;
@@ -60,8 +60,7 @@ function removeEvent(obj, type, fn)
  * @param node node - search only sub nodes of this node (optional)
  * @param string tag - search only these tags (optional)
  */
-function getElementsByClassName(class_name, node, tag)
-{
+function getElementsByClassName(class_name, node, tag) {
     var classElements = new Array();
 
     if (node == null) {
@@ -130,7 +129,7 @@ function setTable(new_table) {
         table = new_table;
 
         if (window.frame_navigation.document.getElementById(db + '.' + table) == null
-         && table != '') {
+            && table != '') {
             // table is unknown, reload complete left frame
             refreshNavigation();
 
@@ -157,7 +156,7 @@ function setTable(new_table) {
  * @param    string    url    name of page to be loaded
  */
 function refreshMain(url) {
-    if (! url) {
+    if (!url) {
         if (db) {
             url = opendb_url;
         } else {
@@ -188,19 +187,18 @@ function refreshMain(url) {
  */
 function refreshNavigation() {
     goTo('navigation.php?server=' + encodeURIComponent(server) +
-        '&token=' + encodeURIComponent(token)  +
-        '&db=' + encodeURIComponent(db)  +
+        '&token=' + encodeURIComponent(token) +
+        '&db=' + encodeURIComponent(db) +
         '&table=' + encodeURIComponent(table) +
         '&lang=' + encodeURIComponent(lang) +
         '&collation_connection=' + encodeURIComponent(collation_connection)
-        );
+    );
 }
 
 /**
  * adds class to element
  */
-function addClass(element, classname)
-{
+function addClass(element, classname) {
     if (element != null) {
         element.className += ' ' + classname;
         //alert('set class: ' + classname + ', now: ' + element.className);
@@ -210,8 +208,7 @@ function addClass(element, classname)
 /**
  * removes class from element
  */
-function removeClass(element, classname)
-{
+function removeClass(element, classname) {
     if (element != null) {
         element.className = element.className.replace(' ' + classname, '');
         // if there is no other class anem there is no leading space
@@ -220,8 +217,7 @@ function removeClass(element, classname)
     }
 }
 
-function unmarkDbTable(db, table)
-{
+function unmarkDbTable(db, table) {
     var element_reference = window.frame_navigation.document.getElementById(db);
     if (element_reference != null) {
         //alert('remove from: ' + db);
@@ -235,8 +231,7 @@ function unmarkDbTable(db, table)
     }
 }
 
-function markDbTable(db, table)
-{
+function markDbTable(db, table) {
     var element_reference = window.frame_navigation.document.getElementById(db);
     if (element_reference != null) {
         addClass(element_reference.parentNode, 'marked');
@@ -262,27 +257,27 @@ function markDbTable(db, table)
 /**
  * sets current selected server, table and db (called from libraries/footer.inc.php)
  */
-function setAll( new_lang, new_collation_connection, new_server, new_db, new_table, new_token ) {
+function setAll(new_lang, new_collation_connection, new_server, new_db, new_table, new_token) {
     //alert('setAll( ' + new_lang + ', ' + new_collation_connection + ', ' + new_server + ', ' + new_db + ', ' + new_table + ', ' + new_token + ' )');
     if (new_server != server || new_lang != lang
-      || new_collation_connection != collation_connection) {
+        || new_collation_connection != collation_connection) {
         // something important has changed
         server = new_server;
-        db     = new_db;
-        table  = new_table;
-        collation_connection  = new_collation_connection;
-        lang  = new_lang;
-        token  = new_token;
+        db = new_db;
+        table = new_table;
+        collation_connection = new_collation_connection;
+        lang = new_lang;
+        token = new_token;
         refreshNavigation();
     } else if (new_db != db || new_table != table) {
         // save new db and table
-        var old_db    = db;
+        var old_db = db;
         var old_table = table;
-        db        = new_db;
-        table     = new_table;
+        db = new_db;
+        table = new_table;
 
         if (window.frame_navigation.document.getElementById(db) == null
-          && window.frame_navigation.document.getElementById(db + '.' + table) == null ) {
+            && window.frame_navigation.document.getElementById(db + '.' + table) == null) {
             // table or db is unknown, reload complete left frame
             refreshNavigation();
         } else {
@@ -297,11 +292,10 @@ function setAll( new_lang, new_collation_connection, new_server, new_db, new_tab
     }
 }
 
-function reload_querywindow(db, table, sql_query)
-{
-    if ( ! querywindow.closed && querywindow.location ) {
-        if ( ! querywindow.document.sqlform.LockFromUpdate
-          || ! querywindow.document.sqlform.LockFromUpdate.checked ) {
+function reload_querywindow(db, table, sql_query) {
+    if (!querywindow.closed && querywindow.location) {
+        if (!querywindow.document.sqlform.LockFromUpdate
+            || !querywindow.document.sqlform.LockFromUpdate.checked) {
             querywindow.document.getElementById('hiddenqueryform').db.value = db;
             querywindow.document.getElementById('hiddenqueryform').table.value = table;
 
@@ -317,10 +311,9 @@ function reload_querywindow(db, table, sql_query)
 /**
  * brings query window to front and inserts query to be edited
  */
-function focus_querywindow(sql_query)
-{
+function focus_querywindow(sql_query) {
     /* if ( querywindow && !querywindow.closed && querywindow.location) { */
-    if ( !querywindow || querywindow.closed || !querywindow.location) {
+    if (!querywindow || querywindow.closed || !querywindow.location) {
         // we need first to open the window and cannot pass the query with it
         // as we dont know if the query exceeds max url length
         /* url = 'querywindow.php?' + common_query + '&db=' + db + '&table=' + table + '&sql_query=SELECT * FROM'; */
@@ -329,7 +322,7 @@ function focus_querywindow(sql_query)
         insertQuery(0);
     } else {
         //var querywindow = querywindow;
-        if ( querywindow.document.getElementById('hiddenqueryform').querydisplay_tab != 'sql' ) {
+        if (querywindow.document.getElementById('hiddenqueryform').querydisplay_tab != 'sql') {
             querywindow.document.getElementById('hiddenqueryform').querydisplay_tab.value = "sql";
             querywindow.document.getElementById('hiddenqueryform').sql_query.value = sql_query;
             querywindow.document.getElementById('hiddenqueryform').submit();
@@ -354,39 +347,39 @@ function insertQuery() {
     return false;
 }
 
-function open_querywindow( url ) {
-    if ( ! url ) {
+function open_querywindow(url) {
+    if (!url) {
         url = 'querywindow.php?' + common_query + '&db=' + encodeURIComponent(db) + '&table=' + encodeURIComponent(table);
     }
 
     if (!querywindow.closed && querywindow.location) {
-        goTo( url, 'query' );
+        goTo(url, 'query');
         querywindow.focus();
     } else {
-        querywindow = window.open( url + '&init=1', '',
+        querywindow = window.open(url + '&init=1', '',
             'toolbar=0,location=0,directories=0,status=1,menubar=0,' +
             'scrollbars=yes,resizable=yes,' +
             'width=' + querywindow_width + ',' +
-            'height=' + querywindow_height );
+            'height=' + querywindow_height);
     }
 
-    if ( ! querywindow.opener ) {
-       querywindow.opener = window.window;
+    if (!querywindow.opener) {
+        querywindow.opener = window.window;
     }
 
-    if ( window.focus ) {
+    if (window.focus) {
         querywindow.focus();
     }
 
     return true;
 }
 
-function refreshQuerywindow( url ) {
+function refreshQuerywindow(url) {
 
-    if ( ! querywindow.closed && querywindow.location ) {
-        if ( ! querywindow.document.sqlform.LockFromUpdate
-          || ! querywindow.document.sqlform.LockFromUpdate.checked ) {
-            open_querywindow( url )
+    if (!querywindow.closed && querywindow.location) {
+        if (!querywindow.document.sqlform.LockFromUpdate
+            || !querywindow.document.sqlform.LockFromUpdate.checked) {
+            open_querywindow(url)
         }
     }
 }
@@ -400,23 +393,23 @@ function refreshQuerywindow( url ) {
  */
 function goTo(targeturl, target) {
     //alert(targeturl);
-    if ( target == 'main' ) {
+    if (target == 'main') {
         target = window.frame_content;
-    } else if ( target == 'query' ) {
+    } else if (target == 'query') {
         target = querywindow;
         //return open_querywindow( targeturl );
-    } else if ( ! target ) {
+    } else if (!target) {
         target = window.frame_navigation;
     }
 
-    if ( target ) {
-        if ( target.location.href == targeturl ) {
+    if (target) {
+        if (target.location.href == targeturl) {
             return true;
-        } else if ( target.location.href == pma_absolute_uri + targeturl ) {
+        } else if (target.location.href == pma_absolute_uri + targeturl) {
             return true;
         }
 
-        if ( safari_browser ) {
+        if (safari_browser) {
             target.location.href = targeturl;
         } else {
             target.location.replace(targeturl);
@@ -435,9 +428,9 @@ function openDb(new_db) {
     return true;
 }
 
-function updateTableTitle( table_link_id, new_title ) {
+function updateTableTitle(table_link_id, new_title) {
     //alert('updateTableTitle');
-    if ( window.parent.frame_navigation.document.getElementById(table_link_id) ) {
+    if (window.parent.frame_navigation.document.getElementById(table_link_id)) {
         var left = window.parent.frame_navigation.document;
 
         var link = left.getElementById(table_link_id);

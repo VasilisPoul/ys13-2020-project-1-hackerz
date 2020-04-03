@@ -18,12 +18,12 @@
  * because both header and footer functions must know what each other is
  * doing.
  *
- * @uses    $cfg['OBGzip']
+ * @return  integer  the output buffer mode
  * @uses    function_exists()
  * @uses    ini_get()
  * @uses    ob_get_level()
  * @staticvar integer remember last calculated value
- * @return  integer  the output buffer mode
+ * @uses    $cfg['OBGzip']
  */
 function PMA_outBufferModeGet()
 {

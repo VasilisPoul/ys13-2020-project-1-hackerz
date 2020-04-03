@@ -72,7 +72,7 @@ class FormDisplay
      * Registers form in form manager
      *
      * @param string $form_name
-     * @param int    $server_id 0 if new server, validation; >= 1 if editing a server
+     * @param int $server_id 0 if new server, validation; >= 1 if editing a server
      */
     public function registerForm($form_name, $server_id = null)
     {
@@ -90,7 +90,7 @@ class FormDisplay
     /**
      * Processes forms, returns true on successful save
      *
-     * @param  bool  $allow_partial_save  allows for partial form saving on failed validation
+     * @param bool $allow_partial_save allows for partial form saving on failed validation
      * @return boolean
      */
     public function process($allow_partial_save = true)
@@ -154,7 +154,7 @@ class FormDisplay
      * Outputs HTML for forms
      *
      * @param bool $tabbed_form
-     * @param bool   $show_restore_default  whether show "restore default" button besides the input field
+     * @param bool $show_restore_default whether show "restore default" button besides the input field
      */
     public function display($tabbed_form = false, $show_restore_default = false)
     {
@@ -238,16 +238,16 @@ class FormDisplay
     /**
      * Prepares data for input field display and outputs HTML code
      *
-     * @param Form   $form
-     * @param string $field                 field name as it appears in $form
-     * @param string $system_path           field path, eg. Servers/1/verbose
-     * @param string $work_path             work path, eg. Servers/4/verbose
-     * @param string $translated_path       work path changed so that it can be used as XHTML id
-     * @param bool   $show_restore_default  whether show "restore default" button besides the input field
-     * @param array  &$js_default           array which stores JavaScript code to be displayed
+     * @param Form $form
+     * @param string $field field name as it appears in $form
+     * @param string $system_path field path, eg. Servers/1/verbose
+     * @param string $work_path work path, eg. Servers/4/verbose
+     * @param string $translated_path work path changed so that it can be used as XHTML id
+     * @param bool $show_restore_default whether show "restore default" button besides the input field
+     * @param array  &$js_default array which stores JavaScript code to be displayed
      */
     private function _displayFieldInput(Form $form, $field, $system_path, $work_path,
-        $translated_path, $show_restore_default, array &$js_default)
+                                        $translated_path, $show_restore_default, array &$js_default)
     {
         $name = PMA_lang_name($system_path);
         $description = PMA_lang_desc($system_path);
@@ -263,7 +263,7 @@ class FormDisplay
 
         $opts = array(
             'doc' => $this->getDocLink($system_path),
-            'wiki' =>  $this->getWikiLink($system_path),
+            'wiki' => $this->getWikiLink($system_path),
             'show_restore_default' => $show_restore_default);
         if (isset($form->default[$system_path])) {
             $opts['setvalue'] = $form->default[$system_path];
@@ -295,12 +295,12 @@ class FormDisplay
                 break;
             case 'array':
                 $type = 'list';
-                $value = (array) $value;
-                $value_default = (array) $value_default;
+                $value = (array)$value;
+                $value_default = (array)$value_default;
                 break;
             case 'NULL':
-            	trigger_error("Field $system_path has no type", E_USER_WARNING);
-            	return;
+                trigger_error("Field $system_path has no type", E_USER_WARNING);
+                return;
         }
 
         // TrustedProxies requires changes before displaying
@@ -323,7 +323,7 @@ class FormDisplay
                 break;
             case 'select':
                 $value_default_js = is_bool($value_default)
-                    ? (int) $value_default
+                    ? (int)$value_default
                     : $value_default;
                 $js_line .= '[\'' . PMA_escapeJsString($value_default_js) . '\']';
                 break;
@@ -381,17 +381,17 @@ class FormDisplay
     /**
      * Validates select field and casts $value to correct type
      *
-     * @param  string  $value
-     * @param  array   $allowed
+     * @param string $value
+     * @param array $allowed
      * @return bool
      */
     private function _validateSelect(&$value, array $allowed)
     {
         foreach ($allowed as $v) {
-          if ($value == $v) {
-              settype($value, gettype($v));
-              return true;
-          }
+            if ($value == $v) {
+                settype($value, gettype($v));
+                return true;
+            }
         }
         return false;
     }
@@ -399,15 +399,15 @@ class FormDisplay
     /**
      * Validates and saves form data to session
      *
-     * @param  array|string  $forms               array of form names
-     * @param  bool          $allow_partial_save  allows for partial form saving on failed validation
+     * @param array|string $forms array of form names
+     * @param bool $allow_partial_save allows for partial form saving on failed validation
      * @return boolean  true on success (no errors and all saved)
      */
     public function save($forms, $allow_partial_save = true)
     {
         $result = true;
         $cf = ConfigFile::getInstance();
-        $forms = (array) $forms;
+        $forms = (array)$forms;
 
         $values = array();
         $to_save = array();
@@ -481,7 +481,7 @@ class FormDisplay
                 $values[$system_path] = $_POST[$key];
                 if ($change_index !== false) {
                     $work_path = str_replace("Servers/$form->index/",
-                      "Servers/$change_index/", $work_path);
+                        "Servers/$change_index/", $work_path);
                 }
                 $to_save[$work_path] = $system_path;
             }
@@ -580,7 +580,8 @@ class FormDisplay
      */
     private static function _getOptName($path)
     {
-      return str_replace(array('Servers/1/', '/'), array('Servers/', '_'), $path);
+        return str_replace(array('Servers/1/', '/'), array('Servers/', '_'), $path);
     }
 }
+
 ?>

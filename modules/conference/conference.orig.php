@@ -1,4 +1,4 @@
-<?php  
+<?php
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System
@@ -25,11 +25,11 @@
 * =========================================================================*/
 /**
  * conference
- * 
+ *
  * @author Dimitris Tsachalis <ditsa@ccf.auth.gr>
  * @version $Id: conference.orig.php,v 1.1 2008-09-11 09:38:39 jexi Exp $
- * 
- * @abstract 
+ *
+ * @abstract
  *
  */
 
@@ -39,8 +39,8 @@ $require_help = TRUE;
 $helpTopic = 'Conference';
 
 include '../../include/baseTheme.php';
-if(!isset($MCU))
-	$MCU="";
+if (!isset($MCU))
+    $MCU = "";
 
 /**** The following is added for statistics purposes ***/
 include('../../include/action.php');
@@ -50,14 +50,14 @@ $action->record('MODULE_ID_CHAT');
 
 $nameTools = $langConference;
 
-$browser = get_browser(null, true); 
-if($browser['browser']!="IE")   
-	$langTeleconference_content = $langTeleconference_content_noIE;
+$browser = get_browser(null, true);
+if ($browser['browser'] != "IE")
+    $langTeleconference_content = $langTeleconference_content_noIE;
 else
- 	$langTeleconference_content = $langTeleconference_content1;
+    $langTeleconference_content = $langTeleconference_content1;
 
 //HEADER
-$head_content='
+$head_content = '
 <script type="text/javascript" src="js/prototype-1.4.0.js"></script>
 <script type="text/javascript" src="js/media_player.js"></script>
 <script>
@@ -113,7 +113,7 @@ function init_teacher()
 
         var set_presantation = function(t) {
 		if(t.responseText==""){
-			document.getElementById("presantation_window").innerHTML="'.$langPresantation_content.'";
+			document.getElementById("presantation_window").innerHTML="' . $langPresantation_content . '";
 		} else{
 			var presantation=\'<iframe height="100%" width="100%" id="iframe" src="\'+t.responseText+\'"></iframe>\';
                         document.getElementById("presantation_window").innerHTML=presantation;
@@ -126,7 +126,7 @@ function init_teacher()
 
         var set_video = function(t) {
 		if(t.responseText==""){
-			document.getElementById("video").innerHTML="'.$langVideo_content.'";
+			document.getElementById("video").innerHTML="' . $langVideo_content . '";
 		} else{
 			mediaLink(document.getElementById("video"),t.responseText);
                 }
@@ -136,14 +136,14 @@ function init_teacher()
         }
         var set_conference = function(t) {
 		if(t.responseText=="false"){
-			document.getElementById("conference").innerHTML="'.$langTeleconference_content.'";
+			document.getElementById("conference").innerHTML="' . $langTeleconference_content . '";
 			document.getElementById("conference_control").checked=false;
 		} else if(t.responseText=="true"){
 			var player="<object ID=\'NetMeeting\' CLASSID=\'CLSID:3E9BAF2D-7A79-11d2-9334-0000F875AE17\'>\
                                             <PARAM NAME =\'MODE\' VALUE =\'RemoteOnly\'>\
                                              </object>";
                         document.getElementById("conference").innerHTML=player;
-                        NetMeeting.CallTo("'.$currentCourseID.'@'.$MCU.'");
+                        NetMeeting.CallTo("' . $currentCourseID . '@' . $MCU . '");
 			document.getElementById("conference_control").checked=true;
                 }
         }
@@ -171,7 +171,7 @@ function refresh_student()
         var set_presantation = function(t) {
 		if(t.responseText==""){
 			presantation_URL="";
-			document.getElementById("presantation_window").innerHTML="'.$langPresantation_content.'";
+			document.getElementById("presantation_window").innerHTML="' . $langPresantation_content . '";
 		} else if( t.responseText!=presantation_URL){
 			presantation_URL=t.responseText;
 			var presantation=\'<iframe height="100%" width="100%" id="iframe" src="\'+t.responseText+\'"></iframe>\';
@@ -186,7 +186,7 @@ function refresh_student()
         var set_video = function(t) {
 		if(t.responseText==""){
 			video_URL="";
-			document.getElementById("video").innerHTML="'.$langVideo_content.'";
+			document.getElementById("video").innerHTML="' . $langVideo_content . '";
 		} else if(t.responseText!=video_URL){
 			video_URL=t.responseText;
 			mediaLink(document.getElementById("video"),t.responseText);
@@ -199,7 +199,7 @@ function refresh_student()
         var set_conference = function(t) {
 		if(t.responseText=="false" || t.responseText==""){
 			conference_set="false";
-			document.getElementById("conference").innerHTML="'.$langTeleconference_content.'";
+			document.getElementById("conference").innerHTML="' . $langTeleconference_content . '";
 			document.getElementById("conference_control").checked=false;
 		} else if(t.responseText=="true" && t.responseText!=conference_set){
 			conference_set="true";
@@ -207,7 +207,7 @@ function refresh_student()
                                             <PARAM NAME =\'MODE\' VALUE =\'RemoteOnly\'>\
                                              </object>";
                         document.getElementById("conference").innerHTML=player;
-                        NetMeeting.CallTo("'.$currentCourseID.'@'.$MCU.'");
+                        NetMeeting.CallTo("' . $currentCourseID . '@' . $MCU . '");
 			document.getElementById("conference_control").checked=true;
                 }
         }
@@ -245,13 +245,13 @@ function netmeeting()
 			<PARAM NAME =\'MODE\' VALUE =\'RemoteOnly\'>\
 			</object>";
 			document.getElementById("conference").innerHTML=player;
-			var netmeeting_number="'.$currentCourseID.'@'.$MCU.'";
+			var netmeeting_number="' . $currentCourseID . '@' . $MCU . '";
 			NetMeeting.CallTo(netmeeting_number);
 			new Ajax.Request("pass_parameters.php", {method:"post", postBody:"netmeeting_show=true"});
 			}
 		else
 			{
-			document.getElementById("conference").innerHTML="'.$langTeleconference_content.'";
+			document.getElementById("conference").innerHTML="' . $langTeleconference_content . '";
 			new Ajax.Request("pass_parameters.php", {method:"post", postBody:"netmeeting_show=false"});
 			}
 	}
@@ -277,12 +277,12 @@ return false;
 	}
 
 function clean_presantation()
-	{	document.getElementById("presantation_window").innerHTML="'.$langPresantation_content.'";
+	{	document.getElementById("presantation_window").innerHTML="' . $langPresantation_content . '";
 		new Ajax.Request("pass_parameters.php", {method:"post", postBody:"action=clean_presantation"});
 		
 	}
 function clean_video()
-	{	document.getElementById("video").innerHTML="'.$langVideo_content.'";
+	{	document.getElementById("video").innerHTML="' . $langVideo_content . '";
 		new Ajax.Request("pass_parameters.php", {method:"post", postBody:"action=clean_video"});
 		
 	}
@@ -291,48 +291,48 @@ function clean_video()
 var pe;
 if (pe) pe.stop();
 ';
-$refreshtime="5";
+$refreshtime = "5";
 
 if ($is_adminOfCourse) {
-	$head_content.='pe = new PeriodicalExecuter(refresh_teacher, '.$refreshtime.');';
+    $head_content .= 'pe = new PeriodicalExecuter(refresh_teacher, ' . $refreshtime . ');';
 } else {
-	$head_content.='pe = new PeriodicalExecuter(refresh_student, '.$refreshtime.');';
+    $head_content .= 'pe = new PeriodicalExecuter(refresh_student, ' . $refreshtime . ');';
 }
 
-$head_content.='</script>';
+$head_content .= '</script>';
 //END HEADERS
 
 //BODY
 if ($is_adminOfCourse) {
-	$body_action='onload=init_teacher();';
+    $body_action = 'onload=init_teacher();';
 } else {
-	$body_action='onload=init_student();';
+    $body_action = 'onload=init_student();';
 }
 //END BODY
 
 //CONTENT
 $tool_content = "";//initialise $tool_content
 
-$tool_content .= '<div id="conference">'.$langTeleconference_content.'</div>
-<div id="video">'.$langVideo_content.'</div>';
+$tool_content .= '<div id="conference">' . $langTeleconference_content . '</div>
+<div id="video">' . $langVideo_content . '</div>';
 
 if ($is_adminOfCourse) {
-	@$tool_content.='<div  id="video_presantation_control"><form id="video_form" onSubmit="return play_video();">';
-	if($MCU!="") {
-		$tool_content.='<p>'.$langconference.'
+    @$tool_content .= '<div  id="video_presantation_control"><form id="video_form" onSubmit="return play_video();">';
+    if ($MCU != "") {
+        $tool_content .= '<p>' . $langconference . '
     		<input type="checkbox" name="conference_control" id="conference_control" onclick="javascript:netmeeting();" /></p>';
-	}
-	$tool_content.='<br><p>'.$langsetvideo.'</p><input type="text" id="Video_URL" size="15"><br><input type="submit" value="'.$langButtonVideo.'"><a href="javascript:clean_video();">'.$langWashVideo.'</a>
+    }
+    $tool_content .= '<br><p>' . $langsetvideo . '</p><input type="text" id="Video_URL" size="15"><br><input type="submit" value="' . $langButtonVideo . '"><a href="javascript:clean_video();">' . $langWashVideo . '</a>
 	</form>
 	<form id="Presantation_form" onSubmit = "return show_presantation();">
-	<p>'.$langpresantation.'</p>
+	<p>' . $langpresantation . '</p>
 	<input type="text" id="Presantation_URL" name="Presantation_URL" size="20"><br>
-	<input type="submit" value="'.$langButtonPresantation.'">
-	<a href="javascript:clean_presantation();">'.$langWashPresanation.'</a>
+	<input type="submit" value="' . $langButtonPresantation . '">
+	<a href="javascript:clean_presantation();">' . $langWashPresanation . '</a>
 	</form></div>';
-	}
+}
 
-$tool_content .= '<div id="presantation_window">'.$langPresantation_content.'</div>
+$tool_content .= '<div id="presantation_window">' . $langPresantation_content . '</div>
 	<div id="chat_div" align="center">
 	<div align="left" id="chat">
 	</div>
@@ -342,13 +342,13 @@ $tool_content .= '<div id="presantation_window">'.$langPresantation_content.'</d
 	<input type="hidden" name="chatLine">
 	<input type="submit" value=" >> ">';
 
-	if ($is_adminOfCourse) {
-		$tool_content .= '<br><a href="conference.php?reset=true" onclick="return clear_chat();">'.$langWash.'</a> |
-        		<a href="conference.php?save=true" onclick="return save_chat();">'.$langSaveChat.'</a>';
- 		}
+if ($is_adminOfCourse) {
+    $tool_content .= '<br><a href="conference.php?reset=true" onclick="return clear_chat();">' . $langWash . '</a> |
+        		<a href="conference.php?save=true" onclick="return save_chat();">' . $langSaveChat . '</a>';
+}
 
-$tool_content.='</form>';
-$tool_content.='</div></div></div>
+$tool_content .= '</form>';
+$tool_content .= '</div></div></div>
 <div id="background"></div>';
 //END CONTENT
 draw($tool_content, 2, 'conference', $head_content, $body_action);

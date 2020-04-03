@@ -42,12 +42,12 @@ $allow_username_change = !get_config('block-username-change');
 if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
 
     if (!isset($_SESSION['login_form_token']) || !isset($_POST['login_form_token'])) {
-        header("location:". $_SERVER['PHP_SELF']."?msg=1");
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
         exit();
     }
 
     if ($_SESSION['login_form_token'] !== $_POST['login_form_token']) {
-        header("location:". $_SERVER['PHP_SELF']."?msg=1");
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
         exit();
     }
 
@@ -105,7 +105,7 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
             if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
                 unset($_SESSION['user_perso_active']);
             }
-            header("location:". $_SERVER['PHP_SELF']."?msg=1");
+            header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
             exit();
         }
     }

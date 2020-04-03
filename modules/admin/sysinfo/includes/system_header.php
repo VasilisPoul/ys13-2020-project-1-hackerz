@@ -20,38 +20,39 @@
 // $Id: system_header.php,v 1.1.1.1 2006-04-13 09:44:37 jexi Exp $
 
 header("Cache-Control: no-cache, must-revalidate");
-if (!isset($charset)) { $charset='UTF-8'; }
-header('Content-Type: text/html; charset='.$charset);
+if (!isset($charset)) {
+    $charset = 'UTF-8';
+}
+header('Content-Type: text/html; charset=' . $charset);
 
 // timestamp
-$timestamp = strftime ("%b %d %Y %H:%M:%S", time());
+$timestamp = strftime("%b %d %Y %H:%M:%S", time());
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 
 <head>
-    <title><?php echo $text['title']; echo " -- ($timestamp)"; ?></title>
+    <title><?php echo $text['title'];
+        echo " -- ($timestamp)"; ?></title>
 
-<?php
-if (isset($refresh) && ($refresh = intval($refresh))) {
-    echo "\t<meta http-equiv=\"Refresh\" content=\"$refresh\">\n";
-}
-if (file_exists("templates/$template/$template.css")) {
-    echo '<link rel="STYLESHEET" type="text/css" href="templates/';
-    echo $template.'/'.$template;
-    echo '.css">'."\n";
-}
-?>
+    <?php
+    if (isset($refresh) && ($refresh = intval($refresh))) {
+        echo "\t<meta http-equiv=\"Refresh\" content=\"$refresh\">\n";
+    }
+    if (file_exists("templates/$template/$template.css")) {
+        echo '<link rel="STYLESHEET" type="text/css" href="templates/';
+        echo $template . '/' . $template;
+        echo '.css">' . "\n";
+    }
+    ?>
 
 </head>
 
 <?php
 if (file_exists("templates/$template/images/$template" . "_background.gif")) {
-  echo '<body background="templates/'.$template.'/images/'.$template.'_background.gif">';
-}
-else
-{
-  echo '<body>';
+    echo '<body background="templates/' . $template . '/images/' . $template . '_background.gif">';
+} else {
+    echo '<body>';
 }
 ?>

@@ -55,8 +55,8 @@ class Form
     /**
      * Constructor, reads default config values
      *
-     * @param string  $form_name
-     * @param int     $index      arbitrary index, stored in Form::$index
+     * @param string $form_name
+     * @param int $index arbitrary index, stored in Form::$index
      */
     public function __construct($form_name, $index = null)
     {
@@ -67,7 +67,7 @@ class Form
     /**
      * Returns type of given option
      *
-     * @param   string  $option_name path or field name
+     * @param string $option_name path or field name
      * @return  string|null  one of: boolean, integer, double, string, select, array
      */
     public function getOptionType($option_name)
@@ -81,7 +81,7 @@ class Form
     /**
      * Returns allowed values for select fields
      *
-     * @param   string  $option_path
+     * @param string $option_path
      * @return  array
      */
     public function getOptionValueList($option_path)
@@ -102,9 +102,9 @@ class Form
      * array_walk callback function, reads path of form fields from
      * array (see file comment in forms.inc.php)
      *
-     * @param   mixed   $value
-     * @param   mixed   $key
-     * @param   mixed   $prefix
+     * @param mixed $value
+     * @param mixed $key
+     * @param mixed $prefix
      */
     private function _readFormPathsCallback($value, $key, $prefix)
     {
@@ -180,4 +180,5 @@ class Form
         $this->readTypes();
     }
 }
+
 ?>

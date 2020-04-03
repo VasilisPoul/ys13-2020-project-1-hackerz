@@ -41,31 +41,31 @@
 include '../../include/baseTheme.php';
 include 'auth.inc.php';
 
-$navigation[]= array ("url"=>"registration.php", "name"=> "$langNewUser");
+$navigation[] = array("url" => "registration.php", "name" => "$langNewUser");
 
 // Initialise $tool_content
 $tool_content = "";
 
 // for security
-$auth = isset($_GET['auth'])?intval($_GET['auth']):0;
+$auth = isset($_GET['auth']) ? intval($_GET['auth']) : 0;
 
 if (isset($_GET['auth']) or isset($_POST['auth']))
-	$_SESSION['u_tmp']=$auth;
-if(!isset($_GET['auth']) or !isset($_POST['auth']))
-	$auth=$_SESSION['u_tmp'];
+    $_SESSION['u_tmp'] = $auth;
+if (!isset($_GET['auth']) or !isset($_POST['auth']))
+    $auth = $_SESSION['u_tmp'];
 else if (!isset($_GET['auth']) && !isset($_SESSION['auth_tmp']))
-	$auth=0;
+    $auth = 0;
 
 $authmethods = get_auth_active_methods();
 
 $msg = get_auth_info($auth);
 $settings = get_auth_settings($auth);
-if(!empty($msg)) $nameTools = "$langConfirmUser ($msg)";
+if (!empty($msg)) $nameTools = "$langConfirmUser ($msg)";
 
 if (isset($p) and ($p)) {
-	$tool_content .= "<form method='post' action='ldapsearch_prof.php'>";
+    $tool_content .= "<form method='post' action='ldapsearch_prof.php'>";
 } else {
-	$tool_content .= "<form method='post' action='ldapsearch.php'>";
+    $tool_content .= "<form method='post' action='ldapsearch.php'>";
 }
 @$tool_content .= "<table width='99%' style='border: 1px solid #edecdf;'>
 	<thead><tr><td>
@@ -81,15 +81,15 @@ if (isset($p) and ($p)) {
 	</tr>
 	<tr><th>&nbsp;</th>
 	<td>
-	<input type='hidden' name='auth' value='".$auth."'>
-	<input type='submit' name='is_submit' value='".$langSubmit."'>
+	<input type='hidden' name='auth' value='" . $auth . "'>
+	<input type='submit' name='is_submit' value='" . $langSubmit . "'>
 	</td>
 	</tr>
 	</thead></table>
-	<div align='right'><small>".$settings['auth_instructions']."</small></div>
+	<div align='right'><small>" . $settings['auth_instructions'] . "</small></div>
 	</td>
 	</tr></thead></table>
 	</form>";
 
-draw($tool_content,0,'auth');
+draw($tool_content, 0, 'auth');
 ?>

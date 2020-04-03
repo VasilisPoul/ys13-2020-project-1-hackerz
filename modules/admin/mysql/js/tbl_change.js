@@ -1,4 +1,5 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
+
 /**
  * function used in table data manipulation pages
  *
@@ -9,17 +10,16 @@
  * Modify from controls when the "NULL" checkbox is selected
  *
  * @param   string   the MySQL field type
- * @param   string   the urlencoded field name - OBSOLETE 
+ * @param   string   the urlencoded field name - OBSOLETE
  * @param   string   the md5 hashed field name
  * @param   string   the multi_edit row sequence number
  *
  * @return  boolean  always true
  */
-function nullify(theType, urlField, md5Field, multi_edit)
-{
+function nullify(theType, urlField, md5Field, multi_edit) {
     var rowForm = document.forms['insertForm'];
 
-    if (typeof(rowForm.elements['funcs' + multi_edit + '[' + md5Field + ']']) != 'undefined') {
+    if (typeof (rowForm.elements['funcs' + multi_edit + '[' + md5Field + ']']) != 'undefined') {
         rowForm.elements['funcs' + multi_edit + '[' + md5Field + ']'].selectedIndex = -1;
     }
 
@@ -30,13 +30,13 @@ function nullify(theType, urlField, md5Field, multi_edit)
     }
     // Other "ENUM" field
     else if (theType == 2) {
-        var elts     = rowForm.elements['field_' + md5Field + multi_edit + '[]'];
+        var elts = rowForm.elements['field_' + md5Field + multi_edit + '[]'];
         // when there is just one option in ENUM:
         if (elts.checked) {
             elts.checked = false;
         } else {
             var elts_cnt = elts.length;
-            for (var i = 0; i < elts_cnt; i++ ) {
+            for (var i = 0; i < elts_cnt; i++) {
                 elts[i].checked = false;
             } // end for
 
@@ -64,15 +64,14 @@ function nullify(theType, urlField, md5Field, multi_edit)
  *
  * @return  boolean  always true
  */
-function unNullify(urlField, multi_edit)
-{
+function unNullify(urlField, multi_edit) {
     var rowForm = document.forms['insertForm'];
 
-    if (typeof(rowForm.elements['fields_null[multi_edit][' + multi_edit + '][' + urlField + ']']) != 'undefined') {
+    if (typeof (rowForm.elements['fields_null[multi_edit][' + multi_edit + '][' + urlField + ']']) != 'undefined') {
         rowForm.elements['fields_null[multi_edit][' + multi_edit + '][' + urlField + ']'].checked = false
     } // end if
 
-    if (typeof(rowForm.elements['insert_ignore_' + multi_edit]) != 'undefined') {
+    if (typeof (rowForm.elements['insert_ignore_' + multi_edit]) != 'undefined') {
         rowForm.elements['insert_ignore_' + multi_edit].checked = false
     } // end if
 
@@ -94,7 +93,7 @@ var clock_set = 0;
  * @param   string      form name
  * @param   string      id of field name
  * @param   string      edit type - date/timestamp
- * @param   string      id of the corresponding checkbox for NULL 
+ * @param   string      id of the corresponding checkbox for NULL
  */
 function openCalendar(params, form, field, type, fieldNull) {
     window.open("./calendar.php?" + params, "calendar", "width=400,height=200,status=yes");
@@ -114,7 +113,7 @@ function openCalendar(params, form, field, type, fieldNull) {
 function formatNum2(i, valtype) {
     f = (i < 10 ? '0' : '') + i;
     if (valtype && valtype != '') {
-        switch(valtype) {
+        switch (valtype) {
             case 'month':
                 f = (f > 12 ? 12 : f);
                 break;
@@ -171,40 +170,40 @@ function initCalendar() {
             value = window.opener.dateField.value;
             if (window.opener.dateType == 'datetime' || window.opener.dateType == 'date') {
                 if (window.opener.dateType == 'datetime') {
-                    parts   = value.split(' ');
-                    value   = parts[0];
+                    parts = value.split(' ');
+                    value = parts[0];
 
                     if (parts[1]) {
-                        time    = parts[1].split(':');
-                        hour    = parseInt(time[0],10);
-                        minute  = parseInt(time[1],10);
-                        second  = parseInt(time[2],10);
+                        time = parts[1].split(':');
+                        hour = parseInt(time[0], 10);
+                        minute = parseInt(time[1], 10);
+                        second = parseInt(time[2], 10);
                     }
                 }
-                date        = value.split("-");
-                day         = parseInt(date[2],10);
-                month       = parseInt(date[1],10) - 1;
-                year        = parseInt(date[0],10);
+                date = value.split("-");
+                day = parseInt(date[2], 10);
+                month = parseInt(date[1], 10) - 1;
+                year = parseInt(date[0], 10);
             } else {
-                year        = parseInt(value.substr(0,4),10);
-                month       = parseInt(value.substr(4,2),10) - 1;
-                day         = parseInt(value.substr(6,2),10);
-                hour        = parseInt(value.substr(8,2),10);
-                minute      = parseInt(value.substr(10,2),10);
-                second      = parseInt(value.substr(12,2),10);
+                year = parseInt(value.substr(0, 4), 10);
+                month = parseInt(value.substr(4, 2), 10) - 1;
+                day = parseInt(value.substr(6, 2), 10);
+                hour = parseInt(value.substr(8, 2), 10);
+                minute = parseInt(value.substr(10, 2), 10);
+                second = parseInt(value.substr(12, 2), 10);
             }
         }
         if (isNaN(year) || isNaN(month) || isNaN(day) || day == 0) {
-            dt      = new Date();
-            year    = dt.getFullYear();
-            month   = dt.getMonth();
-            day     = dt.getDate();
+            dt = new Date();
+            year = dt.getFullYear();
+            month = dt.getMonth();
+            day = dt.getDate();
         }
         if (isNaN(hour) || isNaN(minute) || isNaN(second)) {
-            dt      = new Date();
-            hour    = dt.getHours();
-            minute  = dt.getMinutes();
-            second  = dt.getSeconds();
+            dt = new Date();
+            hour = dt.getHours();
+            minute = dt.getMinutes();
+            second = dt.getSeconds();
         }
     } else {
         /* Moving in calendar */
@@ -233,7 +232,7 @@ function initCalendar() {
     str += '<form method="NONE" onsubmit="return 0">';
     str += '<a href="javascript:month--; initCalendar();">&laquo;</a> ';
     str += '<select id="select_month" name="monthsel" onchange="month = parseInt(document.getElementById(\'select_month\').value); initCalendar();">';
-    for (i =0; i < 12; i++) {
+    for (i = 0; i < 12; i++) {
         if (i == month) selected = ' selected="selected"';
         else selected = '';
         str += '<option value="' + i + '" ' + selected + '>' + month_names[i] + '</option>';
@@ -339,9 +338,9 @@ function returnDate(d) {
     txt = d;
     if (window.opener.dateType != 'date') {
         // need to get time
-        h = parseInt(document.getElementById('hour').value,10);
-        m = parseInt(document.getElementById('minute').value,10);
-        s = parseInt(document.getElementById('second').value,10);
+        h = parseInt(document.getElementById('hour').value, 10);
+        m = parseInt(document.getElementById('minute').value, 10);
+        s = parseInt(document.getElementById('second').value, 10);
         if (window.opener.dateType == 'datetime') {
             txt += ' ' + formatNum2(h, 'hour') + ':' + formatNum2(m, 'minute') + ':' + formatNum2(s, 'second');
         } else {
@@ -351,7 +350,7 @@ function returnDate(d) {
     }
 
     window.opener.dateField.value = txt;
-    if (typeof(window.opener.dateFieldNull) != 'undefined') {
+    if (typeof (window.opener.dateFieldNull) != 'undefined') {
         window.opener.dateFieldNull.checked = false;
     }
     window.close();

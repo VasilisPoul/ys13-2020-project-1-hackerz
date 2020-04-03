@@ -5,7 +5,7 @@
  * @version $Id: header_printview.inc.php 12190 2009-01-13 22:55:44Z lem9 $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -32,35 +32,40 @@ require_once './libraries/header_http.inc.php';
  */
 // Defines the cell alignment values depending on text direction
 if ($text_dir == 'ltr') {
-    $cell_align_left  = 'left';
+    $cell_align_left = 'left';
     $cell_align_right = 'right';
 } else {
-    $cell_align_left  = 'right';
+    $cell_align_left = 'right';
     $cell_align_right = 'left';
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $available_languages[$lang][2]; ?>" lang="<?php echo $available_languages[$lang][2]; ?>" dir="<?php echo $text_dir; ?>">
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $available_languages[$lang][2]; ?>"
+      lang="<?php echo $available_languages[$lang][2]; ?>" dir="<?php echo $text_dir; ?>">
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset; ?>" />
-<link rel="icon" href="./favicon.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
-<title><?php echo $strSQLResult; ?> - phpMyAdmin <?php echo PMA_VERSION ?></title>
-<link rel="stylesheet" type="text/css" href="phpmyadmin.css.php?<?php echo PMA_generate_common_url('', ''); ?>&amp;js_frame=print&amp;nocache=<?php echo $_SESSION['PMA_Config']->getThemeUniqueValue(); ?>" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset; ?>"/>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon"/>
+    <title><?php echo $strSQLResult; ?> - phpMyAdmin <?php echo PMA_VERSION ?></title>
+    <link rel="stylesheet" type="text/css"
+          href="phpmyadmin.css.php?<?php echo PMA_generate_common_url('', ''); ?>&amp;js_frame=print&amp;nocache=<?php echo $_SESSION['PMA_Config']->getThemeUniqueValue(); ?>"/>
 </head>
 
 <body bgcolor="#ffffff">
 <h1><?php echo $strSQLResult; ?></h1>
 <p>
-    <strong><?php echo $strHost; ?>:</strong> <?php echo $cfg['Server']['verbose'] ? $cfg['Server']['verbose'] : $cfg['Server']['host'] . ((!empty($cfg['Server']['port'])) ? ':' . $cfg['Server']['port'] : ''); ?><br />
-    <strong><?php echo $strDatabase; ?>:</strong> <?php echo htmlspecialchars($db); ?><br />
-    <strong><?php echo $strGenTime; ?>:</strong> <?php echo PMA_localisedDate(); ?><br />
-    <strong><?php echo $strGenBy; ?>:</strong> phpMyAdmin&nbsp;<?php echo PMA_VERSION; ?>&nbsp;/ MySQL&nbsp;<?php echo PMA_MYSQL_STR_VERSION; ?><br />
+    <strong><?php echo $strHost; ?>
+        :</strong> <?php echo $cfg['Server']['verbose'] ? $cfg['Server']['verbose'] : $cfg['Server']['host'] . ((!empty($cfg['Server']['port'])) ? ':' . $cfg['Server']['port'] : ''); ?>
+    <br/>
+    <strong><?php echo $strDatabase; ?>:</strong> <?php echo htmlspecialchars($db); ?><br/>
+    <strong><?php echo $strGenTime; ?>:</strong> <?php echo PMA_localisedDate(); ?><br/>
+    <strong><?php echo $strGenBy; ?>:</strong> phpMyAdmin&nbsp;<?php echo PMA_VERSION; ?>&nbsp;/
+    MySQL&nbsp;<?php echo PMA_MYSQL_STR_VERSION; ?><br/>
     <strong><?php echo $strSQLQuery; ?>:</strong> <?php echo htmlspecialchars($full_sql_query); ?>;
-    <?php if (isset($num_rows)) { ?><br />
-    <strong><?php echo $strRows; ?>:</strong> <?php echo $num_rows; ?>
+    <?php if (isset($num_rows)) { ?><br/>
+        <strong><?php echo $strRows; ?>:</strong> <?php echo $num_rows; ?>
     <?php } ?>
 </p>
 

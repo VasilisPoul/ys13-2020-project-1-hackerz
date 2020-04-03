@@ -19,61 +19,61 @@
 //
 // $Id: is.php,v 1.1.1.1 2006/01/10 15:02:11 adia Exp $
 
-$text['title']          = 'Kerfisupplýsingar';
+$text['title'] = 'Kerfisupplýsingar';
 
-$text['vitals']         = 'Helstu Upplýsingar';
-$text['hostname']       = 'Vélarnafn';
-$text['ip']             = 'IP Tala';
-$text['kversion']       = 'Útgáfa kjarna';
-$text['uptime']         = 'Uppitími';
-$text['users']          = 'Notendur';
-$text['loadavg']        = 'Meðal álag';
+$text['vitals'] = 'Helstu Upplýsingar';
+$text['hostname'] = 'Vélarnafn';
+$text['ip'] = 'IP Tala';
+$text['kversion'] = 'Útgáfa kjarna';
+$text['uptime'] = 'Uppitími';
+$text['users'] = 'Notendur';
+$text['loadavg'] = 'Meðal álag';
 
-$text['hardware']       = 'Upplýsingar um vélbúnað';
-$text['numcpu']         = 'Örgjörvi/Örgjörvar';
-$text['cpumodel']       = 'Týpa';
-$text['mhz']            = 'Hraði';
-$text['cache']          = 'Stærð flýtiminnis';
-$text['bogomips']       = 'Kerfis Bogomips';
-$text['pci']            = 'PCI Jaðartæki';
-$text['ide']            = 'IDE Jaðartæki';
-$text['scsi']           = 'SCSI Jaðartæki';
+$text['hardware'] = 'Upplýsingar um vélbúnað';
+$text['numcpu'] = 'Örgjörvi/Örgjörvar';
+$text['cpumodel'] = 'Týpa';
+$text['mhz'] = 'Hraði';
+$text['cache'] = 'Stærð flýtiminnis';
+$text['bogomips'] = 'Kerfis Bogomips';
+$text['pci'] = 'PCI Jaðartæki';
+$text['ide'] = 'IDE Jaðartæki';
+$text['scsi'] = 'SCSI Jaðartæki';
 
-$text['netusage']       = 'Notkun Nets';
-$text['device']         = 'Jaðartæki';
-$text['received']       = 'Tekið á móti';
-$text['sent']           = 'Sent';
-$text['errors']         = 'Villur/Drop';
+$text['netusage'] = 'Notkun Nets';
+$text['device'] = 'Jaðartæki';
+$text['received'] = 'Tekið á móti';
+$text['sent'] = 'Sent';
+$text['errors'] = 'Villur/Drop';
 
-$text['memusage']       = 'Minnisnotkun';
-$text['phymem']         = 'Vinnsluminni';
-$text['swap']           = 'Sýndarminni';
+$text['memusage'] = 'Minnisnotkun';
+$text['phymem'] = 'Vinnsluminni';
+$text['swap'] = 'Sýndarminni';
 
-$text['fs']             = 'Tengd Skráarkerfi';
-$text['mount']          = 'Tengipunktur';
-$text['partition']      = 'Disksneið';
+$text['fs'] = 'Tengd Skráarkerfi';
+$text['mount'] = 'Tengipunktur';
+$text['partition'] = 'Disksneið';
 
-$text['percent']        = 'Prósent af Heildarstærð';
-$text['type']           = 'Týpa';
-$text['free']           = 'Laust';
-$text['used']           = 'Notað';
-$text['size']           = 'Stærð';
-$text['totals']         = 'Samtals';
+$text['percent'] = 'Prósent af Heildarstærð';
+$text['type'] = 'Týpa';
+$text['free'] = 'Laust';
+$text['used'] = 'Notað';
+$text['size'] = 'Stærð';
+$text['totals'] = 'Samtals';
 
-$text['kb']             = 'KB';
-$text['mb']             = 'MB';
-$text['gb']             = 'GB';
+$text['kb'] = 'KB';
+$text['mb'] = 'MB';
+$text['gb'] = 'GB';
 
-$text['none']           = 'ekkert';
+$text['none'] = 'ekkert';
 
-$text['capacity']       = 'Heildarstærð'; 
+$text['capacity'] = 'Heildarstærð';
 
-$text['template']       = 'Template';
-$text['language']       = 'Tungumál';
-$text['submit']         = 'Senda';
-$text['created']        = 'Búið til af';
+$text['template'] = 'Template';
+$text['language'] = 'Tungumál';
+$text['submit'] = 'Senda';
+$text['created'] = 'Búið til af';
 
-$text['days']           = 'dagar';
-$text['hours']          = 'klukkustundir';
-$text['minutes']        = 'mínútur';
+$text['days'] = 'dagar';
+$text['hours'] = 'klukkustundir';
+$text['minutes'] = 'mínútur';
 ?>

@@ -6,7 +6,7 @@
  * @version $Id: ldi.php 12047 2008-11-30 14:20:25Z nijel $
  * @package phpMyAdmin-Import
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -43,9 +43,9 @@ if (isset($plugin_list)) {
             array('type' => 'text', 'name' => 'new_line', 'text' => 'strLinesTerminatedBy', 'size' => 2),
             array('type' => 'text', 'name' => 'columns', 'text' => 'strColumnNames'),
             array('type' => 'bool', 'name' => 'local_option', 'text' => 'strLDILocal'),
-            ),
+        ),
         'options_text' => 'strOptions',
-        );
+    );
     /* We do not define function when plugin is just queried for information above */
     return;
 }
@@ -78,7 +78,7 @@ if (strlen($ldi_enclosed) > 0) {
 if (strlen($ldi_escaped) > 0) {
     $sql .= ' ESCAPED BY \'' . PMA_sqlAddslashes($ldi_escaped) . '\'';
 }
-if (strlen($ldi_new_line) > 0){
+if (strlen($ldi_new_line) > 0) {
     if ($ldi_new_line == 'auto') {
         $ldi_new_line = PMA_whichCrlf() == "\n" ? '\n' : '\r\n';
     }
@@ -90,14 +90,14 @@ if ($skip_queries > 0) {
 }
 if (strlen($ldi_columns) > 0) {
     $sql .= ' (';
-    $tmp   = split(',( ?)', $ldi_columns);
+    $tmp = split(',( ?)', $ldi_columns);
     $cnt_tmp = count($tmp);
     for ($i = 0; $i < $cnt_tmp; $i++) {
         if ($i > 0) {
             $sql .= ', ';
         }
         /* Trim also `, if user already included backquoted fields */
-        $sql     .= PMA_backquote(trim($tmp[$i], " \t\r\n\0\x0B`"));
+        $sql .= PMA_backquote(trim($tmp[$i], " \t\r\n\0\x0B`"));
     } // end for
     $sql .= ')';
 }

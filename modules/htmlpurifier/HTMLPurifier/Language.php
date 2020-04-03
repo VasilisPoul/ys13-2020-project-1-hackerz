@@ -62,7 +62,7 @@ class HTMLPurifier_Language
      */
     public function __construct($config, $context)
     {
-        $this->config  = $config;
+        $this->config = $config;
         $this->context = $context;
     }
 
@@ -122,7 +122,7 @@ class HTMLPurifier_Language
      */
     public function listify($array)
     {
-        $sep      = $this->getMessage('Item separator');
+        $sep = $this->getMessage('Item separator');
         $sep_last = $this->getMessage('Item separator last');
         $ret = '';
         for ($i = 0, $c = count($array); $i < $c; $i++) {
@@ -164,34 +164,34 @@ class HTMLPurifier_Language
                         $generator = $this->context->get('Generator');
                     }
                     if (isset($value->name)) {
-                        $subst['$'.$i.'.Name'] = $value->name;
+                        $subst['$' . $i . '.Name'] = $value->name;
                     }
                     if (isset($value->data)) {
-                        $subst['$'.$i.'.Data'] = $value->data;
+                        $subst['$' . $i . '.Data'] = $value->data;
                     }
-                    $subst['$'.$i.'.Compact'] =
-                    $subst['$'.$i.'.Serialized'] = $generator->generateFromToken($value);
+                    $subst['$' . $i . '.Compact'] =
+                    $subst['$' . $i . '.Serialized'] = $generator->generateFromToken($value);
                     // a more complex algorithm for compact representation
                     // could be introduced for all types of tokens. This
                     // may need to be factored out into a dedicated class
                     if (!empty($value->attr)) {
                         $stripped_token = clone $value;
                         $stripped_token->attr = array();
-                        $subst['$'.$i.'.Compact'] = $generator->generateFromToken($stripped_token);
+                        $subst['$' . $i . '.Compact'] = $generator->generateFromToken($stripped_token);
                     }
-                    $subst['$'.$i.'.Line'] = $value->line ? $value->line : 'unknown';
+                    $subst['$' . $i . '.Line'] = $value->line ? $value->line : 'unknown';
                 }
                 continue;
             } elseif (is_array($value)) {
                 $keys = array_keys($value);
                 if (array_keys($keys) === $keys) {
                     // list
-                    $subst['$'.$i] = $this->listify($value);
+                    $subst['$' . $i] = $this->listify($value);
                 } else {
                     // associative array
                     // no $i implementation yet, sorry
-                    $subst['$'.$i.'.Keys'] = $this->listify($keys);
-                    $subst['$'.$i.'.Values'] = $this->listify(array_values($value));
+                    $subst['$' . $i . '.Keys'] = $this->listify($keys);
+                    $subst['$' . $i . '.Values'] = $this->listify(array_values($value));
                 }
                 continue;
             }

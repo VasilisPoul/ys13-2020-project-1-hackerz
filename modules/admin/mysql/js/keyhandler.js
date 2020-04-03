@@ -1,11 +1,11 @@
 /**
-  * Allows moving around inputs/select by Ctrl+arrows
-  *
-  * @param   object   event data
-  */
+ * Allows moving around inputs/select by Ctrl+arrows
+ *
+ * @param   object   event data
+ */
 function onKeyDownArrowsHandler(e) {
-    e = e||window.event;
-    var o = (e.srcElement||e.target);
+    e = e || window.event;
+    var o = (e.srcElement || e.target);
     if (!o) return;
     if (o.tagName != "TEXTAREA" && o.tagName != "INPUT" && o.tagName != "SELECT") return;
     if (navigator.userAgent.toLowerCase().indexOf('applewebkit/') != -1) {
@@ -18,26 +18,43 @@ function onKeyDownArrowsHandler(e) {
     var pos = o.id.split("_");
     if (pos[0] != "field" || typeof pos[2] == "undefined") return;
 
-    var x = pos[2], y=pos[1];
+    var x = pos[2], y = pos[1];
 
     // skip non existent fields
-    for (i=0; i<10; i++)
-    {
+    for (i = 0; i < 10; i++) {
         if (switch_movement) {
-            switch(e.keyCode) {
-                case 38: x--; break; // up
-                case 40: x++; break; // down
-                case 37: y--; break; // left
-                case 39: y++; break; // right
-                default: return;
+            switch (e.keyCode) {
+                case 38:
+                    x--;
+                    break; // up
+                case 40:
+                    x++;
+                    break; // down
+                case 37:
+                    y--;
+                    break; // left
+                case 39:
+                    y++;
+                    break; // right
+                default:
+                    return;
             }
         } else {
-            switch(e.keyCode) {
-                case 38: y--; break; // up
-                case 40: y++; break; // down
-                case 37: x--; break; // left
-                case 39: x++; break; // right
-                default: return;
+            switch (e.keyCode) {
+                case 38:
+                    y--;
+                    break; // up
+                case 40:
+                    y++;
+                    break; // down
+                case 37:
+                    x--;
+                    break; // left
+                case 39:
+                    x++;
+                    break; // right
+                default:
+                    return;
             }
         }
 

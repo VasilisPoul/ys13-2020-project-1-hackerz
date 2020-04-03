@@ -44,17 +44,17 @@ include '../../include/baseTheme.php';
 // Define $nameTools
 $nameTools = $langVisitsStats;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
-$page_title = $langPlatformStats.": ".$langVisitsStats;
+$page_title = $langPlatformStats . ": " . $langVisitsStats;
 
 // Initialise $tool_content
 $tool_content = "";
 $tool_content .= "
   <div id=\"operations_container\">
     <ul id=\"opslist\">
-      <li><a href='stateclass.php'>".$langPlatformGenStats."</a></li>
-      <li><a href='visitsCourseStats.php?first='>".$langVisitsCourseStats."</a></li>
-      <li><a href='oldStats.php'>".$langOldStats."</a></li>
-      <li><a href='monthlyReport.php'>".$langMonthlyReport."</a></li>
+      <li><a href='stateclass.php'>" . $langPlatformGenStats . "</a></li>
+      <li><a href='visitsCourseStats.php?first='>" . $langVisitsCourseStats . "</a></li>
+      <li><a href='oldStats.php'>" . $langOldStats . "</a></li>
+      <li><a href='monthlyReport.php'>" . $langMonthlyReport . "</a></li>
     </ul>
   </div>";
 
@@ -66,18 +66,18 @@ if ($language == 'greek') {
     $lang = 'en';
 }
 
-$jscalendar = new DHTML_Calendar($urlServer.'include/jscalendar/', $lang, 'calendar-blue2', false);
+$jscalendar = new DHTML_Calendar($urlServer . 'include/jscalendar/', $lang, 'calendar-blue2', false);
 $local_head = $jscalendar->get_load_files_code();
 
-    if (!extension_loaded('gd')) {
-        $tool_content .= "<p>$langGDRequired</p>";
-    } else {
-        $made_chart = true;
-        //show chart with statistics
-        require_once "statsResults.php";
-        //show form for determining time period and user
-        require_once "statsForm.php";
-    }
+if (!extension_loaded('gd')) {
+    $tool_content .= "<p>$langGDRequired</p>";
+} else {
+    $made_chart = true;
+    //show chart with statistics
+    require_once "statsResults.php";
+    //show form for determining time period and user
+    require_once "statsForm.php";
+}
 
 draw($tool_content, 3, 'admin', $local_head, '');
 ?>

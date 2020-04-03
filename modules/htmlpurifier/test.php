@@ -5,7 +5,7 @@ $dirty_html = $_GET['html'];
 
 $config = HTMLPurifier_Config::createDefault();
 $purifier = new HTMLPurifier($config);
-$clean_html = $purifier->purify( $dirty_html );
+$clean_html = $purifier->purify($dirty_html);
 ?>
 
 <h4>clean:</h4>

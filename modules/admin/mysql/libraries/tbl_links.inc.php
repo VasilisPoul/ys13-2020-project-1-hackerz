@@ -5,7 +5,7 @@
  * @version $Id: tbl_links.inc.php 12163 2009-01-01 21:39:21Z lem9 $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -26,14 +26,14 @@ require_once './libraries/bookmark.lib.php';
  * Set parameters for links
  */
 $url_params = array();
-$url_params['db']    = $db;
+$url_params['db'] = $db;
 $url_params['table'] = $table;
 
 /**
  * Defines the urls to return to in case of error in a sql statement
  */
 $err_url_0 = $cfg['DefaultTabDatabase'] . PMA_generate_common_url(array('db' => $db,));
-$err_url   = $cfg['DefaultTabTable'] . PMA_generate_common_url($url_params);
+$err_url = $cfg['DefaultTabTable'] . PMA_generate_common_url($url_params);
 
 /**
  * Displays headers
@@ -63,7 +63,7 @@ $tabs['search']['icon'] = 'b_search.png';
 $tabs['search']['text'] = $strSearch;
 $tabs['search']['link'] = 'tbl_select.php';
 
-if (! (isset($db_is_information_schema) && $db_is_information_schema)) {
+if (!(isset($db_is_information_schema) && $db_is_information_schema)) {
     $tabs['insert']['icon'] = 'b_insrow.png';
     $tabs['insert']['link'] = 'tbl_change.php';
     $tabs['insert']['text'] = $strInsert;
@@ -78,7 +78,7 @@ $tabs['export']['text'] = $strExport;
  * Don't display "Import", "Operations" and "Empty"
  * for views and information_schema
  */
-if (! $tbl_is_view && ! (isset($db_is_information_schema) && $db_is_information_schema)) {
+if (!$tbl_is_view && !(isset($db_is_information_schema) && $db_is_information_schema)) {
     $tabs['import']['icon'] = 'b_tblimport.png';
     $tabs['import']['link'] = 'tbl_import.php';
     $tabs['import']['text'] = $strImport;
@@ -87,11 +87,11 @@ if (! $tbl_is_view && ! (isset($db_is_information_schema) && $db_is_information_
     $tabs['operation']['link'] = 'tbl_operations.php';
     $tabs['operation']['text'] = $strOperations;
 
-    $tabs['empty']['link']  = 'sql.php';
-    $tabs['empty']['args']['reload']    = 1;
+    $tabs['empty']['link'] = 'sql.php';
+    $tabs['empty']['args']['reload'] = 1;
     $tabs['empty']['args']['sql_query'] = 'TRUNCATE TABLE ' . PMA_backquote($table);
     $tabs['empty']['args']['zero_rows'] = sprintf($strTableHasBeenEmptied, htmlspecialchars($table));
-    $tabs['empty']['attr']  = 'onclick="return confirmLink(this, \'TRUNCATE TABLE ' . PMA_jsFormat($table) . '\')"';
+    $tabs['empty']['attr'] = 'onclick="return confirmLink(this, \'TRUNCATE TABLE ' . PMA_jsFormat($table) . '\')"';
     $tabs['empty']['args']['goto'] = 'tbl_structure.php';
     $tabs['empty']['class'] = 'caution';
     $tabs['empty']['icon'] = 'b_empty.png';
@@ -104,16 +104,16 @@ if (! $tbl_is_view && ! (isset($db_is_information_schema) && $db_is_information_
 /**
  * no drop in information_schema
  */
-if (! (isset($db_is_information_schema) && $db_is_information_schema)) {
+if (!(isset($db_is_information_schema) && $db_is_information_schema)) {
     $tabs['drop']['icon'] = 'b_deltbl.png';
     $tabs['drop']['link'] = 'sql.php';
     $tabs['drop']['text'] = $strDrop;
-    $tabs['drop']['args']['reload']     = 1;
-    $tabs['drop']['args']['purge']      = 1;
+    $tabs['drop']['args']['reload'] = 1;
+    $tabs['drop']['args']['purge'] = 1;
     $drop_command = 'DROP ' . ($tbl_is_view ? 'VIEW' : 'TABLE');
-    $tabs['drop']['args']['sql_query']  = $drop_command . ' ' . PMA_backquote($table);
-    $tabs['drop']['args']['goto']       = 'db_structure.php';
-    $tabs['drop']['args']['zero_rows']  = sprintf(($tbl_is_view ? $strViewHasBeenDropped : $strTableHasBeenDropped), htmlspecialchars($table));
+    $tabs['drop']['args']['sql_query'] = $drop_command . ' ' . PMA_backquote($table);
+    $tabs['drop']['args']['goto'] = 'db_structure.php';
+    $tabs['drop']['args']['zero_rows'] = sprintf(($tbl_is_view ? $strViewHasBeenDropped : $strTableHasBeenDropped), htmlspecialchars($table));
     $tabs['drop']['attr'] = 'onclick="return confirmLink(this, \'' . $drop_command . ' ' . PMA_jsFormat($table) . '\')"';
     unset($drop_command);
     $tabs['drop']['class'] = 'caution';

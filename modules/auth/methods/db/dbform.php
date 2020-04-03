@@ -25,41 +25,35 @@
 
 $dbdata = $auth_data;
 
-if(!empty($dbdata))
-{
+if (!empty($dbdata)) {
     $dbsettings = $dbdata['auth_settings'];
     $dbinstructions = $dbdata['auth_instructions'];
-    $edb = empty($dbsettings)?"":explode("|",$dbsettings);
-    if(!empty($edb))
-    {
-	    //dbhost
-	    $dbhost = str_replace("dbhost=","",$edb[0]);
-	    //dbname
-	    $dbname = str_replace("dbname=","",$edb[1]);
-	    //dbuser
-	    $dbuser = str_replace("dbuser=","",$edb[2]);
-	    // dbpass
-	    $dbpass = str_replace("dbpass=","",$edb[3]);
-	    //dbtable
-	    $dbtable = str_replace("dbtable=","",$edb[4]);
-	    //dbfielduser
-	    $dbfielduser = str_replace("dbfielduser=","",$edb[5]);
-	    //dbfieldpass
-	    $dbfieldpass = str_replace("dbfieldpass=","",$edb[6]);
-	  }
-	  else
-	  {
-	  	$dbhost = "";			//dbhost
-	    $dbname = "";			//dbname
-	    $dbuser = "";			//dbuser
-	    $dbpass = "";			// dbpass
-	    $dbtable = "";		//dbtable
-	    $dbfielduser = "";	//dbfielduser
-	    $dbfieldpass = "";	//dbfieldpass
-	  }
-}
-else
-{
+    $edb = empty($dbsettings) ? "" : explode("|", $dbsettings);
+    if (!empty($edb)) {
+        //dbhost
+        $dbhost = str_replace("dbhost=", "", $edb[0]);
+        //dbname
+        $dbname = str_replace("dbname=", "", $edb[1]);
+        //dbuser
+        $dbuser = str_replace("dbuser=", "", $edb[2]);
+        // dbpass
+        $dbpass = str_replace("dbpass=", "", $edb[3]);
+        //dbtable
+        $dbtable = str_replace("dbtable=", "", $edb[4]);
+        //dbfielduser
+        $dbfielduser = str_replace("dbfielduser=", "", $edb[5]);
+        //dbfieldpass
+        $dbfieldpass = str_replace("dbfieldpass=", "", $edb[6]);
+    } else {
+        $dbhost = "";            //dbhost
+        $dbname = "";            //dbname
+        $dbuser = "";            //dbuser
+        $dbpass = "";            // dbpass
+        $dbtable = "";        //dbtable
+        $dbfielduser = "";    //dbfielduser
+        $dbfieldpass = "";    //dbfieldpass
+    }
+} else {
     $dbsettings = $dbdata['auth_settings'];
     $dbinstructions = $dbdata['auth_instructions'];
     $dbhost = $dbsettings;
@@ -99,7 +93,7 @@ $tool_content .= "
     </tr>
     <tr>
       <th class=\"left\">$langInstructionsAuth:</th>
-      <td><textarea class=\"FormData_InputText\" name=\"dbinstructions\" cols=\"30\" rows=\"10\" wrap=\"virtual\">".$dbinstructions."</textarea></td>
+      <td><textarea class=\"FormData_InputText\" name=\"dbinstructions\" cols=\"30\" rows=\"10\" wrap=\"virtual\">" . $dbinstructions . "</textarea></td>
     </tr>
 ";
 

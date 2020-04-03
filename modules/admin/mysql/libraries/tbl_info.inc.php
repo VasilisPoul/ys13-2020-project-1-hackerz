@@ -9,7 +9,7 @@
  * @version $Id: tbl_info.inc.php 12121 2008-12-10 09:23:07Z cybot_tm $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -45,7 +45,7 @@ PMA_DBI_select_db($GLOBALS['db']);
  * Holds information about the current table
  *
  * @todo replace this by PMA_Table
- * @global array $GLOBALS['showtable']
+ * @global array $GLOBALS ['showtable']
  * @name $showtable
  */
 $GLOBALS['showtable'] = array();
@@ -62,12 +62,12 @@ $GLOBALS['showtable'] = PMA_Table::sGetStatusInfo($GLOBALS['db'], $GLOBALS['tabl
 
 if ($showtable) {
     if (PMA_Table::isView($GLOBALS['db'], $GLOBALS['table'])) {
-        $tbl_is_view     = true;
-        $tbl_type        = $GLOBALS['strView'];
-        $show_comment    = null;
+        $tbl_is_view = true;
+        $tbl_type = $GLOBALS['strView'];
+        $show_comment = null;
     } else {
-        $tbl_is_view     = false;
-        $tbl_type        = isset($showtable['Engine'])
+        $tbl_is_view = false;
+        $tbl_type = isset($showtable['Engine'])
             ? strtoupper($showtable['Engine'])
             : '';
         // a new comment could be coming from tbl_operations.php
@@ -75,26 +75,26 @@ if ($showtable) {
         if (isset($submitcomment) && isset($comment)) {
             $show_comment = $comment;
         } else {
-            $show_comment    = isset($showtable['Comment'])
+            $show_comment = isset($showtable['Comment'])
                 ? $showtable['Comment']
                 : '';
         }
     }
-    $tbl_collation       = empty($showtable['Collation'])
+    $tbl_collation = empty($showtable['Collation'])
         ? ''
         : $showtable['Collation'];
 
     if (null === $showtable['Rows']) {
-        $showtable['Rows']   = PMA_Table::countRecords($GLOBALS['db'],
+        $showtable['Rows'] = PMA_Table::countRecords($GLOBALS['db'],
             $showtable['Name'], true, true);
     }
     $table_info_num_rows = isset($showtable['Rows']) ? $showtable['Rows'] : 0;
     $row_format = isset($showtable['Row_format']) ? $showtable['Row_format'] : '';
-    $auto_increment      = isset($showtable['Auto_increment'])
+    $auto_increment = isset($showtable['Auto_increment'])
         ? $showtable['Auto_increment']
         : '';
 
-    $create_options      = isset($showtable['Create_options'])
+    $create_options = isset($showtable['Create_options'])
         ? explode(' ', $showtable['Create_options'])
         : array();
 
@@ -104,7 +104,7 @@ if ($showtable) {
     foreach ($create_options as $each_create_option) {
         $each_create_option = explode('=', $each_create_option);
         if (isset($each_create_option[1])) {
-            $$each_create_option[0]    = $each_create_option[1];
+            $$each_create_option[0] = $each_create_option[1];
         }
     }
     // we need explicit DEFAULT value here (different from '0')

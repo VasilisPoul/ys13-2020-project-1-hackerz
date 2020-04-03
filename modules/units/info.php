@@ -63,15 +63,15 @@ function checkrequired(which, entry) {
 hContent;
 
 if (!$is_adminOfCourse) { // check teacher status
-        $tool_content .= $langNotAllowed;
-        draw($tool_content, 2, 'units', $head_content);
-        exit;
+    $tool_content .= $langNotAllowed;
+    draw($tool_content, 2, 'units', $head_content);
+    exit;
 }
 
 if ($language == 'greek')
-        $lang_editor = 'el';
+    $lang_editor = 'el';
 else
-        $lang_editor = 'en';
+    $lang_editor = 'en';
 
 $head_content .= "<script type='text/javascript'>
 _editor_url  = '$urlAppend/include/xinha/';
@@ -81,23 +81,23 @@ _editor_lang = '$lang_editor';
 <script type='text/javascript' src='$urlAppend/include/xinha/my_config.js'></script>";
 
 if (isset($_GET['edit'])) { // display form for editing course unit
-        $id = intval($_GET['edit']); 
-        $sql = db_query("SELECT id, title, comments FROM course_units WHERE id='$id'");
-        $cu = mysql_fetch_array($sql);
-        $unittitle = " value='" . htmlspecialchars($cu['title'], ENT_QUOTES) . "'";
-        $unitdescr = $cu['comments'];
-        $unit_id = $cu['id'];
-        $button = $langEdit;
+    $id = intval($_GET['edit']);
+    $sql = db_query("SELECT id, title, comments FROM course_units WHERE id='$id'");
+    $cu = mysql_fetch_array($sql);
+    $unittitle = " value='" . htmlspecialchars($cu['title'], ENT_QUOTES) . "'";
+    $unitdescr = $cu['comments'];
+    $unit_id = $cu['id'];
+    $button = $langEdit;
 } else {
-        $nameTools = $langAddUnit;
-        $button = $langAdd;
-        $unitdescr = $unittitle = '';
+    $nameTools = $langAddUnit;
+    $button = $langAdd;
+    $unitdescr = $unittitle = '';
 }
 
 $tool_content .= "<form method='post' action='${urlServer}courses/$currentCourseID/'
         onsubmit=\"return checkrequired(this, 'unittitle');\">";
 if (isset($unit_id)) {
-        $tool_content .= "<input type='hidden' name='unit_id' value='$unit_id'>";
+    $tool_content .= "<input type='hidden' name='unit_id' value='$unit_id'>";
 }
 $tool_content .= "<table width='99%' class='FormData' align='center'><tbody>
         <tr><th width='220'>&nbsp;</th>
@@ -105,7 +105,7 @@ $tool_content .= "<table width='99%' class='FormData' align='center'><tbody>
         <tr><th width='150' class='left'>$langUnitTitle:</th>
             <td><input type='text' name='unittitle' size='50' maxlength='255' $unittitle class='FormData_InputText'></td></tr>
         <tr><th class='left'>$langUnitDescr:</th><td>
-        <table class='xinha_editor'><tr><td><textarea id='xinha' name='unitdescr'>". str_replace('{','&#123;',htmlspecialchars($unitdescr))."</textarea></td></tr>
+        <table class='xinha_editor'><tr><td><textarea id='xinha' name='unitdescr'>" . str_replace('{', '&#123;', htmlspecialchars($unitdescr)) . "</textarea></td></tr>
         </table></td></tr>
         <tr><th>&nbsp;</th>
             <td><input type='submit' name='edit_submit' value='$button'></td></tr>

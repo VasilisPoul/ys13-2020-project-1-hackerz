@@ -24,14 +24,14 @@ var only_once_elements = new Array();
  * @param   boolean only_once   if true this is only done once
  *                              f.e. only on first focus
  */
-function selectContent( element, lock, only_once ) {
-    if ( only_once && only_once_elements[element.name] ) {
+function selectContent(element, lock, only_once) {
+    if (only_once && only_once_elements[element.name]) {
         return;
     }
 
     only_once_elements[element.name] = true;
 
-    if ( lock  ) {
+    if (lock) {
         return;
     }
 
@@ -47,11 +47,10 @@ function selectContent( element, lock, only_once ) {
  *
  * @return  boolean  whether to run the query or not
  */
-function confirmLinkDropDB(theLink, theSqlQuery)
-{
+function confirmLinkDropDB(theLink, theSqlQuery) {
     // Confirmation is not required in the configuration file
     // or browser is Opera (crappy js implementation)
-    if (PMA_messages['strDoYouReally'] == '' || typeof(window.opera) != 'undefined') {
+    if (PMA_messages['strDoYouReally'] == '' || typeof (window.opera) != 'undefined') {
         return true;
     }
 
@@ -72,19 +71,18 @@ function confirmLinkDropDB(theLink, theSqlQuery)
  *
  * @return  boolean  whether to run the query or not
  */
-function confirmLink(theLink, theSqlQuery)
-{
+function confirmLink(theLink, theSqlQuery) {
     // Confirmation is not required in the configuration file
     // or browser is Opera (crappy js implementation)
-    if (PMA_messages['strDoYouReally'] == '' || typeof(window.opera) != 'undefined') {
+    if (PMA_messages['strDoYouReally'] == '' || typeof (window.opera) != 'undefined') {
         return true;
     }
 
     var is_confirmed = confirm(PMA_messages['strDoYouReally'] + ' :\n' + theSqlQuery);
     if (is_confirmed) {
-        if ( typeof(theLink.href) != 'undefined' ) {
+        if (typeof (theLink.href) != 'undefined') {
             theLink.href += '&is_js_confirmed=1';
-        } else if ( typeof(theLink.form) != 'undefined' ) {
+        } else if (typeof (theLink.form) != 'undefined') {
             theLink.form.action += '?is_js_confirmed=1';
         }
     }
@@ -100,11 +98,10 @@ function confirmLink(theLink, theSqlQuery)
  *
  * @return  boolean  whether to run the query or not
  */
-function confirmAction(theMessage)
-{
+function confirmAction(theMessage) {
     // TODO: Confirmation is not required in the configuration file
     // or browser is Opera (crappy js implementation)
-    if (typeof(window.opera) != 'undefined') {
+    if (typeof (window.opera) != 'undefined') {
         return true;
     }
 
@@ -127,15 +124,14 @@ function confirmAction(theMessage)
  *
  * @see     checkSqlQuery()
  */
-function confirmQuery(theForm1, sqlQuery1)
-{
+function confirmQuery(theForm1, sqlQuery1) {
     // Confirmation is not required in the configuration file
     if (PMA_messages['strDoYouReally'] == '') {
         return true;
     }
 
     // The replace function (js1.2) isn't supported
-    else if (typeof(sqlQuery1.value.replace) == 'undefined') {
+    else if (typeof (sqlQuery1.value.replace) == 'undefined') {
         return true;
     }
 
@@ -165,9 +161,9 @@ function confirmQuery(theForm1, sqlQuery1)
         if (do_confirm_re_0.test(sqlQuery1.value)
             || do_confirm_re_1.test(sqlQuery1.value)
             || do_confirm_re_2.test(sqlQuery1.value)) {
-            var message      = (sqlQuery1.value.length > 100)
-                             ? sqlQuery1.value.substr(0, 100) + '\n    ...'
-                             : sqlQuery1.value;
+            var message = (sqlQuery1.value.length > 100)
+                ? sqlQuery1.value.substr(0, 100) + '\n    ...'
+                : sqlQuery1.value;
             var is_confirmed = confirm(PMA_messages['strDoYouReally'] + ' :\n' + message);
             // drop/delete/alter statement is confirmed -> update the
             // "is_js_confirmed" form field so the confirm test won't be
@@ -176,7 +172,7 @@ function confirmQuery(theForm1, sqlQuery1)
                 theForm1.elements['is_js_confirmed'].value = 1;
                 return true;
             }
-            // "DROP/DELETE/ALTER" statement is rejected -> do not submit
+                // "DROP/DELETE/ALTER" statement is rejected -> do not submit
             // the form
             else {
                 window.focus();
@@ -194,15 +190,14 @@ function confirmQuery(theForm1, sqlQuery1)
  * Displays a confirmation box before disabling the BLOB repository for a given database.
  * This function is called while clicking links
  *
- * @param   object   the database 
+ * @param   object   the database
  *
  * @return  boolean  whether to disable the repository or not
  */
-function confirmDisableRepository(theDB)
-{
+function confirmDisableRepository(theDB) {
     // Confirmation is not required in the configuration file
     // or browser is Opera (crappy js implementation)
-    if (PMA_messages['strDoYouReally'] == '' || typeof(window.opera) != 'undefined') {
+    if (PMA_messages['strDoYouReally'] == '' || typeof (window.opera) != 'undefined') {
         return true;
     }
 
@@ -222,39 +217,38 @@ function confirmDisableRepository(theDB)
  *
  * @see     confirmQuery()
  */
-function checkSqlQuery(theForm)
-{
+function checkSqlQuery(theForm) {
     var sqlQuery = theForm.elements['sql_query'];
-    var isEmpty  = 1;
+    var isEmpty = 1;
 
     // The replace function (js1.2) isn't supported -> basic tests
-    if (typeof(sqlQuery.value.replace) == 'undefined') {
-        isEmpty      = (sqlQuery.value == '') ? 1 : 0;
-        if (isEmpty && typeof(theForm.elements['sql_file']) != 'undefined') {
-            isEmpty  = (theForm.elements['sql_file'].value == '') ? 1 : 0;
+    if (typeof (sqlQuery.value.replace) == 'undefined') {
+        isEmpty = (sqlQuery.value == '') ? 1 : 0;
+        if (isEmpty && typeof (theForm.elements['sql_file']) != 'undefined') {
+            isEmpty = (theForm.elements['sql_file'].value == '') ? 1 : 0;
         }
-        if (isEmpty && typeof(theForm.elements['sql_localfile']) != 'undefined') {
-            isEmpty  = (theForm.elements['sql_localfile'].value == '') ? 1 : 0;
+        if (isEmpty && typeof (theForm.elements['sql_localfile']) != 'undefined') {
+            isEmpty = (theForm.elements['sql_localfile'].value == '') ? 1 : 0;
         }
-        if (isEmpty && typeof(theForm.elements['id_bookmark']) != 'undefined') {
-            isEmpty  = (theForm.elements['id_bookmark'].value == null || theForm.elements['id_bookmark'].value == '');
+        if (isEmpty && typeof (theForm.elements['id_bookmark']) != 'undefined') {
+            isEmpty = (theForm.elements['id_bookmark'].value == null || theForm.elements['id_bookmark'].value == '');
         }
     }
     // js1.2+ -> validation with regular expressions
     else {
         var space_re = new RegExp('\\s+');
-        if (typeof(theForm.elements['sql_file']) != 'undefined' &&
-                theForm.elements['sql_file'].value.replace(space_re, '') != '') {
+        if (typeof (theForm.elements['sql_file']) != 'undefined' &&
+            theForm.elements['sql_file'].value.replace(space_re, '') != '') {
             return true;
         }
-        if (typeof(theForm.elements['sql_localfile']) != 'undefined' &&
-                theForm.elements['sql_localfile'].value.replace(space_re, '') != '') {
+        if (typeof (theForm.elements['sql_localfile']) != 'undefined' &&
+            theForm.elements['sql_localfile'].value.replace(space_re, '') != '') {
             return true;
         }
-        if (isEmpty && typeof(theForm.elements['id_bookmark']) != 'undefined' &&
-                (theForm.elements['id_bookmark'].value != null || theForm.elements['id_bookmark'].value != '') &&
-                theForm.elements['id_bookmark'].selectedIndex != 0
-                ) {
+        if (isEmpty && typeof (theForm.elements['id_bookmark']) != 'undefined' &&
+            (theForm.elements['id_bookmark'].value != null || theForm.elements['id_bookmark'].value != '') &&
+            theForm.elements['id_bookmark'].selectedIndex != 0
+        ) {
             return true;
         }
         // Checks for "DROP/DELETE/ALTER" statements
@@ -289,18 +283,17 @@ function checkSqlQuery(theForm)
  *
  * @return  boolean  whether the form field is empty or not
  */
-function emptyCheckTheField(theForm, theFieldName)
-{
-    var isEmpty  = 1;
+function emptyCheckTheField(theForm, theFieldName) {
+    var isEmpty = 1;
     var theField = theForm.elements[theFieldName];
     // Whether the replace function (js1.2) is supported or not
-    var isRegExp = (typeof(theField.value.replace) != 'undefined');
+    var isRegExp = (typeof (theField.value.replace) != 'undefined');
 
     if (!isRegExp) {
-        isEmpty      = (theField.value == '') ? 1 : 0;
+        isEmpty = (theField.value == '') ? 1 : 0;
     } else {
         var space_re = new RegExp('\\s+');
-        isEmpty      = (theField.value.replace(space_re, '') == '') ? 1 : 0;
+        isEmpty = (theField.value.replace(space_re, '') == '') ? 1 : 0;
     }
 
     return isEmpty;
@@ -316,8 +309,7 @@ function emptyCheckTheField(theForm, theFieldName)
  *
  * @return  boolean  whether the form field is empty or not
  */
-function emptyFormElements(theForm, theFieldName)
-{
+function emptyFormElements(theForm, theFieldName) {
     var theField = theForm.elements[theFieldName];
     var isEmpty = emptyCheckTheField(theForm, theFieldName);
 
@@ -343,15 +335,14 @@ function emptyFormElements(theForm, theFieldName)
  *
  * @return  boolean  whether a valid number has been submitted or not
  */
-function checkFormElementInRange(theForm, theFieldName, message, min, max)
-{
-    var theField         = theForm.elements[theFieldName];
-    var val              = parseInt(theField.value);
+function checkFormElementInRange(theForm, theFieldName, message, min, max) {
+    var theField = theForm.elements[theFieldName];
+    var val = parseInt(theField.value);
 
-    if (typeof(min) == 'undefined') {
+    if (typeof (min) == 'undefined') {
         min = 0;
     }
-    if (typeof(max) == 'undefined') {
+    if (typeof (max) == 'undefined') {
         max = Number.MAX_VALUE;
     }
 
@@ -378,16 +369,14 @@ function checkFormElementInRange(theForm, theFieldName, message, min, max)
 } // end of the 'checkFormElementInRange()' function
 
 
-function checkTableEditForm(theForm, fieldsCnt)
-{
+function checkTableEditForm(theForm, fieldsCnt) {
     // TODO: avoid sending a message if user just wants to add a line
     // on the form but has not completed at least one field name
 
     var atLeastOneField = 0;
     var i, elm, elm2, elm3, val, id;
 
-    for (i=0; i<fieldsCnt; i++)
-    {
+    for (i = 0; i < fieldsCnt; i++) {
         id = "field_" + i + "_2";
         elm = getElement(id);
         if (elm.value == 'VARCHAR' || elm.value == 'CHAR' || elm.value == 'BIT') {
@@ -429,8 +418,7 @@ function checkTableEditForm(theForm, fieldsCnt)
  *
  * @return  boolean  always true
  */
-function checkTransmitDump(theForm, theAction)
-{
+function checkTransmitDump(theForm, theAction) {
     var formElts = theForm.elements;
 
     // 'zipped' option has been checked
@@ -438,10 +426,10 @@ function checkTransmitDump(theForm, theAction)
         if (!formElts['asfile'].checked) {
             theForm.elements['asfile'].checked = true;
         }
-        if (typeof(formElts['gzip']) != 'undefined' && formElts['gzip'].checked) {
+        if (typeof (formElts['gzip']) != 'undefined' && formElts['gzip'].checked) {
             theForm.elements['gzip'].checked = false;
         }
-        if (typeof(formElts['bzip']) != 'undefined' && formElts['bzip'].checked) {
+        if (typeof (formElts['bzip']) != 'undefined' && formElts['bzip'].checked) {
             theForm.elements['bzip'].checked = false;
         }
     }
@@ -450,10 +438,10 @@ function checkTransmitDump(theForm, theAction)
         if (!formElts['asfile'].checked) {
             theForm.elements['asfile'].checked = true;
         }
-        if (typeof(formElts['zip']) != 'undefined' && formElts['zip'].checked) {
+        if (typeof (formElts['zip']) != 'undefined' && formElts['zip'].checked) {
             theForm.elements['zip'].checked = false;
         }
-        if (typeof(formElts['bzip']) != 'undefined' && formElts['bzip'].checked) {
+        if (typeof (formElts['bzip']) != 'undefined' && formElts['bzip'].checked) {
             theForm.elements['bzip'].checked = false;
         }
     }
@@ -462,22 +450,22 @@ function checkTransmitDump(theForm, theAction)
         if (!formElts['asfile'].checked) {
             theForm.elements['asfile'].checked = true;
         }
-        if (typeof(formElts['zip']) != 'undefined' && formElts['zip'].checked) {
+        if (typeof (formElts['zip']) != 'undefined' && formElts['zip'].checked) {
             theForm.elements['zip'].checked = false;
         }
-        if (typeof(formElts['gzip']) != 'undefined' && formElts['gzip'].checked) {
+        if (typeof (formElts['gzip']) != 'undefined' && formElts['gzip'].checked) {
             theForm.elements['gzip'].checked = false;
         }
     }
     // 'transmit' option has been unchecked
     else if (theAction == 'transmit' && !formElts['asfile'].checked) {
-        if (typeof(formElts['zip']) != 'undefined' && formElts['zip'].checked) {
+        if (typeof (formElts['zip']) != 'undefined' && formElts['zip'].checked) {
             theForm.elements['zip'].checked = false;
         }
-        if ((typeof(formElts['gzip']) != 'undefined' && formElts['gzip'].checked)) {
+        if ((typeof (formElts['gzip']) != 'undefined' && formElts['gzip'].checked)) {
             theForm.elements['gzip'].checked = false;
         }
-        if ((typeof(formElts['bzip']) != 'undefined' && formElts['bzip'].checked)) {
+        if ((typeof (formElts['bzip']) != 'undefined' && formElts['bzip'].checked)) {
             theForm.elements['bzip'].checked = false;
         }
     }
@@ -498,20 +486,20 @@ var marked_row = new Array;
 function PMA_markRowsInit() {
     // for every table row ...
     var rows = document.getElementsByTagName('tr');
-    for ( var i = 0; i < rows.length; i++ ) {
+    for (var i = 0; i < rows.length; i++) {
         // ... with the class 'odd' or 'even' ...
-        if ( 'odd' != rows[i].className.substr(0,3) && 'even' != rows[i].className.substr(0,4) ) {
+        if ('odd' != rows[i].className.substr(0, 3) && 'even' != rows[i].className.substr(0, 4)) {
             continue;
         }
         // ... add event listeners ...
         // ... to highlight the row on mouseover ...
-        if ( navigator.appName == 'Microsoft Internet Explorer' ) {
+        if (navigator.appName == 'Microsoft Internet Explorer') {
             // but only for IE, other browsers are handled by :hover in css
-            rows[i].onmouseover = function() {
+            rows[i].onmouseover = function () {
                 this.className += ' hover';
             }
-            rows[i].onmouseout = function() {
-                this.className = this.className.replace( ' hover', '' );
+            rows[i].onmouseout = function () {
+                this.className = this.className.replace(' hover', '');
             }
         }
         // Do not set click events if not wanted
@@ -519,54 +507,55 @@ function PMA_markRowsInit() {
             continue;
         }
         // ... and to mark the row on click ...
-        rows[i].onmousedown = function() {
+        rows[i].onmousedown = function () {
             var unique_id;
             var checkbox;
 
-            checkbox = this.getElementsByTagName( 'input' )[0];
-            if ( checkbox && checkbox.type == 'checkbox' ) {
+            checkbox = this.getElementsByTagName('input')[0];
+            if (checkbox && checkbox.type == 'checkbox') {
                 unique_id = checkbox.name + checkbox.value;
-            } else if ( this.id.length > 0 ) {
+            } else if (this.id.length > 0) {
                 unique_id = this.id;
             } else {
                 return;
             }
 
-            if ( typeof(marked_row[unique_id]) == 'undefined' || !marked_row[unique_id] ) {
+            if (typeof (marked_row[unique_id]) == 'undefined' || !marked_row[unique_id]) {
                 marked_row[unique_id] = true;
             } else {
                 marked_row[unique_id] = false;
             }
 
-            if ( marked_row[unique_id] ) {
+            if (marked_row[unique_id]) {
                 this.className += ' marked';
             } else {
                 this.className = this.className.replace(' marked', '');
             }
 
-            if ( checkbox && checkbox.disabled == false ) {
+            if (checkbox && checkbox.disabled == false) {
                 checkbox.checked = marked_row[unique_id];
             }
         }
 
         // ... and disable label ...
         var labeltag = rows[i].getElementsByTagName('label')[0];
-        if ( labeltag ) {
-            labeltag.onclick = function() {
+        if (labeltag) {
+            labeltag.onclick = function () {
                 return false;
             }
         }
         // .. and checkbox clicks
         var checkbox = rows[i].getElementsByTagName('input')[0];
-        if ( checkbox ) {
-            checkbox.onclick = function() {
+        if (checkbox) {
+            checkbox.onclick = function () {
                 // opera does not recognize return false;
-                this.checked = ! this.checked;
+                this.checked = !this.checked;
             }
         }
     }
 }
-window.onload=PMA_markRowsInit;
+
+window.onload = PMA_markRowsInit;
 
 /**
  * marks all rows and selects its first checkbox inside the given element
@@ -574,20 +563,20 @@ window.onload=PMA_markRowsInit;
  *
  * @param    container    DOM element
  */
-function markAllRows( container_id ) {
+function markAllRows(container_id) {
     var rows = document.getElementById(container_id).getElementsByTagName('tr');
     var unique_id;
     var checkbox;
 
-    for ( var i = 0; i < rows.length; i++ ) {
+    for (var i = 0; i < rows.length; i++) {
 
-        checkbox = rows[i].getElementsByTagName( 'input' )[0];
+        checkbox = rows[i].getElementsByTagName('input')[0];
 
-        if ( checkbox && checkbox.type == 'checkbox' ) {
+        if (checkbox && checkbox.type == 'checkbox') {
             unique_id = checkbox.name + checkbox.value;
-            if ( checkbox.disabled == false ) {
+            if (checkbox.disabled == false) {
                 checkbox.checked = true;
-                if ( typeof(marked_row[unique_id]) == 'undefined' || !marked_row[unique_id] ) {
+                if (typeof (marked_row[unique_id]) == 'undefined' || !marked_row[unique_id]) {
                     rows[i].className += ' marked';
                     marked_row[unique_id] = true;
                 }
@@ -604,16 +593,16 @@ function markAllRows( container_id ) {
  *
  * @param    container    DOM element
  */
-function unMarkAllRows( container_id ) {
+function unMarkAllRows(container_id) {
     var rows = document.getElementById(container_id).getElementsByTagName('tr');
     var unique_id;
     var checkbox;
 
-    for ( var i = 0; i < rows.length; i++ ) {
+    for (var i = 0; i < rows.length; i++) {
 
-        checkbox = rows[i].getElementsByTagName( 'input' )[0];
+        checkbox = rows[i].getElementsByTagName('input')[0];
 
-        if ( checkbox && checkbox.type == 'checkbox' ) {
+        if (checkbox && checkbox.type == 'checkbox') {
             unique_id = checkbox.name + checkbox.value;
             checkbox.checked = false;
             rows[i].className = rows[i].className.replace(' marked', '');
@@ -636,65 +625,60 @@ function unMarkAllRows( container_id ) {
  *
  * @return  boolean  whether pointer is set or not
  */
-function setPointer(theRow, theRowNum, theAction, theDefaultColor, thePointerColor, theMarkColor)
-{
+function setPointer(theRow, theRowNum, theAction, theDefaultColor, thePointerColor, theMarkColor) {
     var theCells = null;
 
     // 1. Pointer and mark feature are disabled or the browser can't get the
     //    row -> exits
     if ((thePointerColor == '' && theMarkColor == '')
-        || typeof(theRow.style) == 'undefined') {
+        || typeof (theRow.style) == 'undefined') {
         return false;
     }
 
     // 1.1 Sets the mouse pointer to pointer on mouseover and back to normal otherwise.
     if (theAction == "over" || theAction == "click") {
-        theRow.style.cursor='pointer';
+        theRow.style.cursor = 'pointer';
     } else {
-        theRow.style.cursor='default';
+        theRow.style.cursor = 'default';
     }
 
     // 2. Gets the current row and exits if the browser can't get it
-    if (typeof(document.getElementsByTagName) != 'undefined') {
+    if (typeof (document.getElementsByTagName) != 'undefined') {
         theCells = theRow.getElementsByTagName('td');
-    }
-    else if (typeof(theRow.cells) != 'undefined') {
+    } else if (typeof (theRow.cells) != 'undefined') {
         theCells = theRow.cells;
-    }
-    else {
+    } else {
         return false;
     }
 
     // 3. Gets the current color...
-    var rowCellsCnt  = theCells.length;
-    var domDetect    = null;
+    var rowCellsCnt = theCells.length;
+    var domDetect = null;
     var currentColor = null;
-    var newColor     = null;
+    var newColor = null;
     // 3.1 ... with DOM compatible browsers except Opera that does not return
     //         valid values with "getAttribute"
-    if (typeof(window.opera) == 'undefined'
-        && typeof(theCells[0].getAttribute) != 'undefined') {
+    if (typeof (window.opera) == 'undefined'
+        && typeof (theCells[0].getAttribute) != 'undefined') {
         currentColor = theCells[0].getAttribute('bgcolor');
-        domDetect    = true;
+        domDetect = true;
     }
     // 3.2 ... with other browsers
     else {
         currentColor = theCells[0].style.backgroundColor;
-        domDetect    = false;
+        domDetect = false;
     } // end 3
 
     // 3.3 ... Opera changes colors set via HTML to rgb(r,g,b) format so fix it
-    if (currentColor.indexOf("rgb") >= 0)
-    {
+    if (currentColor.indexOf("rgb") >= 0) {
         var rgbStr = currentColor.slice(currentColor.indexOf('(') + 1,
-                                     currentColor.indexOf(')'));
+            currentColor.indexOf(')'));
         var rgbValues = rgbStr.split(",");
         currentColor = "#";
         var hexChars = "0123456789ABCDEF";
-        for (var i = 0; i < 3; i++)
-        {
+        for (var i = 0; i < 3; i++) {
             var v = rgbValues[i].valueOf();
-            currentColor += hexChars.charAt(v/16) + hexChars.charAt(v%16);
+            currentColor += hexChars.charAt(v / 16) + hexChars.charAt(v % 16);
         }
     }
 
@@ -703,10 +687,9 @@ function setPointer(theRow, theRowNum, theAction, theDefaultColor, thePointerCol
     if (currentColor == ''
         || currentColor.toLowerCase() == theDefaultColor.toLowerCase()) {
         if (theAction == 'over' && thePointerColor != '') {
-            newColor              = thePointerColor;
-        }
-        else if (theAction == 'click' && theMarkColor != '') {
-            newColor              = theMarkColor;
+            newColor = thePointerColor;
+        } else if (theAction == 'click' && theMarkColor != '') {
+            newColor = theMarkColor;
             marked_row[theRowNum] = true;
             // Garvin: deactivated onclick marking of the checkbox because it's also executed
             // when an action (like edit/delete) on a single item is performed. Then the checkbox
@@ -717,12 +700,11 @@ function setPointer(theRow, theRowNum, theAction, theDefaultColor, thePointerCol
     }
     // 4.1.2 Current color is the pointer one
     else if (currentColor.toLowerCase() == thePointerColor.toLowerCase()
-             && (typeof(marked_row[theRowNum]) == 'undefined' || !marked_row[theRowNum])) {
+        && (typeof (marked_row[theRowNum]) == 'undefined' || !marked_row[theRowNum])) {
         if (theAction == 'out') {
-            newColor              = theDefaultColor;
-        }
-        else if (theAction == 'click' && theMarkColor != '') {
-            newColor              = theMarkColor;
+            newColor = theDefaultColor;
+        } else if (theAction == 'click' && theMarkColor != '') {
+            newColor = theMarkColor;
             marked_row[theRowNum] = true;
             // document.getElementById('id_rows_to_delete' + theRowNum).checked = true;
         }
@@ -730,12 +712,12 @@ function setPointer(theRow, theRowNum, theAction, theDefaultColor, thePointerCol
     // 4.1.3 Current color is the marker one
     else if (currentColor.toLowerCase() == theMarkColor.toLowerCase()) {
         if (theAction == 'click') {
-            newColor              = (thePointerColor != '')
-                                  ? thePointerColor
-                                  : theDefaultColor;
-            marked_row[theRowNum] = (typeof(marked_row[theRowNum]) == 'undefined' || !marked_row[theRowNum])
-                                  ? true
-                                  : null;
+            newColor = (thePointerColor != '')
+                ? thePointerColor
+                : theDefaultColor;
+            marked_row[theRowNum] = (typeof (marked_row[theRowNum]) == 'undefined' || !marked_row[theRowNum])
+                ? true
+                : null;
             // document.getElementById('id_rows_to_delete' + theRowNum).checked = false;
         }
     } // end 4
@@ -778,16 +760,16 @@ function setVerticalPointer(theRow, theColNum, theAction, theDefaultClass1, theD
     // 1. Pointer and mark feature are disabled or the browser can't get the
     //    row -> exits
     if ((thePointerClass == '' && theMarkClass == '')
-        || typeof(theRow.style) == 'undefined') {
+        || typeof (theRow.style) == 'undefined') {
         return false;
     }
 
     var tagSwitch = null;
 
     // 2. Gets the current row and exits if the browser can't get it
-    if (typeof(document.getElementsByTagName) != 'undefined') {
+    if (typeof (document.getElementsByTagName) != 'undefined') {
         tagSwitch = 'tag';
-    } else if (typeof(document.getElementById('table_results')) != 'undefined') {
+    } else if (typeof (document.getElementById('table_results')) != 'undefined') {
         tagSwitch = 'cells';
     } else {
         return false;
@@ -796,21 +778,21 @@ function setVerticalPointer(theRow, theColNum, theAction, theDefaultClass1, theD
     var theCells = null;
 
     if (tagSwitch == 'tag') {
-        theRows     = document.getElementById('table_results').getElementsByTagName('tr');
-        theCells    = theRows[1].getElementsByTagName('td');
+        theRows = document.getElementById('table_results').getElementsByTagName('tr');
+        theCells = theRows[1].getElementsByTagName('td');
     } else if (tagSwitch == 'cells') {
-        theRows     = document.getElementById('table_results').rows;
-        theCells    = theRows[1].cells;
+        theRows = document.getElementById('table_results').rows;
+        theCells = theRows[1].cells;
     }
 
     // 3. Gets the current Class...
-    var currentClass   = null;
-    var newClass       = null;
+    var currentClass = null;
+    var newClass = null;
 
     // 3.1 ... with DOM compatible browsers except Opera that does not return
     //         valid values with "getAttribute"
-    if (typeof(window.opera) == 'undefined'
-        && typeof(theCells[theColNum].getAttribute) != 'undefined') {
+    if (typeof (window.opera) == 'undefined'
+        && typeof (theCells[theColNum].getAttribute) != 'undefined') {
         currentClass = theCells[theColNum].className;
     } // end 3
 
@@ -820,33 +802,32 @@ function setVerticalPointer(theRow, theColNum, theAction, theDefaultClass1, theD
         || currentClass.toLowerCase() == theDefaultClass1.toLowerCase()
         || currentClass.toLowerCase() == theDefaultClass2.toLowerCase()) {
         if (theAction == 'over' && thePointerClass != '') {
-            newClass              = thePointerClass;
+            newClass = thePointerClass;
         } else if (theAction == 'click' && theMarkClass != '') {
-            newClass              = theMarkClass;
+            newClass = theMarkClass;
             marked_row[theColNum] = true;
         }
     }
     // 4.1.2 Current Class is the pointer one
     else if (currentClass.toLowerCase() == thePointerClass.toLowerCase() &&
-             (typeof(marked_row[theColNum]) == 'undefined' || !marked_row[theColNum]) || marked_row[theColNum] == false) {
-            if (theAction == 'out') {
-                if (theColNum % 2) {
-                    newClass              = theDefaultClass1;
-                } else {
-                    newClass              = theDefaultClass2;
-                }
+        (typeof (marked_row[theColNum]) == 'undefined' || !marked_row[theColNum]) || marked_row[theColNum] == false) {
+        if (theAction == 'out') {
+            if (theColNum % 2) {
+                newClass = theDefaultClass1;
+            } else {
+                newClass = theDefaultClass2;
             }
-            else if (theAction == 'click' && theMarkClass != '') {
-                newClass              = theMarkClass;
-                marked_row[theColNum] = true;
-            }
+        } else if (theAction == 'click' && theMarkClass != '') {
+            newClass = theMarkClass;
+            marked_row[theColNum] = true;
+        }
     }
     // 4.1.3 Current Class is the marker one
     else if (currentClass.toLowerCase() == theMarkClass.toLowerCase()) {
         if (theAction == 'click') {
-            newClass              = (thePointerClass != '')
-                                  ? thePointerClass
-                                  : ((theColNum % 2) ? theDefaultClass2 : theDefaultClass1);
+            newClass = (thePointerClass != '')
+                ? thePointerClass
+                : ((theColNum % 2) ? theDefaultClass2 : theDefaultClass1);
             marked_row[theColNum] = false;
         }
     } // end 4
@@ -863,15 +844,15 @@ function setVerticalPointer(theRow, theColNum, theAction, theDefaultClass1, theD
                 Cells = theRows[c].cells;
             }
 
-            Cell  = Cells[theColNum];
+            Cell = Cells[theColNum];
 
             // 5.1 Sets the new Class...
             Cell.className = Cell.className.replace(currentClass, newClass);
         } // end for
     } // end 5
 
-     return true;
- } // end of the 'setVerticalPointer()' function
+    return true;
+} // end of the 'setVerticalPointer()' function
 
 /**
  * Checks/unchecks all checkbox in given conainer (f.e. a form, fieldset or div)
@@ -880,11 +861,11 @@ function setVerticalPointer(theRow, theColNum, theAction, theDefaultClass1, theD
  * @param   boolean  state         new value for checkbox (true or false)
  * @return  boolean  always true
  */
-function setCheckboxes( container_id, state ) {
+function setCheckboxes(container_id, state) {
     var checkboxes = document.getElementById(container_id).getElementsByTagName('input');
 
-    for ( var i = 0; i < checkboxes.length; i++ ) {
-        if ( checkboxes[i].type == 'checkbox' ) {
+    for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].type == 'checkbox') {
             checkboxes[i].checked = state;
         }
     }
@@ -896,22 +877,21 @@ function setCheckboxes( container_id, state ) {
 // added 2004-05-08 by Michael Keck <mail_at_michaelkeck_dot_de>
 //   copy the checked from left to right or from right to left
 //   so it's easier for users to see, if $cfg['ModifyAtRight']=true, what they've checked ;)
-function copyCheckboxesRange(the_form, the_name, the_clicked)
-{
-    if (typeof(document.forms[the_form].elements[the_name]) != 'undefined' && typeof(document.forms[the_form].elements[the_name + 'r']) != 'undefined') {
+function copyCheckboxesRange(the_form, the_name, the_clicked) {
+    if (typeof (document.forms[the_form].elements[the_name]) != 'undefined' && typeof (document.forms[the_form].elements[the_name + 'r']) != 'undefined') {
         if (the_clicked !== 'r') {
             if (document.forms[the_form].elements[the_name].checked == true) {
                 document.forms[the_form].elements[the_name + 'r'].checked = true;
-            }else {
+            } else {
                 document.forms[the_form].elements[the_name + 'r'].checked = false;
             }
         } else if (the_clicked == 'r') {
             if (document.forms[the_form].elements[the_name + 'r'].checked == true) {
                 document.forms[the_form].elements[the_name].checked = true;
-            }else {
+            } else {
                 document.forms[the_form].elements[the_name].checked = false;
             }
-       }
+        }
     }
 }
 
@@ -919,7 +899,7 @@ function copyCheckboxesRange(the_form, the_name, the_clicked)
 // added 2004-05-08 by Michael Keck <mail_at_michaelkeck_dot_de>
 //  - this was directly written to each td, so why not a function ;)
 //  setCheckboxColumn(\'id_rows_to_delete' . $row_no . ''\');
-function setCheckboxColumn(theCheckbox){
+function setCheckboxColumn(theCheckbox) {
     if (document.getElementById(theCheckbox)) {
         document.getElementById(theCheckbox).checked = (document.getElementById(theCheckbox).checked ? false : true);
         if (document.getElementById(theCheckbox + 'r')) {
@@ -927,7 +907,7 @@ function setCheckboxColumn(theCheckbox){
         }
     } else {
         if (document.getElementById(theCheckbox + 'r')) {
-            document.getElementById(theCheckbox + 'r').checked = (document.getElementById(theCheckbox +'r').checked ? false : true);
+            document.getElementById(theCheckbox + 'r').checked = (document.getElementById(theCheckbox + 'r').checked ? false : true);
             if (document.getElementById(theCheckbox)) {
                 document.getElementById(theCheckbox).checked = document.getElementById(theCheckbox + 'r').checked;
             }
@@ -937,18 +917,17 @@ function setCheckboxColumn(theCheckbox){
 
 
 /**
-  * Checks/unchecks all options of a <select> element
-  *
-  * @param   string   the form name
-  * @param   string   the element name
-  * @param   boolean  whether to check or to uncheck the element
-  *
-  * @return  boolean  always true
-  */
-function setSelectOptions(the_form, the_select, do_check)
-{
+ * Checks/unchecks all options of a <select> element
+ *
+ * @param   string   the form name
+ * @param   string   the element name
+ * @param   boolean  whether to check or to uncheck the element
+ *
+ * @return  boolean  always true
+ */
+function setSelectOptions(the_form, the_select, do_check) {
     var selectObject = document.forms[the_form].elements[the_select];
-    var selectCount  = selectObject.length;
+    var selectCount = selectObject.length;
 
     for (var i = 0; i < selectCount; i++) {
         selectObject.options[i].selected = do_check;
@@ -958,19 +937,19 @@ function setSelectOptions(the_form, the_select, do_check)
 } // end of the 'setSelectOptions()' function
 
 /**
-  * Inserts multiple fields.
-  *
-  */
+ * Inserts multiple fields.
+ *
+ */
 function insertValueQuery() {
     var myQuery = document.sqlform.sql_query;
     var myListBox = document.sqlform.dummy;
 
-    if(myListBox.options.length > 0) {
+    if (myListBox.options.length > 0) {
         sql_box_locked = true;
         var chaineAj = "";
         var NbSelect = 0;
-        for(var i=0; i<myListBox.options.length; i++) {
-            if (myListBox.options[i].selected){
+        for (var i = 0; i < myListBox.options.length; i++) {
+            if (myListBox.options[i].selected) {
                 NbSelect++;
                 if (NbSelect > 1)
                     chaineAj += ", ";
@@ -1000,8 +979,8 @@ function insertValueQuery() {
 }
 
 /**
-  * listbox redirection
-  */
+ * listbox redirection
+ */
 function goToUrl(selObj, goToLocation) {
     eval("document.location.href = '" + goToLocation + "pos=" + selObj.options[selObj.selectedIndex].value + "'");
 }
@@ -1009,25 +988,25 @@ function goToUrl(selObj, goToLocation) {
 /**
  * getElement
  */
-function getElement(e,f){
-    if(document.layers){
-        f=(f)?f:self;
-        if(f.document.layers[e]) {
+function getElement(e, f) {
+    if (document.layers) {
+        f = (f) ? f : self;
+        if (f.document.layers[e]) {
             return f.document.layers[e];
         }
-        for(W=0;W<f.document.layers.length;W++) {
-            return(getElement(e,f.document.layers[W]));
+        for (W = 0; W < f.document.layers.length; W++) {
+            return (getElement(e, f.document.layers[W]));
         }
     }
-    if(document.all) {
+    if (document.all) {
         return document.all[e];
     }
     return document.getElementById(e);
 }
 
 /**
-  * Refresh the WYSIWYG-PDF scratchboard after changes have been made
-  */
+ * Refresh the WYSIWYG-PDF scratchboard after changes have been made
+ */
 function refreshDragOption(e) {
     myid = getElement(e);
     if (myid.style.visibility == 'visible') {
@@ -1036,26 +1015,26 @@ function refreshDragOption(e) {
 }
 
 /**
-  * Refresh/resize the WYSIWYG-PDF scratchboard
-  */
+ * Refresh/resize the WYSIWYG-PDF scratchboard
+ */
 function refreshLayout() {
-        myid = getElement('pdflayout');
+    myid = getElement('pdflayout');
 
-        if (document.pdfoptions.orientation.value == 'P') {
-            posa = 'x';
-            posb = 'y';
-        } else {
-            posa = 'y';
-            posb = 'x';
-        }
+    if (document.pdfoptions.orientation.value == 'P') {
+        posa = 'x';
+        posb = 'y';
+    } else {
+        posa = 'y';
+        posb = 'x';
+    }
 
-        myid.style.width = pdfPaperSize(document.pdfoptions.paper.value, posa) + 'px';
-        myid.style.height = pdfPaperSize(document.pdfoptions.paper.value, posb) + 'px';
+    myid.style.width = pdfPaperSize(document.pdfoptions.paper.value, posa) + 'px';
+    myid.style.height = pdfPaperSize(document.pdfoptions.paper.value, posb) + 'px';
 }
 
 /**
-  * Show/hide the WYSIWYG-PDF scratchboard
-  */
+ * Show/hide the WYSIWYG-PDF scratchboard
+ */
 function ToggleDragDrop(e) {
     myid = getElement(e);
 
@@ -1072,14 +1051,14 @@ function ToggleDragDrop(e) {
 }
 
 /**
-  * PDF scratchboard: When a position is entered manually, update
-  * the fields inside the scratchboard.
-  */
+ * PDF scratchboard: When a position is entered manually, update
+ * the fields inside the scratchboard.
+ */
 function dragPlace(no, axis, value) {
     if (axis == 'x') {
         getElement("table_" + no).style.left = value + 'px';
     } else {
-        getElement("table_" + no).style.top  = value + 'px';
+        getElement("table_" + no).style.top = value + 'px';
     }
 }
 
@@ -1243,15 +1222,14 @@ function pdfPaperSize(format, axis) {
 /**
  * rajk - for playing media from the BLOB repository
  *
- * @param   var     
- * @param   var     url_params  main purpose is to pass the token 
+ * @param   var
+ * @param   var     url_params  main purpose is to pass the token
  * @param   var     bs_ref      BLOB repository reference
  * @param   var     m_type      type of BLOB repository media
  * @param   var     w_width     width of popup window
  * @param   var     w_height    height of popup window
  */
-function popupBSMedia(url_params, bs_ref, m_type, is_cust_type, w_width, w_height)
-{
+function popupBSMedia(url_params, bs_ref, m_type, is_cust_type, w_width, w_height) {
     // if width not specified, use default
     if (w_width == undefined)
         w_width = 640;
@@ -1272,8 +1250,7 @@ function popupBSMedia(url_params, bs_ref, m_type, is_cust_type, w_width, w_heigh
  * @param   var     reference               BLOB repository reference
  * @param   var     current_mime_type       current MIME type associated with BLOB repository reference
  */
-function requestMIMETypeChange(db, table, reference, current_mime_type)
-{
+function requestMIMETypeChange(db, table, reference, current_mime_type) {
     // no mime type specified, set to default (nothing)
     if (undefined == current_mime_type)
         current_mime_type == "";
@@ -1294,13 +1271,12 @@ function requestMIMETypeChange(db, table, reference, current_mime_type)
  * @param   var     reference       BLOB repository reference
  * @param   var     mime_type       new MIME type to be associated with BLOB repository reference
  */
-function changeMIMEType(db, table, reference, mime_type)
-{
+function changeMIMEType(db, table, reference, mime_type) {
     // specify url and parameters for mootools AJAx request
     var mime_chg_url = 'bs_change_mime_type.php';
-    var params = { bs_db: db, bs_table: table, bs_reference: reference, bs_new_mime_type: mime_type };
+    var params = {bs_db: db, bs_table: table, bs_reference: reference, bs_new_mime_type: mime_type};
 
     // create AJAX object with above options and execute request
-    var chgRequest = new Request({ method: 'post', url: mime_chg_url, data: params, evalScripts: true });
+    var chgRequest = new Request({method: 'post', url: mime_chg_url, data: params, evalScripts: true});
     chgRequest.send();
 }

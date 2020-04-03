@@ -1,62 +1,71 @@
-.wikiTitle h1{
-            color: grey;
-            background: none;
-            font-size: 11px;
-            font-weight: bold;
-            /*font-weight: normal;*/
-        }
-.wiki2xhtml{
-            vertical-align:middle;
-            font-family: Verdana, Arial, Helvetica, sans-serif;
-            font-size: 10px;
-            padding: 1px;
-            border: 1px solid #CAC3B5;
-            background-color: #f9f8ea;
-            color: #666666;
-        }
-.wiki2xhtml h2,h3,h4{
-            color: Black;
-            background: none;
-        }
-.wiki2xhtml h2{
-            border-bottom: 1px solid #aaaaaa;
-            font-size: 11px;
-            font-weight:bold;
-        }
-.wiki2xhtml h3{
-            border-bottom: 1px groove #aaaaaa;
-            font-size: 11px;
-            font-weight:bold;
-        }
-.wiki2xhtml h4{
-            font-size: 11px;
-            font-weight:bold;
-        }
+.wikiTitle h1 {
+    color: grey;
+    background: none;
+    font-size: 11px;
+    font-weight: bold;
+    /*font-weight: normal;*/
+}
 
-.wiki2xhtml a.wikiEdit{
-            color: red;
-        }
-.diff{
-            font-family: monospace;
-            padding: 5px;
-            margin: 5px;
-        }
-.diffEqual{
-            background-color: white;
-        }
-.diffMoved{
-            background-color: #00CCFF;
-        }
-.diffAdded{
-            background-color: lime;
-        }
-.diffDeleted{
-            background-color: #FF00AA;
-        }
+.wiki2xhtml {
+    vertical-align: middle;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 10px;
+    padding: 1px;
+    border: 1px solid #CAC3B5;
+    background-color: #f9f8ea;
+    color: #666666;
+}
+
+.wiki2xhtml h2, h3, h4 {
+    color: Black;
+    background: none;
+}
+
+.wiki2xhtml h2 {
+    border-bottom: 1px solid #aaaaaa;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.wiki2xhtml h3 {
+    border-bottom: 1px groove #aaaaaa;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.wiki2xhtml h4 {
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.wiki2xhtml a.wikiEdit {
+    color: red;
+}
+
+.diff {
+    font-family: monospace;
+    padding: 5px;
+    margin: 5px;
+}
+
+.diffEqual {
+    background-color: white;
+}
+
+.diffMoved {
+    background-color: #00CCFF;
+}
+
+.diffAdded {
+    background-color: lime;
+}
+
+.diffDeleted {
+    background-color: #FF00AA;
+}
 
 
-
-.invisible { 
+.invisible {
     color: #999999 !important;
     background-color: #f9f8ea !important;
 }
@@ -66,14 +75,21 @@
 .invisible a:visited,
 a.invisible,
 a:link.invisible,
-a:visited.invisible
-{
-   color: #999999;
+a:visited.invisible {
+    color: #999999;
 }
 
-.comments{ color: #a19b99; }
-.correct{ color: #009900; }
-.error{  color: #990000; }
+.comments {
+    color: #a19b99;
+}
+
+.correct {
+    color: #009900;
+}
+
+.error {
+    color: #990000;
+}
 
 .comment {
     font-size: smaller;
@@ -81,8 +97,8 @@ a:visited.invisible
 }
 
 
-.LP_button { 
-    vertical-align:middle;
+.LP_button {
+    vertical-align: middle;
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px;
     padding: 2px;
@@ -97,41 +113,40 @@ a:visited.invisible
     color: #000000;
     border-top: 1px solid #a33033;
     border-bottom: 1px solid #a33033;
-	border-left: 1px solid #CAC3B5;
-	border-right: 1px #000000 solid;
+    border-left: 1px solid #CAC3B5;
+    border-right: 1px #000000 solid;
 }
 
-.LP_Operations td{
+.LP_Operations td {
     padding: 2px !important;
 }
 
 .Group_Operations a {
-   color: #000000;
-   font-size: 10px;
-   font-weight: normal;
-   text-decoration: none;
+    color: #000000;
+    font-size: 10px;
+    font-weight: normal;
+    text-decoration: none;
 }
 
 .LP_Operations a:hover {
-       text-decoration: underline;
-       color: #ffffff;
-       font-size: 10px;
+    text-decoration: underline;
+    color: #ffffff;
+    font-size: 10px;
 }
 
 
 a.claroCmd {
-   font-size: 10px;
-   font-weight: normal;
-   text-decoration: none;
+    font-size: 10px;
+    font-weight: normal;
+    text-decoration: none;
 }
 
 a.claroCmd:hover {
-   text-decoration: underline;
+    text-decoration: underline;
 }
 
 
-
-table.WikiSum{
+table.WikiSum {
     padding: 2px;
     border-top: 1px solid #edecdf;
     border-bottom: 1px solid #edecdf;
@@ -139,43 +154,43 @@ table.WikiSum{
     border-right: 1px solid #edecdf;
 }
 
-table.WikiSum thead{
-	padding: 2px;
-	border-top: 1px solid #edecdf;
-	border-bottom: 1px solid #edecdf;
-	border-left: 1px solid #edecdf;
-	border-right: 1px solid #edecdf;
+table.WikiSum thead {
+    padding: 2px;
+    border-top: 1px solid #edecdf;
+    border-bottom: 1px solid #edecdf;
+    border-left: 1px solid #edecdf;
+    border-right: 1px solid #edecdf;
 }
 
 
-table.WikiSum th{
-	text-align: center;
-	padding: 4px;
-	padding-bottom: 6px;
-	padding-top: 6px;
-	font-weight: bold;
-	font-size:10px !important;
+table.WikiSum th {
+    text-align: center;
+    padding: 4px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    font-weight: bold;
+    font-size: 10px !important;
     border-top: 1px solid #edecdf;
-	border-bottom: 1px solid #edecdf;
-	border-left: 1px solid #edecdf;
-	border-right: 1px solid #edecdf;
+    border-bottom: 1px solid #edecdf;
+    border-left: 1px solid #edecdf;
+    border-right: 1px solid #edecdf;
     background: #edecdf;
 }
 
-table.WikiSum td{
-	color: #727266;
+table.WikiSum td {
+    color: #727266;
 }
 
 
 .Wiki_header {
     color: #000 !important;
     background-color: #edecdf !important;
-	text-align: center !important;
-	font-weight: bold !important;
+    text-align: center !important;
+    font-weight: bold !important;
 }
 
 
-table.ExerciseSum{
+table.ExerciseSum {
     padding: 2px;
     vertical-align: middle;
     border-top: 1px solid #edecdf;
@@ -184,16 +199,16 @@ table.ExerciseSum{
     border-right: 1px solid #edecdf;
 }
 
-table.ExerciseSum thead{
-	padding: 2px;
-	vertical-align: middle;
-	border-top: 1px solid #CAC3B5;
-	border-bottom: 1px solid #CAC3B5;
-	border-left: 1px solid #edecdf;
-	border-right: 1px solid #edecdf;
+table.ExerciseSum thead {
+    padding: 2px;
+    vertical-align: middle;
+    border-top: 1px solid #CAC3B5;
+    border-bottom: 1px solid #CAC3B5;
+    border-left: 1px solid #edecdf;
+    border-right: 1px solid #edecdf;
 }
 
-table.ExerciseSum tbody{
+table.ExerciseSum tbody {
     padding: 2px;
     vertical-align: middle;
     border-top: 1px solid #edecdf;
@@ -202,55 +217,55 @@ table.ExerciseSum tbody{
     border-right: 1px solid #edecdf;
 }
 
-table.ExerciseSum th{
-	text-align: center;
-	padding: 4px;
-	padding-bottom: 6px;
-	padding-top: 6px;
-	font-weight: bold;
-	font-size:10px !important;
-	vertical-align: middle;
-	background : #fbfbfb;
+table.ExerciseSum th {
+    text-align: center;
+    padding: 4px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    font-weight: bold;
+    font-size: 10px !important;
+    vertical-align: middle;
+    background: #fbfbfb;
 }
 
 table.ExerciseSum td {
-	color: #727266;
-	vertical-align: top;
-	background : #fbfbfb;
-	padding : 5px 4px 4px 4px;
+    color: #727266;
+    vertical-align: top;
+    background: #fbfbfb;
+    padding: 5px 4px 4px 4px;
 }
 
 
 table.Exercise {
-	padding: 2px;
-	vertical-align: middle;
-	border-top: 1px solid #DBDCCD;
-	border-bottom: 1px solid #DBDCCD;
-	border-left: 1px solid #DBDCCD;
-	border-right: 1px solid #DBDCCD;
+    padding: 2px;
+    vertical-align: middle;
+    border-top: 1px solid #DBDCCD;
+    border-bottom: 1px solid #DBDCCD;
+    border-left: 1px solid #DBDCCD;
+    border-right: 1px solid #DBDCCD;
 }
 
-table.Exercise th{
-	text-align: center;
-	padding: 4px;
-	padding-bottom: 6px;
-	padding-top: 6px;
-	font-weight: bold;
-	font-size:10px !important;
-	vertical-align: middle;
-	background : #edecdf;
+table.Exercise th {
+    text-align: center;
+    padding: 4px;
+    padding-bottom: 6px;
+    padding-top: 6px;
+    font-weight: bold;
+    font-size: 10px !important;
+    vertical-align: middle;
+    background: #edecdf;
 }
 
 table.Exercise td {
     padding: 4px;
     color: #727266;
     vertical-align: middle;
-    background : #edecdf;
+    background: #edecdf;
 }
 
 table.Question {
     padding: 2px;
-	vertical-align: top;
+    vertical-align: top;
     border-top: 1px solid #edecdf;
     border-bottom: 1px solid #edecdf;
     border-left: 1px solid #edecdf;
@@ -258,56 +273,56 @@ table.Question {
 }
 
 table.Question th {
-	padding: 4px;
-	vertical-align: top;
-	background: #edecdf;
-	font-size:10px;
-	color: #727266;
-	border-top: 1px solid #edecdf;
-	border-bottom: 1px solid #edecdf;
-	border-left: 1px solid #edecdf;
-	border-right: 1px solid #edecdf;
-	font-style : normal;
-	font-variant : normal;
-	font-weight : normal;
+    padding: 4px;
+    vertical-align: top;
+    background: #edecdf;
+    font-size: 10px;
+    color: #727266;
+    border-top: 1px solid #edecdf;
+    border-bottom: 1px solid #edecdf;
+    border-left: 1px solid #edecdf;
+    border-right: 1px solid #edecdf;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
 }
 
 table.Question td {
-	padding: 4px;
-	vertical-align: top !important;
-	background: #Fbfbfb;
-	font-size:10px;
-	color: #727266;
-	vertical-align: middle;
+    padding: 4px;
+    vertical-align: top !important;
+    background: #Fbfbfb;
+    font-size: 10px;
+    color: #727266;
+    vertical-align: middle;
 }
 
 #question_title_id {
-    padding:2px;
-    padding-top:5px;
+    padding: 2px;
+    padding-top: 5px;
     color: #a33033;
     font-size: 10px;
     font-weight: bold;
 }
 
 .invisible {
-	color : #CAC3B5 !important;
+    color: #CAC3B5 !important;
 }
 
-.invisible a{
-	color : #ABABAB;
+.invisible a {
+    color: #ABABAB;
 }
 
 .empty {
-	color: red !important;
+    color: red !important;
 }
 
 .score {
-	color: #a33033 !important;
-	text-align : right;
+    color: #a33033 !important;
+    text-align: right;
 }
 
 .question_local_header {
-	color: #a33033;
-	border: red  !important;
+    color: #a33033;
+    border: red !important;
 }
 

@@ -12,7 +12,7 @@
  * no need for variables importing
  * @ignore
  */
-if (! defined('PMA_NO_VARIABLES_IMPORT')) {
+if (!defined('PMA_NO_VARIABLES_IMPORT')) {
     define('PMA_NO_VARIABLES_IMPORT', true);
 }
 
@@ -37,29 +37,29 @@ require './libraries/server_links.inc.php';
  * Did the user request information about a certain storage engine?
  */
 if (empty($_REQUEST['engine'])
- || ! PMA_StorageEngine::isValid($_REQUEST['engine'])) {
+    || !PMA_StorageEngine::isValid($_REQUEST['engine'])) {
 
     /**
      * Displays the sub-page heading
      */
     echo '<h2>' . "\n"
-       . ($GLOBALS['cfg']['MainPageIconic']
+        . ($GLOBALS['cfg']['MainPageIconic']
             ? '<img class="icon" src="' . $pmaThemeImage . 'b_engine.png"'
-                .' width="16" height="16" alt="" />' : '')
-       . "\n" . $strStorageEngines . "\n"
-       . '</h2>' . "\n";
+            . ' width="16" height="16" alt="" />' : '')
+        . "\n" . $strStorageEngines . "\n"
+        . '</h2>' . "\n";
 
 
     /**
      * Displays the table header
      */
     echo '<table>' . "\n"
-       . '<thead>' . "\n"
-       . '<tr><th>' . $strStorageEngine . '</th>' . "\n"
-       . '    <th>' . $strDescription . '</th>' . "\n"
-       . '</tr>' . "\n"
-       . '</thead>' . "\n"
-       . '<tbody>' . "\n";
+        . '<thead>' . "\n"
+        . '<tr><th>' . $strStorageEngine . '</th>' . "\n"
+        . '    <th>' . $strDescription . '</th>' . "\n"
+        . '</tr>' . "\n"
+        . '</thead>' . "\n"
+        . '<tbody>' . "\n";
 
 
     /**
@@ -68,22 +68,22 @@ if (empty($_REQUEST['engine'])
     $odd_row = true;
     foreach (PMA_StorageEngine::getStorageEngines() as $engine => $details) {
         echo '<tr class="'
-           . ($odd_row ? 'odd' : 'even')
-           . ($details['Support'] == 'NO' || $details['Support'] == 'DISABLED'
+            . ($odd_row ? 'odd' : 'even')
+            . ($details['Support'] == 'NO' || $details['Support'] == 'DISABLED'
                 ? ' disabled'
                 : '')
-           . '">' . "\n"
-           . '    <td><a href="./server_engines.php'
-           . PMA_generate_common_url(array('engine' => $engine)) . '">' . "\n"
-           . '            ' . htmlspecialchars($details['Engine']) . "\n"
-           . '        </a></td>' . "\n"
-           . '    <td>' . htmlspecialchars($details['Comment']) . '</td>' . "\n"
-           . '</tr>' . "\n";
+            . '">' . "\n"
+            . '    <td><a href="./server_engines.php'
+            . PMA_generate_common_url(array('engine' => $engine)) . '">' . "\n"
+            . '            ' . htmlspecialchars($details['Engine']) . "\n"
+            . '        </a></td>' . "\n"
+            . '    <td>' . htmlspecialchars($details['Comment']) . '</td>' . "\n"
+            . '</tr>' . "\n";
         $odd_row = !$odd_row;
     }
     unset($odd_row, $engine, $details);
     echo '</tbody>' . "\n"
-       . '</table>' . "\n";
+        . '</table>' . "\n";
 
 } else {
 
@@ -93,21 +93,21 @@ if (empty($_REQUEST['engine'])
 
     $engine_plugin = PMA_StorageEngine::getEngine($_REQUEST['engine']);
     echo '<h2>' . "\n"
-       . ($GLOBALS['cfg']['MainPageIconic']
+        . ($GLOBALS['cfg']['MainPageIconic']
             ? '<img class="icon" src="' . $pmaThemeImage . 'b_engine.png"'
-                .' width="16" height="16" alt="" />' : '')
-       . '    ' . htmlspecialchars($engine_plugin->getTitle()) . "\n"
-       . '    ' . PMA_showMySQLDocu('', $engine_plugin->getMysqlHelpPage()) . "\n"
-       . '</h2>' . "\n\n";
+            . ' width="16" height="16" alt="" />' : '')
+        . '    ' . htmlspecialchars($engine_plugin->getTitle()) . "\n"
+        . '    ' . PMA_showMySQLDocu('', $engine_plugin->getMysqlHelpPage()) . "\n"
+        . '</h2>' . "\n\n";
     echo '<p>' . "\n"
-       . '    <em>' . "\n"
-       . '        ' . htmlspecialchars($engine_plugin->getComment()) . "\n"
-       . '    </em>' . "\n"
-       . '</p>' . "\n\n";
+        . '    <em>' . "\n"
+        . '        ' . htmlspecialchars($engine_plugin->getComment()) . "\n"
+        . '    </em>' . "\n"
+        . '</p>' . "\n\n";
     $infoPages = $engine_plugin->getInfoPages();
     if (!empty($infoPages) && is_array($infoPages)) {
         echo '<p>' . "\n"
-           . '    <strong>[</strong>' . "\n";
+            . '    <strong>[</strong>' . "\n";
         if (empty($_REQUEST['page'])) {
             echo '    <strong>' . $strServerTabVariables . '</strong>' . "\n";
         } else {
@@ -128,7 +128,7 @@ if (empty($_REQUEST['engine'])
         }
         unset($current, $label);
         echo '    <strong>]</strong>' . "\n"
-           . '</p>' . "\n\n";
+            . '</p>' . "\n\n";
     }
     unset($infoPages, $page_output);
     if (!empty($_REQUEST['page'])) {
@@ -138,8 +138,8 @@ if (empty($_REQUEST['engine'])
         echo $page_output;
     } else {
         echo '<p> ' . $engine_plugin->getSupportInformationMessage() . "\n"
-           . '</p>' . "\n"
-           . $engine_plugin->getHtmlVariables();
+            . '</p>' . "\n"
+            . $engine_plugin->getHtmlVariables();
     }
 }
 

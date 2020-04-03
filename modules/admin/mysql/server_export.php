@@ -20,8 +20,8 @@ require './libraries/server_links.inc.php';
 
 $export_page_title = $strViewDumpDatabases . "\n";
 $checkall_url = 'server_export.php?'
-              . PMA_generate_common_url()
-              . '&amp;goto=db_export.php';
+    . PMA_generate_common_url()
+    . '&amp;goto=db_export.php';
 
 $multi_values = '<div align="center">';
 $multi_values .= '<a href="' . $checkall_url . '&amp;selectall=1" onclick="setSelectOptions(\'dump\', \'db_select[]\', true); return false;">' . $strSelectAll . '</a>
@@ -37,7 +37,7 @@ foreach ($GLOBALS['pma']->databases as $current_db) {
     } else {
         $is_selected = '';
     }
-    $current_db   = htmlspecialchars($current_db);
+    $current_db = htmlspecialchars($current_db);
     $multi_values .= '                <option value="' . $current_db . '"' . $is_selected . '>' . $current_db . '</option>' . "\n";
 } // end while
 $multi_values .= "\n";

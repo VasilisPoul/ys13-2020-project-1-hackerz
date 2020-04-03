@@ -11,15 +11,16 @@
 /**
  * Displays authentication form
  *
- * @global  string    the font face to use in case of failure
- * @global  string    the default font size to use in case of failure
- * @global  string    the big font size to use in case of failure
- *
  * @return  boolean   always true (no return indeed)
  *
  * @access  public
+ * @global  string    the default font size to use in case of failure
+ * @global  string    the big font size to use in case of failure
+ *
+ * @global  string    the font face to use in case of failure
  */
-function PMA_auth() {
+function PMA_auth()
+{
     if (empty($GLOBALS['cfg']['Server']['SignonURL'])) {
         PMA_fatalError('You must set SignonURL!');
     } elseif (!empty($_REQUEST['old_usr']) && !empty($GLOBALS['cfg']['Server']['LogoutURL'])) {
@@ -35,6 +36,9 @@ function PMA_auth() {
 /**
  * Gets advanced authentication settings
  *
+ * @return  boolean   whether we get authentication settings or not
+ *
+ * @access  public
  * @global  string    the username if register_globals is on
  * @global  string    the password if register_globals is on
  * @global  array     the array of server variables if register_globals is
@@ -47,9 +51,6 @@ function PMA_auth() {
  * @global  string    the password for the WebSite Professional server
  * @global  string    the username of the user who logs out
  *
- * @return  boolean   whether we get authentication settings or not
- *
- * @access  public
  */
 function PMA_auth_check()
 {
@@ -92,7 +93,7 @@ function PMA_auth_check()
             }
         }
         if (isset($_SESSION['PMA_single_signon_host'])) {
-	        $single_signon_host = $_SESSION['PMA_single_signon_host'];
+            $single_signon_host = $_SESSION['PMA_single_signon_host'];
         }
         /* Also get token as it is needed to access subpages */
         if (isset($_SESSION['PMA_single_signon_token'])) {
@@ -111,7 +112,7 @@ function PMA_auth_check()
         session_start();
 
         /* Set the single signon host */
-        $GLOBALS['cfg']['Server']['host']=$single_signon_host;
+        $GLOBALS['cfg']['Server']['host'] = $single_signon_host;
 
         /* Restore our token */
         if (!empty($pma_token)) {
@@ -131,22 +132,22 @@ function PMA_auth_check()
 /**
  * Set the user and password after last checkings if required
  *
- * @global  array     the valid servers settings
+ * @return  boolean   always true
+ *
+ * @access  public
  * @global  integer   the id of the current server
  * @global  array     the current server settings
  * @global  string    the current username
  * @global  string    the current password
  *
- * @return  boolean   always true
- *
- * @access  public
+ * @global  array     the valid servers settings
  */
 function PMA_auth_set_user()
 {
     global $cfg;
     global $PHP_AUTH_USER, $PHP_AUTH_PW;
 
-    $cfg['Server']['user']     = $PHP_AUTH_USER;
+    $cfg['Server']['user'] = $PHP_AUTH_USER;
     $cfg['Server']['password'] = $PHP_AUTH_PW;
 
     return true;

@@ -164,9 +164,9 @@ class HTMLPurifier_ConfigSchema
     public function postProcess()
     {
         foreach ($this->info as $key => $v) {
-            if (count((array) $v) == 1) {
+            if (count((array)$v) == 1) {
                 $this->info[$key] = $v->type;
-            } elseif (count((array) $v) == 2 && isset($v->allow_null)) {
+            } elseif (count((array)$v) == 2 && isset($v->allow_null)) {
                 $this->info[$key] = -$v->type;
             }
         }

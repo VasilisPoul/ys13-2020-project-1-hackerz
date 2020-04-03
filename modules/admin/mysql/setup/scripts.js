@@ -1,6 +1,6 @@
 /**
  * functions used in setup script
- * 
+ *
  * @version $Id: scripts.js 11561 2008-09-04 13:50:10Z crackpl $
  */
 
@@ -137,8 +137,7 @@ function checkFieldDefault(field, type) {
         // compare arrays, will work for our representation of select values
         if (currentValue.length != defaultValues[field.id].length) {
             isDefault = false;
-        }
-        else {
+        } else {
             for (var i = 0; i < currentValue.length; i++) {
                 if (currentValue[i] != defaultValues[field.id][i]) {
                     isDefault = false;
@@ -165,14 +164,14 @@ function getIdPrefix(element) {
 // stores hidden message ids
 var hiddenMessages = [];
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
     var hidden = hiddenMessages.length;
     for (var i = 0; i < hidden; i++) {
         $(hiddenMessages[i]).style.display = 'none';
     }
     if (hidden > 0) {
         var link = $('show_hidden_messages');
-        link.addEvent('click', function(e) {
+        link.addEvent('click', function (e) {
             e.stop();
             for (var i = 0; i < hidden; i++) {
                 $(hiddenMessages[i]).style.display = '';
@@ -220,7 +219,7 @@ var validators = {
      *
      * @param boolean isKeyUp
      */
-    validate_port_number: function(isKeyUp) {
+    validate_port_number: function (isKeyUp) {
         var result = this.value.test('^[0-9]*$') && this.value != '0';
         if (!result || this.value > 65536) {
             result = PMA_messages['error_incorrect_port'];
@@ -234,7 +233,7 @@ var validators = {
          *
          * @param boolean isKeyUp
          */
-        hide_db: function(isKeyUp) {
+        hide_db: function (isKeyUp) {
             if (!isKeyUp && this.value != '') {
                 var data = {};
                 data[this.id] = this.value;
@@ -242,12 +241,12 @@ var validators = {
             }
             return true;
         },
-		/**
+        /**
          * TrustedProxies field
          *
          * @param boolean isKeyUp
          */
-        TrustedProxies: function(isKeyUp) {
+        TrustedProxies: function (isKeyUp) {
             if (!isKeyUp && this.value != '') {
                 var data = {};
                 data[this.id] = this.value;
@@ -263,7 +262,7 @@ var validators = {
          *
          * @param boolean isKeyUp
          */
-        Server: function(isKeyUp) {
+        Server: function (isKeyUp) {
             if (!isKeyUp) {
                 ajaxValidate(this, 'Server', getAllValues());
             }
@@ -274,7 +273,7 @@ var validators = {
          *
          * @param boolean isKeyUp
          */
-        Server_login_options: function(isKeyUp) {
+        Server_login_options: function (isKeyUp) {
             return validators._fieldset.Server.bind(this)(isKeyUp);
         },
         /**
@@ -282,7 +281,7 @@ var validators = {
          *
          * @param boolean isKeyUp
          */
-        Server_pmadb: function(isKeyUp) {
+        Server_pmadb: function (isKeyUp) {
             if (isKeyUp) {
                 return true;
             }
@@ -319,7 +318,7 @@ function ajaxValidate(parent, id, values) {
             request: new Request.JSON({
                 url: 'validate.php',
                 autoCancel: true,
-                onSuccess: function(response) {
+                onSuccess: function (response) {
                     if (response == null) {
                         return;
                     }
@@ -329,12 +328,13 @@ function ajaxValidate(parent, id, values) {
                     } else if (typeof response['error'] != 'undefined') {
                         error[parent.id] = [response['error']];
                     } else {
-                        $each(response, function(value, key) {
+                        $each(response, function (value, key) {
                             error[key] = $type(value) == 'array' ? value : [value];
                         });
                     }
                     displayErrors(error);
-                }}),
+                }
+            }),
             token: parent.getParent('form').token.value
         };
     }
@@ -343,7 +343,8 @@ function ajaxValidate(parent, id, values) {
         data: {
             token: parent.validate.token,
             id: id,
-            values: JSON.encode(values)}
+            values: JSON.encode(values)
+        }
     });
 
     return true;
@@ -405,7 +406,7 @@ function getFieldValidators(field_id, onKeyUpOnly) {
  * @param Object  error list (key: field id, value: error array)
  */
 function displayErrors(errors) {
-    $each(errors, function(errors, field_id) {
+    $each(errors, function (errors, field_id) {
         var field = $(field_id);
         var isFieldset = field.tagName == 'FIELDSET';
         var errorCnt = isFieldset
@@ -413,7 +414,7 @@ function displayErrors(errors) {
             : field.getNext('.inline_errors');
 
         // remove empty errors (used to clear error list)
-        errors = errors.filter(function(item) {
+        errors = errors.filter(function (item) {
             return item != '';
         });
 
@@ -455,7 +456,7 @@ function displayErrors(errors) {
 function validate_fieldset(fieldset, isKeyUp, errors) {
     if (fieldset && typeof validators._fieldset[fieldset.id] != 'undefined') {
         var fieldset_errors = validators._fieldset[fieldset.id].bind(fieldset)(isKeyUp);
-        $each(fieldset_errors, function(field_errors, field_id) {
+        $each(fieldset_errors, function (field_errors, field_id) {
             if (typeof errors[field_id] == 'undefined') {
                 errors[field_id] = [];
             }
@@ -524,7 +525,7 @@ function setRestoreDefaultBtn(field, display) {
     el.style.display = (display ? '' : 'none');
 }
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
     var elements = $$('input[id], select[id], textarea[id]');
     var elements_count = elements.length;
 
@@ -532,13 +533,13 @@ window.addEvent('domready', function() {
     for (var i = 0; i < elements_count; i++) {
         var el = elements[i];
         markField(el);
-        el.addEvent('change', function(e) {
+        el.addEvent('change', function (e) {
             validate_field_and_fieldset(this, false);
             markField(this);
         });
         // text fields can be validated after each change
         if (el.tagName == 'INPUT' && el.type == 'text') {
-            el.addEvent('keyup', function(e) {
+            el.addEvent('keyup', function (e) {
                 validate_field_and_fieldset(this, true);
                 markField(el);
             });
@@ -549,24 +550,24 @@ window.addEvent('domready', function() {
         }
     }
 
-	// check whether we've refreshed a page and browser remembered modified
-	// form values
-	var check_page_refresh = $('check_page_refresh');
-	if (!check_page_refresh || check_page_refresh.value == '1') {
-		// run all field validators
-		var errors = {};
-		for (var i = 0; i < elements_count; i++) {
-			validate_field(elements[i], false, errors);
-		}
-		// run all fieldset validators
-		$$('fieldset').each(function(el){
-			validate_fieldset(el, false, errors);
-		});
-		
-		displayErrors(errors);
-	} else if (check_page_refresh) {
-		check_page_refresh.value = '1';
-	}
+    // check whether we've refreshed a page and browser remembered modified
+    // form values
+    var check_page_refresh = $('check_page_refresh');
+    if (!check_page_refresh || check_page_refresh.value == '1') {
+        // run all field validators
+        var errors = {};
+        for (var i = 0; i < elements_count; i++) {
+            validate_field(elements[i], false, errors);
+        }
+        // run all fieldset validators
+        $$('fieldset').each(function (el) {
+            validate_fieldset(el, false, errors);
+        });
+
+        displayErrors(errors);
+    } else if (check_page_refresh) {
+        check_page_refresh.value = '1';
+    }
 });
 
 //
@@ -600,7 +601,7 @@ function setTab(tab_link) {
     location.hash = 'tab_' + tab_link.getProperty('href').substr(1);
 }
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
     var tabs = $$('.tabs');
     var url_tab = location.hash.match(/^#tab_.+/)
         ? $$('a[href$="' + location.hash.substr(5) + '"]') : null;
@@ -612,7 +613,7 @@ window.addEvent('domready', function() {
         var links = tabs[i].getElements('a');
         var selected_tab = links[0];
         for (var j = 0, jmax = links.length; j < jmax; j++) {
-            links[j].addEvent('click', function(e) {
+            links[j].addEvent('click', function (e) {
                 e.stop();
                 setTab(this);
             });
@@ -625,7 +626,7 @@ window.addEvent('domready', function() {
     // tab links handling, check each 200ms
     // (works with history in FF, further browser support here would be an overkill)
     var prev_hash = location.hash;
-    (function() {
+    (function () {
         if (location.hash != prev_hash) {
             prev_hash = location.hash;
             var url_tab = location.hash.match(/^#tab_.+/)
@@ -645,10 +646,10 @@ window.addEvent('domready', function() {
 // Form reset buttons
 //
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
     var buttons = $$('input[type=button]');
     for (var i = 0, imax = buttons.length; i < imax; i++) {
-        buttons[i].addEvent('click', function(e) {
+        buttons[i].addEvent('click', function (e) {
             var fields = this.getParent('fieldset').getElements('input, select, textarea');
             for (var i = 0, imax = fields.length; i < imax; i++) {
                 setFieldValue(fields[i], getFieldType(fields[i]));
@@ -678,7 +679,7 @@ function restoreField(field_id) {
     setFieldValue(field, getFieldType(field), defaultValues[field_id]);
 }
 
-window.addEvent('domready', function() {
+window.addEvent('domready', function () {
     var buttons = $$('.restore-default, .set-value');
     var fixIE = Browser.Engine.name == 'trident' && Browser.Engine.version == 4;
     for (var i = 0, imax = buttons.length; i < imax; i++) {
@@ -688,9 +689,13 @@ window.addEvent('domready', function() {
             buttons[i].style.display = '';
         }
         buttons[i].addEvents({
-            mouseenter: function(e) {this.set('opacity', 1);},
-            mouseleave: function(e) {this.set('opacity', 0.25);},
-            click: function(e) {
+            mouseenter: function (e) {
+                this.set('opacity', 1);
+            },
+            mouseleave: function (e) {
+                this.set('opacity', 0.25);
+            },
+            click: function (e) {
                 e.stop();
                 var href = this.getProperty('href').substr(1);
                 var field_id;

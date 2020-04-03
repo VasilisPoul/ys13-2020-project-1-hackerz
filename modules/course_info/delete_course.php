@@ -31,27 +31,27 @@ include '../../include/baseTheme.php';
 $nameTools = $langDelCourse;
 $tool_content = "";
 
-if($is_adminOfCourse) {
-	if(isset($delete)) {
-		mysql_select_db("$mysqlMainDb",$db);
-		mysql_query("DROP DATABASE `$currentCourseID`");
-		mysql_query("DELETE FROM `$mysqlMainDb`.cours WHERE code='$currentCourseID'");
-		mysql_query("DELETE FROM `$mysqlMainDb`.cours_user WHERE cours_id='$cours_id'");
-		mysql_query("DELETE FROM `$mysqlMainDb`.cours_faculte WHERE code='$currentCourseID'");
-		mysql_query("DELETE FROM `$mysqlMainDb`.annonces WHERE cours_id='$cours_id'");
-		##[BEGIN personalisation modification]############
-		mysql_query("DELETE FROM `$mysqlMainDb`.agenda WHERE lesson_code='$currentCourseID'");
-		##[END personalisation modification]############
-		@mkdir("../../courses/garbage");
-		rename("../../courses/$currentCourseID", "../../courses/garbage/$currentCourseID");
-		$tool_content .= "<p class=\"success_small\">$langTheCourse <b>($intitule $currentCourseID)</b>  $langHasDel</p><br />
-		<p align=\"right\"><a href=\"../../index.php\">".$langBackHome." ".$siteName."</a></p>";
-                unset($currentCourseID);
-                unset($_SESSION['dbname']);
-		draw($tool_content, 1);
-		exit();
-	} else {
-		$tool_content .= "
+if ($is_adminOfCourse) {
+    if (isset($delete)) {
+        mysql_select_db("$mysqlMainDb", $db);
+        mysql_query("DROP DATABASE `$currentCourseID`");
+        mysql_query("DELETE FROM `$mysqlMainDb`.cours WHERE code='$currentCourseID'");
+        mysql_query("DELETE FROM `$mysqlMainDb`.cours_user WHERE cours_id='$cours_id'");
+        mysql_query("DELETE FROM `$mysqlMainDb`.cours_faculte WHERE code='$currentCourseID'");
+        mysql_query("DELETE FROM `$mysqlMainDb`.annonces WHERE cours_id='$cours_id'");
+        ##[BEGIN personalisation modification]############
+        mysql_query("DELETE FROM `$mysqlMainDb`.agenda WHERE lesson_code='$currentCourseID'");
+        ##[END personalisation modification]############
+        @mkdir("../../courses/garbage");
+        rename("../../courses/$currentCourseID", "../../courses/garbage/$currentCourseID");
+        $tool_content .= "<p class=\"success_small\">$langTheCourse <b>($intitule $currentCourseID)</b>  $langHasDel</p><br />
+		<p align=\"right\"><a href=\"../../index.php\">" . $langBackHome . " " . $siteName . "</a></p>";
+        unset($currentCourseID);
+        unset($_SESSION['dbname']);
+        draw($tool_content, 1);
+        exit();
+    } else {
+        $tool_content .= "
 		<table width=\"99%\">
 		<tbody>
 		<tr>
@@ -61,7 +61,7 @@ if($is_adminOfCourse) {
 		</tr>
 		<tr>
 		<th rowspan='2' class='left' width='220'>$langConfirmDel :</th>
-		<td width='52' align='center'><a href=\"".$_SERVER['PHP_SELF']."?delete=yes\">$langYes</a></td>
+		<td width='52' align='center'><a href=\"" . $_SERVER['PHP_SELF'] . "?delete=yes\">$langYes</a></td>
 		<td><small>$langByDel</small></td>
 		</tr>
 		<tr>
@@ -70,13 +70,13 @@ if($is_adminOfCourse) {
 		</tr>
 		</tbody>
 		</table>";
-		
-		$tool_content .= "<p align=\"right\"><a href=\"infocours.php\">$langBack</a></p>
+
+        $tool_content .= "<p align=\"right\"><a href=\"infocours.php\">$langBack</a></p>
 		</ul>
 		</div>";
-	} // else
-} else  {
-	$tool_content .= "<center><p>$langForbidden</p></center>";
+    } // else
+} else {
+    $tool_content .= "<center><p>$langForbidden</p></center>";
 }
 
 draw($tool_content, 2, 'course_info');

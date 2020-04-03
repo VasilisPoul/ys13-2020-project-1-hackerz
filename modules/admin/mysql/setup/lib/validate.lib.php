@@ -26,16 +26,16 @@
  *   cleanup in HTML documen
  * o false - when no validators match name(s) given by $validator_id
  *
- * @param string|array  $validator_id
- * @param array         $values
- * @param bool          $isPostSource  tells whether $values are directly from POST request
+ * @param string|array $validator_id
+ * @param array $values
+ * @param bool $isPostSource tells whether $values are directly from POST request
  * @return bool|array
  */
 function validate($validator_id, &$values, $isPostSource)
 {
     // find validators
     $cf = ConfigFile::getInstance();
-    $validator_id = (array) $validator_id;
+    $validator_id = (array)$validator_id;
     $validators = $cf->getDbEntry('_validators');
     $vids = array();
     foreach ($validator_id as &$vid) {
@@ -113,8 +113,8 @@ function test_php_errormsg($start = true)
 /**
  * Test database connection
  *
- * @param string $extension     'mysql' or 'mysqli'
- * @param string $connect_type  'tcp' or 'socket'
+ * @param string $extension 'mysql' or 'mysqli'
+ * @param string $connect_type 'tcp' or 'socket'
  * @param string $host
  * @param string $port
  * @param string $socket
@@ -155,7 +155,7 @@ function test_db_connection($extension, $connect_type, $host, $port, $socket, $u
  * Validate server config
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_server($path, $values)
@@ -189,7 +189,7 @@ function validate_server($path, $values)
  * Validate pmadb config
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_pmadb($path, $values)
@@ -225,7 +225,7 @@ function validate_pmadb($path, $values)
  * Validates regular expression
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_regex($path, $values)
@@ -256,7 +256,7 @@ function validate_regex($path, $values)
  * Validates TrustedProxies field
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_trusted_proxies($path, $values)
@@ -272,8 +272,8 @@ function validate_trusted_proxies($path, $values)
         $lines = array();
         foreach ($values[$path] as $ip => $v) {
             $lines[] = preg_match('/^-\d+$/', $ip)
-            	? $v
-            	: $ip . ': ' . $v;
+                ? $v
+                : $ip . ': ' . $v;
         }
     } else {
         // AJAX validation
@@ -304,11 +304,11 @@ function validate_trusted_proxies($path, $values)
  * Tests integer value
  *
  * @param string $path
- * @param array  $values
- * @param bool   $allow_neg       allow negative values
- * @param bool   $allow_zero      allow zero
- * @param int    $max_value       max allowed value
- * @param string $error_lang_key  error message key: $GLOBALS["strSetup$error_lang_key"]
+ * @param array $values
+ * @param bool $allow_neg allow negative values
+ * @param bool $allow_zero allow zero
+ * @param int $max_value max allowed value
+ * @param string $error_lang_key error message key: $GLOBALS["strSetup$error_lang_key"]
  * @return string  empty string if test is successful
  */
 function test_number($path, $values, $allow_neg, $allow_zero, $max_value, $error_lang_key)
@@ -328,7 +328,7 @@ function test_number($path, $values, $allow_neg, $allow_zero, $max_value, $error
  * Validates port number
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_port_number($path, $values)
@@ -340,7 +340,7 @@ function validate_port_number($path, $values)
  * Validates positive number
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_positive_number($path, $values)
@@ -352,11 +352,12 @@ function validate_positive_number($path, $values)
  * Validates non-negative number
  *
  * @param string $path
- * @param array  $values
+ * @param array $values
  * @return array
  */
 function validate_non_negative_number($path, $values)
 {
     return array($path => test_number($path, $values, false, true, PHP_INT_MAX, 'error_nan_nneg'));
 }
+
 ?>

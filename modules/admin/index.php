@@ -1,8 +1,8 @@
 <?
- //* @version $Id: index.php,v 1.23 2009-02-23 10:00:01 adia Exp $
+//* @version $Id: index.php,v 1.23 2009-02-23 10:00:01 adia Exp $
 /*****************************************************************************
-        DEAL WITH  BASETHEME, OTHER INCLUDES AND NAMETOOLS
-******************************************************************************/
+ * DEAL WITH  BASETHEME, OTHER INCLUDES AND NAMETOOLS
+ ******************************************************************************/
 // Check if user is administrator and if yes continue
 
 /*========================================================================
@@ -40,8 +40,8 @@ $nameTools = $langAdmin;
 $tool_content = "";
 
 /*****************************************************************************
-        MAIN BODY
-******************************************************************************/
+ * MAIN BODY
+ ******************************************************************************/
 
 // This is used for inserting data in 'monthly_report' table.
 // The work is done every time the admin page is called in order to
@@ -73,11 +73,11 @@ $tool_content .= "
     <tr class='odd'>
       <th class='left' style='border-left: 1px solid #edecdf; border-bottom: 1px solid #edecdf;'>Data Base Server:</th>
       <td>";
-        if (extension_loaded('mysql'))
-            $tool_content .= "$langMySqlVersion<b>".mysql_get_server_info()."</b>";
-        else // If not display message no MySQL
-            $tool_content .= "<font color='red'>".$langNoMysql."</font>";
-    $tool_content .= "</td>
+if (extension_loaded('mysql'))
+    $tool_content .= "$langMySqlVersion<b>" . mysql_get_server_info() . "</b>";
+else // If not display message no MySQL
+    $tool_content .= "<font color='red'>" . $langNoMysql . "</font>";
+$tool_content .= "</td>
     </tr>
     </tbody>
     </table>
@@ -99,34 +99,34 @@ if ($count_prof_requests > 0) {
 $sql = "SELECT code, intitule, titulaires FROM cours ORDER BY cours_id DESC LIMIT 0,1";
 $result = mysql_query($sql);
 $myrow = mysql_fetch_array($result);
-$last_course_info = "<b>".$myrow['intitule']."</b> (".$myrow['code'].", ".$myrow['titulaires'].")";
+$last_course_info = "<b>" . $myrow['intitule'] . "</b> (" . $myrow['code'] . ", " . $myrow['titulaires'] . ")";
 
 // Find last prof registration
 $sql = "SELECT prenom, nom, email, registered_at FROM user WHERE statut = 1 ORDER BY user_id DESC LIMIT 0,1";
 $result = mysql_query($sql);
 $myrow = mysql_fetch_array($result);
-$last_prof_info = "<b>".$myrow['prenom']." ".$myrow['nom']."</b> (".$myrow['email'].", ".date("j/n/Y H:i",$myrow['registered_at']).")";
+$last_prof_info = "<b>" . $myrow['prenom'] . " " . $myrow['nom'] . "</b> (" . $myrow['email'] . ", " . date("j/n/Y H:i", $myrow['registered_at']) . ")";
 
 // Find last stud registration
 $sql = "SELECT prenom, nom, email, registered_at FROM user WHERE statut = 5 ORDER BY user_id DESC LIMIT 0,1";
 $result = mysql_query($sql);
 $myrow = mysql_fetch_array($result);
-$last_stud_info = "<b>".$myrow['prenom']." ".$myrow['nom']."</b> (".$myrow['email'].", ".date("j/n/Y H:i",$myrow['registered_at']).")";
+$last_stud_info = "<b>" . $myrow['prenom'] . " " . $myrow['nom'] . "</b> (" . $myrow['email'] . ", " . date("j/n/Y H:i", $myrow['registered_at']) . ")";
 
 // Find admin's last login
-$sql = "SELECT `when` FROM loginout WHERE id_user = '".$uid."' AND action = 'LOGIN' ORDER BY `when` DESC LIMIT 1,1";
+$sql = "SELECT `when` FROM loginout WHERE id_user = '" . $uid . "' AND action = 'LOGIN' ORDER BY `when` DESC LIMIT 1,1";
 $result = mysql_query($sql);
 $myrow = mysql_fetch_array($result);
-$lastadminlogin = strtotime($myrow['when']!=""?$myrow['when']:0);
+$lastadminlogin = strtotime($myrow['when'] != "" ? $myrow['when'] : 0);
 
 // Count profs registered after last login
-$sql = "SELECT COUNT(*) AS cnt FROM user WHERE statut = 1 AND registered_at > '".$lastadminlogin."'";
+$sql = "SELECT COUNT(*) AS cnt FROM user WHERE statut = 1 AND registered_at > '" . $lastadminlogin . "'";
 $result = mysql_query($sql);
 $myrow = mysql_fetch_array($result);
 $lastregisteredprofs = $myrow['cnt'];
 
 // Count studs registered after last login
-$sql = "SELECT COUNT(*) AS cnt FROM user WHERE statut = 5 AND registered_at > '".$lastadminlogin."'";
+$sql = "SELECT COUNT(*) AS cnt FROM user WHERE statut = 5 AND registered_at > '" . $lastadminlogin . "'";
 $result = mysql_query($sql);
 $myrow = mysql_fetch_array($result);
 $lastregisteredstuds = $myrow['cnt'];
@@ -141,7 +141,7 @@ $tool_content .= "
     </tr>
     <tr class=\"odd\">
       <th class=\"left\" style=\"border-left: 1px solid #edecdf;\">$langOpenRequests:</th>
-      <td>".$prof_request_msg."</td>
+      <td>" . $prof_request_msg . "</td>
     </tr>
     <tr class=\"odd\">
       <th class=\"left\" style=\"border-left: 1px solid #edecdf;\">$langLastLesson</th>
@@ -159,8 +159,8 @@ $tool_content .= "
       <th class=\"left\" style=\"border-left: 1px solid #edecdf; border-bottom: 1px solid #edecdf;\">$langAfterLastLoginInfo</th>
       <td>$langAfterLastLogin
         <ul>
-          <li><b>".$lastregisteredprofs."</b> $langTeachers</li>
-          <li><b>".$lastregisteredstuds."</b> $langUsersS </li>
+          <li><b>" . $lastregisteredprofs . "</b> $langTeachers</li>
+          <li><b>" . $lastregisteredstuds . "</b> $langUsersS </li>
         </ul>
       </td>
     </tr>
@@ -169,10 +169,10 @@ $tool_content .= "
     <br />";
 
 /*****************************************************************************
-        DISPLAY HTML
-******************************************************************************/
+ * DISPLAY HTML
+ ******************************************************************************/
 // Call draw function to display the HTML
 // $tool_content: the content to display
 // 3: display administrator menu
 // admin: use tool.css from admin folder
-draw($tool_content,3,'admin');
+draw($tool_content, 3, 'admin');

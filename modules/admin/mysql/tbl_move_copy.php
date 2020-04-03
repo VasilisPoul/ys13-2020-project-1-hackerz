@@ -64,8 +64,8 @@ if (PMA_isValid($_REQUEST['new_name'])) {
 
         /* Check: Work on new table or on old table? */
         if (isset($_REQUEST['submit_move']) || PMA_isValid($_REQUEST['switch_to_new'])) {
-            $db        = $_REQUEST['target_db'];
-            $table     = $_REQUEST['new_name'];
+            $db = $_REQUEST['target_db'];
+            $table = $_REQUEST['new_name'];
         }
         $reload = 1;
 

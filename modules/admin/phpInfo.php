@@ -46,8 +46,8 @@
 ==============================================================================*/
 
 /*****************************************************************************
-		DEAL WITH BASETHEME, OTHER INCLUDES AND NAMETOOLS
-******************************************************************************/
+ * DEAL WITH BASETHEME, OTHER INCLUDES AND NAMETOOLS
+ ******************************************************************************/
 
 // Check if user is administrator and if yes continue
 // Othewise exit with appropriate message
@@ -60,26 +60,26 @@ $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $tool_content = "";
 
 /*****************************************************************************
-		MAIN BODY
-******************************************************************************/
+ * MAIN BODY
+ ******************************************************************************/
 // Display phpinfo
-if ($to=="phpinfo") {
-	$tool_content .= '<div>';
-	ob_start();
-	phpinfo();
-	$phpinfo = ob_get_contents();
-	ob_end_clean();
-	$tool_content .= $phpinfo;
-	$tool_content .= '</div>';
+if ($to == "phpinfo") {
+    $tool_content .= '<div>';
+    ob_start();
+    phpinfo();
+    $phpinfo = ob_get_contents();
+    ob_end_clean();
+    $tool_content .= $phpinfo;
+    $tool_content .= '</div>';
 }
 // Display link to go back to index.php
 $tool_content .= "<br><center><p><a href=\"index.php\">$langBack</a></p></center>";
 
 /*****************************************************************************
-		DISPLAY HTML
-******************************************************************************/
+ * DISPLAY HTML
+ ******************************************************************************/
 // Call draw function to display the HTML
 // $tool_content: the content to display
 // 3: display administrator menu
 // admin: use tool.css from admin folder
-draw($tool_content,3,'admin');
+draw($tool_content, 3, 'admin');

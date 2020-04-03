@@ -61,12 +61,12 @@ class PMA_Theme_Manager
     /**
      * sets path to folder containing the themes
      *
-     * @param   string  $path   path to themes folder
+     * @param string $path path to themes folder
      * @return  boolean success
      */
     function setThemesPath($path)
     {
-        if (! $this->_checkThemeFolder($path)) {
+        if (!$this->_checkThemeFolder($path)) {
             return false;
         }
 
@@ -86,11 +86,11 @@ class PMA_Theme_Manager
     /**
      * sets if there are different themes per server
      *
-     * @param   boolean $per_server
+     * @param boolean $per_server
      */
     function setThemePerServer($per_server)
     {
-        $this->per_server  = (bool) $per_server;
+        $this->per_server = (bool)$per_server;
     }
 
     function init()
@@ -99,7 +99,7 @@ class PMA_Theme_Manager
         $this->theme_default = 'original';
         $this->active_theme = '';
 
-        if (! $this->setThemesPath($GLOBALS['cfg']['ThemePath'])) {
+        if (!$this->setThemesPath($GLOBALS['cfg']['ThemePath'])) {
             return false;
         }
 
@@ -110,7 +110,7 @@ class PMA_Theme_Manager
         $this->theme = new PMA_Theme;
 
 
-        if (! $this->checkTheme($GLOBALS['cfg']['ThemeDefault'])) {
+        if (!$this->checkTheme($GLOBALS['cfg']['ThemeDefault'])) {
             trigger_error(
                 sprintf($GLOBALS['strThemeDefaultNotFound'],
                     htmlspecialchars($GLOBALS['cfg']['ThemeDefault'])),
@@ -121,8 +121,8 @@ class PMA_Theme_Manager
         $this->theme_default = $GLOBALS['cfg']['ThemeDefault'];
 
         // check if user have a theme cookie
-        if (! $this->getThemeCookie()
-         || ! $this->setActiveTheme($this->getThemeCookie())) {
+        if (!$this->getThemeCookie()
+            || !$this->setActiveTheme($this->getThemeCookie())) {
             // otherwise use default theme
             if ($GLOBALS['cfg']['ThemeDefault']) {
                 $this->setActiveTheme($GLOBALS['cfg']['ThemeDefault']);
@@ -136,7 +136,7 @@ class PMA_Theme_Manager
     function checkConfig()
     {
         if ($this->_themes_path != trim($GLOBALS['cfg']['ThemePath'])
-         || $this->theme_default != $GLOBALS['cfg']['ThemeDefault']) {
+            || $this->theme_default != $GLOBALS['cfg']['ThemeDefault']) {
             $this->init();
         } else {
             // at least the theme path needs to be checked every time for new
@@ -148,7 +148,7 @@ class PMA_Theme_Manager
 
     function setActiveTheme($theme = null)
     {
-        if (! $this->checkTheme($theme)) {
+        if (!$this->checkTheme($theme)) {
             trigger_error(
                 sprintf($GLOBALS['strThemeNotFound'], htmlspecialchars($theme)),
                 E_USER_ERROR);
@@ -211,12 +211,13 @@ class PMA_Theme_Manager
 
     /**
      * @private
-     * @param   string $folder
+     * @param string $folder
      * @return  boolean
      */
-    /*private*/ function _checkThemeFolder($folder)
+    /*private*/
+    function _checkThemeFolder($folder)
     {
-        if (! is_dir($folder)) {
+        if (!is_dir($folder)) {
             trigger_error(
                 sprintf($GLOBALS['strThemePathNotFound'],
                     htmlspecialchars($folder)),
@@ -263,11 +264,11 @@ class PMA_Theme_Manager
     /**
      * checks if given theme name is a known theme
      *
-     * @param   string  $theme  name fo theme to check for
+     * @param string $theme name fo theme to check for
      */
     function checkTheme($theme)
     {
-        if (! array_key_exists($theme, $this->themes)) {
+        if (!array_key_exists($theme, $this->themes)) {
             return false;
         }
 
@@ -277,7 +278,7 @@ class PMA_Theme_Manager
     /**
      * returns HTML selectbox, with or without form enclosed
      *
-     * @param   boolean $form   whether enclosed by from tags or not
+     * @param boolean $form whether enclosed by from tags or not
      */
     function getHtmlSelectBox($form = true)
     {
@@ -285,31 +286,31 @@ class PMA_Theme_Manager
 
         if ($form) {
             $select_box .= '<form name="setTheme" method="post" action="index.php"'
-                .' target="_parent">';
-            $select_box .=  PMA_generate_common_hidden_inputs();
+                . ' target="_parent">';
+            $select_box .= PMA_generate_common_hidden_inputs();
         }
 
         $theme_selected = FALSE;
-        $theme_preview_path= './themes.php';
+        $theme_preview_path = './themes.php';
         $theme_preview_href = '<a href="' . $theme_preview_path . '" target="themes" onclick="'
-                            . "window.open('" . $theme_preview_path . "','themes','left=10,top=20,width=510,height=350,scrollbars=yes,status=yes,resizable=yes');"
-                            . '">';
-        $select_box .=  $theme_preview_href . $GLOBALS['strTheme'] . '</a>:' . "\n";
+            . "window.open('" . $theme_preview_path . "','themes','left=10,top=20,width=510,height=350,scrollbars=yes,status=yes,resizable=yes');"
+            . '">';
+        $select_box .= $theme_preview_href . $GLOBALS['strTheme'] . '</a>:' . "\n";
 
-        $select_box .=  '<select name="set_theme" xml:lang="en" dir="ltr"'
-            .' onchange="this.form.submit();" >';
+        $select_box .= '<select name="set_theme" xml:lang="en" dir="ltr"'
+            . ' onchange="this.form.submit();" >';
         foreach ($this->themes as $each_theme_id => $each_theme) {
-            $select_box .=  '<option value="' . $each_theme_id . '"';
+            $select_box .= '<option value="' . $each_theme_id . '"';
             if ($this->active_theme === $each_theme_id) {
-                $select_box .=  ' selected="selected"';
+                $select_box .= ' selected="selected"';
             }
-            $select_box .=  '>' . htmlspecialchars($each_theme->getName()) . '</option>';
+            $select_box .= '>' . htmlspecialchars($each_theme->getName()) . '</option>';
         }
-        $select_box .=  '</select>';
+        $select_box .= '</select>';
 
         if ($form) {
-            $select_box .=  '<noscript><input type="submit" value="' . $GLOBALS['strGo'] . '" /></noscript>';
-            $select_box .=  '</form>';
+            $select_box .= '<noscript><input type="submit" value="' . $GLOBALS['strGo'] . '" /></noscript>';
+            $select_box .= '</form>';
         }
 
         return $select_box;
@@ -320,9 +321,9 @@ class PMA_Theme_Manager
      */
     function makeBc()
     {
-        $GLOBALS['theme']           = $this->theme->getId();
-        $GLOBALS['pmaThemePath']    = $this->theme->getPath();
-        $GLOBALS['pmaThemeImage']   = $this->theme->getImgPath();
+        $GLOBALS['theme'] = $this->theme->getId();
+        $GLOBALS['pmaThemePath'] = $this->theme->getPath();
+        $GLOBALS['pmaThemeImage'] = $this->theme->getImgPath();
 
         /**
          * load layout file if exists
@@ -378,4 +379,5 @@ class PMA_Theme_Manager
         return false;
     }
 }
+
 ?>

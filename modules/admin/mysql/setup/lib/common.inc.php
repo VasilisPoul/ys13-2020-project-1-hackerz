@@ -38,9 +38,9 @@ ob_start();
  * $path is a string describing position of an element in an associative array,
  * eg. Servers/1/host refers to $array[Servers][1][host]
  *
- * @param  string   $path
- * @param  array    $array
- * @param  mixed    $default
+ * @param string $path
+ * @param array $array
+ * @param mixed $default
  * @return mixed    array element or $default
  */
 function array_read($path, $array, $default = null)
@@ -59,9 +59,9 @@ function array_read($path, $array, $default = null)
 /**
  * Stores value in an array
  *
- * @param  string   $path
- * @param  array    &$array
- * @param  mixed    $value
+ * @param string $path
+ * @param array    &$array
+ * @param mixed $value
  */
 function array_write($path, &$array, $value)
 {
@@ -80,9 +80,9 @@ function array_write($path, &$array, $value)
 /**
  * Removes value from an array
  *
- * @param  string   $path
- * @param  array    &$array
- * @param  mixed    $value
+ * @param string $path
+ * @param array    &$array
+ * @param mixed $value
  */
 function array_remove($path, &$array)
 {
@@ -100,7 +100,7 @@ function array_remove($path, &$array)
             break;
         }
         $depth++;
-        $path[$depth] =& $path[$depth-1][$key];
+        $path[$depth] =& $path[$depth - 1][$key];
     }
     // if element found, remove it
     if ($found) {
@@ -110,7 +110,7 @@ function array_remove($path, &$array)
 
     // remove empty nested arrays
     for (; $depth >= 0; $depth--) {
-        if (!isset($path[$depth+1]) || count($path[$depth+1]) == 0) {
+        if (!isset($path[$depth + 1]) || count($path[$depth + 1]) == 0) {
             unset($path[$depth][$keys[$depth]]);
         } else {
             break;
@@ -123,8 +123,8 @@ function array_remove($path, &$array)
  * for formatting. Takes variable number of arguments.
  * Based on PMA_sanitize from sanitize.lib.php.
  *
- * @param  string  $lang_key key in $GLOBALS WITHOUT 'strSetup' prefix
- * @param  mixed   $args     arguments for sprintf
+ * @param string $lang_key key in $GLOBALS WITHOUT 'strSetup' prefix
+ * @param mixed $args arguments for sprintf
  * @return string
  */
 function PMA_lang($lang_key)
@@ -134,19 +134,19 @@ function PMA_lang($lang_key)
     // some quick cache'ing
     if ($search === null) {
         $replace_pairs = array(
-            '<'         => '&lt;',
-            '>'         => '&gt;',
-            '[em]'      => '<em>',
-            '[/em]'     => '</em>',
-            '[strong]'  => '<strong>',
+            '<' => '&lt;',
+            '>' => '&gt;',
+            '[em]' => '<em>',
+            '[/em]' => '</em>',
+            '[strong]' => '<strong>',
             '[/strong]' => '</strong>',
-            '[code]'    => '<code>',
-            '[/code]'   => '</code>',
-            '[kbd]'     => '<kbd>',
-            '[/kbd]'    => '</kbd>',
-            '[br]'      => '<br />',
-            '[sup]'     => '<sup>',
-            '[/sup]'    => '</sup>');
+            '[code]' => '<code>',
+            '[/code]' => '</code>',
+            '[kbd]' => '<kbd>',
+            '[/kbd]' => '</kbd>',
+            '[br]' => '<br />',
+            '[sup]' => '<sup>',
+            '[/sup]' => '</sup>');
         $search = array_keys($replace_pairs);
         $replace = array_values($replace_pairs);
     }
@@ -176,9 +176,9 @@ function PMA_lang($lang_key)
 function PMA_lang_name($canonical_path)
 {
     $lang_key = str_replace(
-    	array('Servers/1/', '/'),
-    	array('Servers/', '_'),
-    	$canonical_path) . '_name';
+            array('Servers/1/', '/'),
+            array('Servers/', '_'),
+            $canonical_path) . '_name';
     return isset($GLOBALS["strSetup$lang_key"])
         ? $GLOBALS["strSetup$lang_key"]
         : $lang_key;
@@ -193,9 +193,9 @@ function PMA_lang_name($canonical_path)
 function PMA_lang_desc($canonical_path)
 {
     $lang_key = str_replace(
-    	array('Servers/1/', '/'),
-    	array('Servers/', '_'),
-    	$canonical_path) . '_desc';
+            array('Servers/1/', '/'),
+            array('Servers/', '_'),
+            $canonical_path) . '_desc';
     return isset($GLOBALS["strSetup$lang_key"])
         ? PMA_lang($lang_key)
         : '';
@@ -223,4 +223,5 @@ function PMA_lang_link_replace($link, $text)
 
     return '<a href="' . $link . '">' . $text . '</a>';
 }
+
 ?>

@@ -187,7 +187,7 @@ if (isset($submit) && $submit) {
             $stmt = $conn->prepare("INSERT INTO posts_text (post_id, post_text) VALUES (?, ?)");
             $stmt->bind_param("is", $post_id, autoquote($message));
             $stmt->execute();
-            if($stmt->errno){
+            if ($stmt->errno) {
                 echo $stmt->errno;
                 die;
             }
@@ -195,7 +195,7 @@ if (isset($submit) && $submit) {
 
             $stmt = $conn->prepare("UPDATE topics SET topic_last_post_id = ? WHERE topic_id = ?");
             $stmt->bind_param("ii", $post_id, $topic_id);
-            if($stmt->errno){
+            if ($stmt->errno) {
                 echo $stmt->errno;
                 die;
             }

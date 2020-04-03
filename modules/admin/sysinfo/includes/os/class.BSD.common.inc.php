@@ -26,44 +26,44 @@ class bsd_common
 
     // Our constructor
     // this function is run on the initialization of this class
-    function bsd_common ()
+    function bsd_common()
     {
         // initialize all the variables we need from our parent class
         $this->sysinfo();
     }
 
     // read /var/run/dmesg.boot, but only if we haven't already.
-    function read_dmesg ()
+    function read_dmesg()
     {
-        if (! $this->dmesg) {
-            $this->dmesg = file ('/var/run/dmesg.boot');
+        if (!$this->dmesg) {
+            $this->dmesg = file('/var/run/dmesg.boot');
         }
         return $this->dmesg;
     }
 
     // grabs a key from sysctl(8)
-    function grab_key ($key)
+    function grab_key($key)
     {
         return execute_program('sysctl', "-n $key");
     }
 
     // get our apache SERVER_NAME or vhost
-    function hostname ()
+    function hostname()
     {
-        if ( !($result = getenv('SERVER_NAME')) ) {
+        if (!($result = getenv('SERVER_NAME'))) {
             $result = "N.A.";
         }
         return $result;
     }
 
     // get our canonical hostname
-    function chostname ()
+    function chostname()
     {
         return execute_program('hostname');
     }
 
     // get the IP address of our canonical hostname
-    function ip_addr ()
+    function ip_addr()
     {
         if (!($result = getenv('SERVER_ADDR'))) {
             $result = gethostbyname($this->chostname());
@@ -71,28 +71,28 @@ class bsd_common
         return $result;
     }
 
-    function kernel ()
+    function kernel()
     {
         $s = $this->grab_key('kern.version');
         $a = explode(':', $s);
         return $a[0];
     }
 
-    function uptime ()
+    function uptime()
     {
         $sys_ticks = $this->get_sys_ticks();
 
-        $min   = $sys_ticks / 60;
+        $min = $sys_ticks / 60;
         $hours = $min / 60;
-        $days  = floor($hours / 24);
+        $days = floor($hours / 24);
         $hours = floor($hours - ($days * 24));
-        $min   = floor($min - ($days * 60 * 24) - ($hours * 60));
+        $min = floor($min - ($days * 60 * 24) - ($hours * 60));
 
-        if ( $days != 0 ) {
+        if ($days != 0) {
             $result = "$days days, ";
         }
 
-        if ( $hours != 0 ) {
+        if ($hours != 0) {
             $result .= "$hours hours, ";
         }
         $result .= "$min minutes";
@@ -100,12 +100,12 @@ class bsd_common
         return $result;
     }
 
-    function users ()
+    function users()
     {
         return execute_program('who', '| wc -l');
     }
 
-    function loadavg ()
+    function loadavg()
     {
         $s = $this->grab_key('vm.loadavg');
         $s = str_replace('{ ', '', $s);
@@ -115,15 +115,15 @@ class bsd_common
         return $results;
     }
 
-    function cpu_info ()
+    function cpu_info()
     {
         $results = array();
-        $ar_buf  = array();
+        $ar_buf = array();
 
         $results['model'] = $this->grab_key('hw.model');
-        $results['cpus']  = $this->grab_key('hw.ncpu');
+        $results['cpus'] = $this->grab_key('hw.ncpu');
 
-        for ($i=0; $i < count($this->read_dmesg()); $i++) {
+        for ($i = 0; $i < count($this->read_dmesg()); $i++) {
             $buf = $this->dmesg[$i];
             if (preg_match("/$this->cpu_regexp/", $buf, $ar_buf)) {
                 $results['mhz'] = round($ar_buf[2]);
@@ -134,32 +134,32 @@ class bsd_common
     }
 
     // get the scsi device information out of dmesg
-    function scsi ()
+    function scsi()
     {
         $results = array();
 
         $s = 0;
-        for ($i=0; $i < count($this->read_dmesg()); $i++) {
+        for ($i = 0; $i < count($this->read_dmesg()); $i++) {
             $buf = $this->dmesg[$i];
             if (preg_match("/$this->scsi_regexp/", $buf, $ar_buf)) {
-            $results[$s++] = $ar_buf[1].": ".$ar_buf[2];
+                $results[$s++] = $ar_buf[1] . ": " . $ar_buf[2];
             }
         }
         return array_values(array_unique($results));
     }
 
     // get the pci device information out of dmesg
-    function pci ()
+    function pci()
     {
         $results = array();
 
         $s = 0;
-        for ($i=0; $i < count($this->read_dmesg()); $i++) {
+        for ($i = 0; $i < count($this->read_dmesg()); $i++) {
             $buf = $this->dmesg[$i];
             if (preg_match('/(.*): <(.*)>(.*) pci[0-9]$/', $buf, $ar_buf)) {
-                $results[$s++] = $ar_buf[1].": ".$ar_buf[2];
+                $results[$s++] = $ar_buf[1] . ": " . $ar_buf[2];
             } elseif (preg_match('/(.*): <(.*)>.* at [.0-9]+ irq/', $buf, $ar_buf)) {
-                $results[$s++] = $ar_buf[1].": ".$ar_buf[2];
+                $results[$s++] = $ar_buf[1] . ": " . $ar_buf[2];
             }
         }
         sort($results);
@@ -167,12 +167,12 @@ class bsd_common
     }
 
     // get the ide device information out of dmesg
-    function ide ()
+    function ide()
     {
         $results = array();
 
         $s = 0;
-        for ($i=0; $i < count($this->read_dmesg()); $i++) {
+        for ($i = 0; $i < count($this->read_dmesg()); $i++) {
             $buf = $this->dmesg[$i];
             if (preg_match('/^(ad[0-9]): (.*)MB <(.*)> (.*) (.*)/', $buf, $ar_buf)) {
                 $s = $ar_buf[1];
@@ -189,7 +189,7 @@ class bsd_common
         return array_values(array_unique($results));
     }
 
-    function memory ()
+    function memory()
     {
         $s = $this->grab_key('hw.physmem');
 
@@ -222,10 +222,10 @@ class bsd_common
         $results['ram']['t_used'] = $results['ram']['used'];
         $results['ram']['t_free'] = $results['ram']['free'];
 
-        $results['ram']['percent'] = round(($results['ram']['used'] *100) / $results['ram']['total']);
+        $results['ram']['percent'] = round(($results['ram']['used'] * 100) / $results['ram']['total']);
 
         $pstat = execute_program('swapinfo', '-k');
-        $lines = split("\n",$pstat);
+        $lines = split("\n", $pstat);
 
         for ($i = 0; $i < sizeof($lines); $i++) {
             $ar_buf = preg_split("/\s+/", $lines[$i], 6);
@@ -245,20 +245,20 @@ class bsd_common
         return $results;
     }
 
-    function filesystems ()
+    function filesystems()
     {
         $df = execute_program('df', '-k');
         $mounts = split("\n", $df);
         $fstype = array();
 
-        $s     = execute_program('mount');
-        $lines = explode("\n",$s);
+        $s = execute_program('mount');
+        $lines = explode("\n", $s);
 
         $i = 0;
-        while (list(,$line) = each($lines)) {
+        while (list(, $line) = each($lines)) {
             preg_match('/(.*) \((.*)\)/', $line, $a);
 
-            $m = explode(' ',$a[0]);
+            $m = explode(' ', $a[0]);
             $fsdev[$m[0]] = $a[2];
         }
 

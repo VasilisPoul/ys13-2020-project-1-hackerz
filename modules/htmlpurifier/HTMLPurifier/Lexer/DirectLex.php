@@ -25,7 +25,7 @@ class HTMLPurifier_Lexer_DirectLex extends HTMLPurifier_Lexer
 
     /**
      * Callback function for script CDATA fudge
-     * @param array $matches, in form of array(opening tag, contents, closing tag)
+     * @param array $matches , in form of array(opening tag, contents, closing tag)
      * @return string
      */
     protected function scriptCallback($matches)

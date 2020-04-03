@@ -14,9 +14,9 @@ FILEPAT="*.inc.php"
 STRINGMATCH='^[[:space:]]*\$[[:alnum:]_]+[[:blank:]]+='
 IGNOREMATCH='strEncto|strKanjiEncodConvert|strXkana|allow_recoding|doc_lang'
 
-if [ "`which diffstat`" = "" ] ; then
-    echo 'You need diffstat to use this!'
-    exit 1
+if [ "$(which diffstat)" = "" ]; then
+  echo 'You need diffstat to use this!'
+  exit 1
 fi
 
 rm -rf $TMPDIR
@@ -24,22 +24,19 @@ mkdir -p $TMPDIR
 
 # Build the list of variables in each file
 echo "Building data"
-for f in $FILEPAT;
-do
-    awk "/$STRINGMATCH/ && ! /$IGNOREMATCH/ { print \$1 }" $f | sort > $TMPDIR/$f
+for f in $FILEPAT; do
+  awk "/$STRINGMATCH/ && ! /$IGNOREMATCH/ { print \$1 }" $f | sort >$TMPDIR/$f
 done
-
 
 # Build the diff files used for checking
 # And if there are no differences, delete the empty files
 echo "Comparing data"
-for f in $FILEPAT;
-do
-    if [ ! $MASTER = $f ]; then
-        if diff -u $TMPDIR/$MASTER $TMPDIR/$f >$TMPDIR/$f.diff ; then
-            rm -f $TMPDIR/$f.diff $TMPDIR/$f
-        fi
+for f in $FILEPAT; do
+  if [ ! $MASTER = $f ]; then
+    if diff -u $TMPDIR/$MASTER $TMPDIR/$f >$TMPDIR/$f.diff; then
+      rm -f $TMPDIR/$f.diff $TMPDIR/$f
     fi
+  fi
 done
 
 # Cleanup
@@ -49,11 +46,10 @@ rm -f $TMPDIR/$MASTER
 echo "Differences"
 diffstat -f 0 $TMPDIR/*.diff >$TMPDIR/diffstat 2>/dev/null
 echo "Dupe	Miss	Filename"
-head -n -1 $TMPDIR/diffstat | \
-while read filename sep change add plus sub minus edits exclaim; 
-do 
-    echo "$add	$sub	$filename"; 
-done
+head -n -1 $TMPDIR/diffstat |
+  while read filename sep change add plus sub minus edits exclaim; do
+    echo "$add	$sub	$filename"
+  done
 
 echo
 echo "Dupe = Duplicate Variables"

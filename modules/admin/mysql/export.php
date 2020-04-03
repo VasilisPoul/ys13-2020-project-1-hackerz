@@ -53,12 +53,12 @@ if (empty($_REQUEST['asfile'])) {
     if (!empty($_REQUEST['onserver'])) {
         $onserver = $_REQUEST['onserver'];
         // Will we save dump on server?
-        $save_on_server = ! empty($cfg['SaveDir']) && $onserver;
+        $save_on_server = !empty($cfg['SaveDir']) && $onserver;
     }
 }
 
 // Does export require to be into file?
-if (isset($export_list[$type]['force_file']) && ! $asfile) {
+if (isset($export_list[$type]['force_file']) && !$asfile) {
     $message = PMA_Message::error('strExportMustBeFile');
     $GLOBALS['js_include'][] = 'functions.js';
     require_once './libraries/header.inc.php';
@@ -115,7 +115,7 @@ $time_start = time();
  * Output handler for all exports, if needed buffering, it stores data into
  * $dump_buffer, otherwise it prints thems out.
  *
- * @param   string  the insert statement
+ * @param string  the insert statement
  *
  * @return  bool    Whether output suceeded
  */
@@ -140,10 +140,9 @@ function PMA_exportOutputHandler($line)
                     $dump_buffer = PMA_convert_string($GLOBALS['charset'], $GLOBALS['charset_of_file'], $dump_buffer);
                 }
                 // as bzipped
-                if ($GLOBALS['compression'] == 'bzip'  && @function_exists('bzcompress')) {
+                if ($GLOBALS['compression'] == 'bzip' && @function_exists('bzcompress')) {
                     $dump_buffer = bzcompress($dump_buffer);
-                }
-                // as a gzipped file
+                } // as a gzipped file
                 elseif ($GLOBALS['compression'] == 'gzip' && @function_exists('gzencode')) {
                     // without the optional parameter level because it bug
                     $dump_buffer = gzencode($dump_buffer);
@@ -262,26 +261,26 @@ if ($asfile) {
     }
 
     // convert filename to iso-8859-1, it is safer
-    if (!(isset($cfg['AllowAnywhereRecoding']) && $cfg['AllowAnywhereRecoding'] )) {
+    if (!(isset($cfg['AllowAnywhereRecoding']) && $cfg['AllowAnywhereRecoding'])) {
         $filename = PMA_convert_string($charset, 'iso-8859-1', $filename);
     } else {
         $filename = PMA_convert_string($convcharset, 'iso-8859-1', $filename);
     }
 
     // Grab basic dump extension and mime type
-    $filename  .= '.' . $export_list[$type]['extension'];
-    $mime_type  = $export_list[$type]['mime_type'];
+    $filename .= '.' . $export_list[$type]['extension'];
+    $mime_type = $export_list[$type]['mime_type'];
 
     // If dump is going to be compressed, set correct mime_type and add
     // compression to extension
     if ($compression == 'bzip') {
-        $filename  .= '.bz2';
+        $filename .= '.bz2';
         $mime_type = 'application/x-bzip2';
     } elseif ($compression == 'gzip') {
-        $filename  .= '.gz';
+        $filename .= '.gz';
         $mime_type = 'application/x-gzip';
     } elseif ($compression == 'zip') {
-        $filename  .= '.zip';
+        $filename .= '.zip';
         $mime_type = 'application/zip';
     }
 }
@@ -330,7 +329,7 @@ if (!$save_on_server) {
         // Download
         // (avoid rewriting data containing HTML with anchors and forms;
         // this was reported to happen under Plesk)
-        @ini_set('url_rewriter.tags','');
+        @ini_set('url_rewriter.tags', '');
 
         header('Content-Type: ' . $mime_type);
         header('Expires: ' . gmdate('D, d M Y H:i:s') . ' GMT');
@@ -371,11 +370,11 @@ if (!$save_on_server) {
         echo "\n" . '<div align="' . $cell_align_left . '">' . "\n";
         //echo '    <pre>' . "\n";
         echo '    <form name="nofunction">' . "\n"
-           // remove auto-select for now: there is no way to select
-           // only a part of the text; anyway, it should obey
-           // $cfg['TextareaAutoSelect']
-           //. '        <textarea name="sqldump" cols="50" rows="30" onclick="this.select();" id="textSQLDUMP" wrap="OFF">' . "\n";
-           . '        <textarea name="sqldump" cols="50" rows="30" id="textSQLDUMP" wrap="OFF">' . "\n";
+            // remove auto-select for now: there is no way to select
+            // only a part of the text; anyway, it should obey
+            // $cfg['TextareaAutoSelect']
+            //. '        <textarea name="sqldump" cols="50" rows="30" onclick="this.select();" id="textSQLDUMP" wrap="OFF">' . "\n";
+            . '        <textarea name="sqldump" cols="50" rows="30" id="textSQLDUMP" wrap="OFF">' . "\n";
     } // end download
 }
 
@@ -384,165 +383,165 @@ if (!$save_on_server) {
 do {
 
 // Add possibly some comments to export
-if (!PMA_exportHeader()) {
-    break;
-}
+    if (!PMA_exportHeader()) {
+        break;
+    }
 
 // Will we need relation & co. setup?
-$do_relation = isset($GLOBALS[$what . '_relation']);
-$do_comments = isset($GLOBALS[$what . '_comments']);
-$do_mime     = isset($GLOBALS[$what . '_mime']);
-if ($do_relation || $do_comments || $do_mime) {
-    require_once './libraries/relation.lib.php';
-    $cfgRelation = PMA_getRelationsParam();
-}
-if ($do_mime) {
-    require_once './libraries/transformations.lib.php';
-}
+    $do_relation = isset($GLOBALS[$what . '_relation']);
+    $do_comments = isset($GLOBALS[$what . '_comments']);
+    $do_mime = isset($GLOBALS[$what . '_mime']);
+    if ($do_relation || $do_comments || $do_mime) {
+        require_once './libraries/relation.lib.php';
+        $cfgRelation = PMA_getRelationsParam();
+    }
+    if ($do_mime) {
+        require_once './libraries/transformations.lib.php';
+    }
 
 // Include dates in export?
-$do_dates   = isset($GLOBALS[$what . '_dates']);
+    $do_dates = isset($GLOBALS[$what . '_dates']);
 
-/**
- * Builds the dump
- */
+    /**
+     * Builds the dump
+     */
 // Gets the number of tables if a dump of a database has been required
-if ($export_type == 'server') {
-    if (isset($db_select)) {
-        $tmp_select = implode($db_select, '|');
-        $tmp_select = '|' . $tmp_select . '|';
-    }
-    // Walk over databases
-    foreach ($GLOBALS['pma']->databases as $current_db) {
-        if ((isset($tmp_select) && strpos(' ' . $tmp_select, '|' . $current_db . '|'))
-            || !isset($tmp_select)) {
-            if (!PMA_exportDBHeader($current_db)) {
-                break 2;
-            }
-            if (!PMA_exportDBCreate($current_db)) {
-                break 2;
-            }
-            $tables = PMA_DBI_get_tables($current_db);
-            $views = array();
-            foreach ($tables as $table) {
-                // if this is a view, collect it for later; views must be exported
-                // after the tables
-                $is_view = PMA_Table::isView($current_db, $table);
-                if ($is_view) {
-                    $views[] = $table;
+    if ($export_type == 'server') {
+        if (isset($db_select)) {
+            $tmp_select = implode($db_select, '|');
+            $tmp_select = '|' . $tmp_select . '|';
+        }
+        // Walk over databases
+        foreach ($GLOBALS['pma']->databases as $current_db) {
+            if ((isset($tmp_select) && strpos(' ' . $tmp_select, '|' . $current_db . '|'))
+                || !isset($tmp_select)) {
+                if (!PMA_exportDBHeader($current_db)) {
+                    break 2;
                 }
-                if (isset($GLOBALS[$what . '_structure'])) {
-                    // for a view, export a stand-in definition of the table
-                    // to resolve view dependencies
-                    if (!PMA_exportStructure($current_db, $table, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, $is_view ? 'stand_in' : 'create_table', $export_type)) {
-                        break 3;
+                if (!PMA_exportDBCreate($current_db)) {
+                    break 2;
+                }
+                $tables = PMA_DBI_get_tables($current_db);
+                $views = array();
+                foreach ($tables as $table) {
+                    // if this is a view, collect it for later; views must be exported
+                    // after the tables
+                    $is_view = PMA_Table::isView($current_db, $table);
+                    if ($is_view) {
+                        $views[] = $table;
+                    }
+                    if (isset($GLOBALS[$what . '_structure'])) {
+                        // for a view, export a stand-in definition of the table
+                        // to resolve view dependencies
+                        if (!PMA_exportStructure($current_db, $table, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, $is_view ? 'stand_in' : 'create_table', $export_type)) {
+                            break 3;
+                        }
+                    }
+                    if (isset($GLOBALS[$what . '_data']) && !$is_view) {
+                        $local_query = 'SELECT * FROM ' . PMA_backquote($current_db) . '.' . PMA_backquote($table);
+                        if (!PMA_exportData($current_db, $table, $crlf, $err_url, $local_query)) {
+                            break 3;
+                        }
                     }
                 }
-                if (isset($GLOBALS[$what . '_data']) && ! $is_view) {
-                    $local_query  = 'SELECT * FROM ' . PMA_backquote($current_db) . '.' . PMA_backquote($table);
-                    if (!PMA_exportData($current_db, $table, $crlf, $err_url, $local_query)) {
-                        break 3;
+                foreach ($views as $view) {
+                    // no data export for a view
+                    if (isset($GLOBALS[$what . '_structure'])) {
+                        if (!PMA_exportStructure($current_db, $view, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, 'create_view', $export_type)) {
+                            break 3;
+                        }
                     }
                 }
-            }
-            foreach($views as $view) {
-                // no data export for a view
-                if (isset($GLOBALS[$what . '_structure'])) {
-                    if (!PMA_exportStructure($current_db, $view, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, 'create_view', $export_type)) {
-                        break 3;
-                    }
+                if (!PMA_exportDBFooter($current_db)) {
+                    break 2;
                 }
             }
-            if (!PMA_exportDBFooter($current_db)) {
-                break 2;
+        }
+    } elseif ($export_type == 'database') {
+        if (!PMA_exportDBHeader($db)) {
+            break;
+        }
+        $i = 0;
+        $views = array();
+        // $tables contains the choices from the user (via $table_select)
+        foreach ($tables as $table) {
+            // if this is a view, collect it for later; views must be exported after
+            // the tables
+            $is_view = PMA_Table::isView($db, $table);
+            if ($is_view) {
+                $views[] = $table;
+            }
+            if (isset($GLOBALS[$what . '_structure'])) {
+                // for a view, export a stand-in definition of the table
+                // to resolve view dependencies
+                if (!PMA_exportStructure($db, $table, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, $is_view ? 'stand_in' : 'create_table', $export_type)) {
+                    break 2;
+                }
+            }
+            if (isset($GLOBALS[$what . '_data']) && !$is_view) {
+                $local_query = 'SELECT * FROM ' . PMA_backquote($db) . '.' . PMA_backquote($table);
+                if (!PMA_exportData($db, $table, $crlf, $err_url, $local_query)) {
+                    break 2;
+                }
             }
         }
-    }
-} elseif ($export_type == 'database') {
-    if (!PMA_exportDBHeader($db)) {
-        break;
-    }
-    $i = 0;
-    $views = array();
-    // $tables contains the choices from the user (via $table_select)
-    foreach ($tables as $table) {
-        // if this is a view, collect it for later; views must be exported after
-        // the tables
-        $is_view = PMA_Table::isView($db, $table);
-        if ($is_view) {
-            $views[] = $table;
-        }
-        if (isset($GLOBALS[$what . '_structure'])) {
-            // for a view, export a stand-in definition of the table
-            // to resolve view dependencies
-            if (!PMA_exportStructure($db, $table, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, $is_view ? 'stand_in' : 'create_table', $export_type)) {
-                break 2;
+        foreach ($views as $view) {
+            // no data export for a view
+            if (isset($GLOBALS[$what . '_structure'])) {
+                if (!PMA_exportStructure($db, $view, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, 'create_view', $export_type)) {
+                    break 2;
+                }
             }
         }
-        if (isset($GLOBALS[$what . '_data']) && ! $is_view) {
-            $local_query  = 'SELECT * FROM ' . PMA_backquote($db) . '.' . PMA_backquote($table);
-            if (!PMA_exportData($db, $table, $crlf, $err_url, $local_query)) {
-                break 2;
-            }
-        }
-    }
-    foreach ($views as $view) {
-        // no data export for a view
-        if (isset($GLOBALS[$what . '_structure'])) {
-            if (!PMA_exportStructure($db, $view, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, 'create_view', $export_type)) {
-                break 2;
-            }
-        }
-    }
 
-    if (!PMA_exportDBFooter($db)) {
-        break;
-    }
-} else {
-    if (!PMA_exportDBHeader($db)) {
-        break;
-    }
-    // We export just one table
-
-    if ($limit_to > 0 && $limit_from >= 0) {
-        $add_query  = ' LIMIT '
-                    . (($limit_from > 0) ? $limit_from . ', ' : '')
-                    . $limit_to;
+        if (!PMA_exportDBFooter($db)) {
+            break;
+        }
     } else {
-        $add_query  = '';
-    }
+        if (!PMA_exportDBHeader($db)) {
+            break;
+        }
+        // We export just one table
 
-    $is_view = PMA_Table::isView($db, $table);
-    if (isset($GLOBALS[$what . '_structure'])) {
-        if (!PMA_exportStructure($db, $table, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, $is_view ? 'create_view' : 'create_table', $export_type)) {
-            break;
-        }
-    }
-    // If this is an export of a single view, we have to export data;
-    // for example, a PDF report
-    if (isset($GLOBALS[$what . '_data'])) {
-        if (!empty($sql_query)) {
-            // only preg_replace if needed
-            if (!empty($add_query)) {
-                // remove trailing semicolon before adding a LIMIT
-                $sql_query = preg_replace('%;\s*$%', '', $sql_query);
-            }
-            $local_query = $sql_query . $add_query;
-            PMA_DBI_select_db($db);
+        if ($limit_to > 0 && $limit_from >= 0) {
+            $add_query = ' LIMIT '
+                . (($limit_from > 0) ? $limit_from . ', ' : '')
+                . $limit_to;
         } else {
-            $local_query  = 'SELECT * FROM ' . PMA_backquote($db) . '.' . PMA_backquote($table) . $add_query;
+            $add_query = '';
         }
-        if (!PMA_exportData($db, $table, $crlf, $err_url, $local_query)) {
+
+        $is_view = PMA_Table::isView($db, $table);
+        if (isset($GLOBALS[$what . '_structure'])) {
+            if (!PMA_exportStructure($db, $table, $crlf, $err_url, $do_relation, $do_comments, $do_mime, $do_dates, $is_view ? 'create_view' : 'create_table', $export_type)) {
+                break;
+            }
+        }
+        // If this is an export of a single view, we have to export data;
+        // for example, a PDF report
+        if (isset($GLOBALS[$what . '_data'])) {
+            if (!empty($sql_query)) {
+                // only preg_replace if needed
+                if (!empty($add_query)) {
+                    // remove trailing semicolon before adding a LIMIT
+                    $sql_query = preg_replace('%;\s*$%', '', $sql_query);
+                }
+                $local_query = $sql_query . $add_query;
+                PMA_DBI_select_db($db);
+            } else {
+                $local_query = 'SELECT * FROM ' . PMA_backquote($db) . '.' . PMA_backquote($table) . $add_query;
+            }
+            if (!PMA_exportData($db, $table, $crlf, $err_url, $local_query)) {
+                break;
+            }
+        }
+        if (!PMA_exportDBFooter($db)) {
             break;
         }
     }
-    if (!PMA_exportDBFooter($db)) {
+    if (!PMA_exportFooter()) {
         break;
     }
-}
-if (!PMA_exportFooter()) {
-    break;
-}
 
 } while (false);
 // End of fake loop
@@ -577,17 +576,15 @@ if (!empty($asfile)) {
     if ($compression == 'zip') {
         if (@function_exists('gzcompress')) {
             $zipfile = new zipfile();
-            $zipfile -> addFile($dump_buffer, substr($filename, 0, -4));
-            $dump_buffer = $zipfile -> file();
+            $zipfile->addFile($dump_buffer, substr($filename, 0, -4));
+            $dump_buffer = $zipfile->file();
         }
-    }
-    // 2. as a bzipped file
+    } // 2. as a bzipped file
     elseif ($compression == 'bzip') {
         if (@function_exists('bzcompress')) {
             $dump_buffer = bzcompress($dump_buffer);
         }
-    }
-    // 3. as a gzipped file
+    } // 3. as a gzipped file
     elseif ($compression == 'gzip') {
         if (@function_exists('gzencode') && !@ini_get('zlib.output_compression')) {
             // without the optional parameter level because it bug
@@ -599,7 +596,7 @@ if (!empty($asfile)) {
     if ($save_on_server) {
         $write_result = @fwrite($file_handle, $dump_buffer);
         fclose($file_handle);
-        if (strlen($dump_buffer) !=0 && (!$write_result || ($write_result != strlen($dump_buffer)))) {
+        if (strlen($dump_buffer) != 0 && (!$write_result || ($write_result != strlen($dump_buffer)))) {
             $message = new PMA_Message('strNoSpace', PMA_Message::ERROR, $save_filename);
         } else {
             $message = new PMA_Message('strDumpSaved', PMA_Message::SUCCESS, $save_filename);
@@ -621,8 +618,7 @@ if (!empty($asfile)) {
     } else {
         echo $dump_buffer;
     }
-}
-/**
+} /**
  * Displays the dump...
  */
 else {
@@ -631,31 +627,32 @@ else {
      */
     //echo '    </pre>' . "\n";
     echo '</textarea>' . "\n"
-       . '    </form>' . "\n";
+        . '    </form>' . "\n";
     echo '</div>' . "\n";
     echo "\n";
-?>
-<script type="text/javascript">
-//<![CDATA[
-    var bodyWidth=null; var bodyHeight=null;
-    if (document.getElementById('textSQLDUMP')) {
-        bodyWidth  = self.innerWidth;
-        bodyHeight = self.innerHeight;
-        if (!bodyWidth && !bodyHeight) {
-            if (document.compatMode && document.compatMode == "BackCompat") {
-                bodyWidth  = document.body.clientWidth;
-                bodyHeight = document.body.clientHeight;
-            } else if (document.compatMode && document.compatMode == "CSS1Compat") {
-                bodyWidth  = document.documentElement.clientWidth;
-                bodyHeight = document.documentElement.clientHeight;
+    ?>
+    <script type="text/javascript">
+        //<![CDATA[
+        var bodyWidth = null;
+        var bodyHeight = null;
+        if (document.getElementById('textSQLDUMP')) {
+            bodyWidth = self.innerWidth;
+            bodyHeight = self.innerHeight;
+            if (!bodyWidth && !bodyHeight) {
+                if (document.compatMode && document.compatMode == "BackCompat") {
+                    bodyWidth = document.body.clientWidth;
+                    bodyHeight = document.body.clientHeight;
+                } else if (document.compatMode && document.compatMode == "CSS1Compat") {
+                    bodyWidth = document.documentElement.clientWidth;
+                    bodyHeight = document.documentElement.clientHeight;
+                }
             }
+            document.getElementById('textSQLDUMP').style.width = (bodyWidth - 50) + 'px';
+            document.getElementById('textSQLDUMP').style.height = (bodyHeight - 100) + 'px';
         }
-        document.getElementById('textSQLDUMP').style.width=(bodyWidth-50) + 'px';
-        document.getElementById('textSQLDUMP').style.height=(bodyHeight-100) + 'px';
-    }
-//]]>
-</script>
-<?php
+        //]]>
+    </script>
+    <?php
     require_once './libraries/footer.inc.php';
 } // end if
 ?>

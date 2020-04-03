@@ -28,7 +28,7 @@
  * @version  $Id: sqlvalidator.class.php 11990 2008-11-24 11:12:52Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -42,10 +42,11 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
 } else {
     // Ok, we have SOAP Support, so let's use it!
 
-/**
- * @package phpMyAdmin
- */
-    class PMA_SQLValidator {
+    /**
+     * @package phpMyAdmin
+     */
+    class PMA_SQLValidator
+    {
 
         var $url;
         var $service_name;
@@ -73,7 +74,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Service opening
          *
-         * @param  string  URL of Mimer SQL Validator WSDL file
+         * @param string  URL of Mimer SQL Validator WSDL file
          *
          * @return object  Object to use
          *
@@ -89,36 +90,36 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Service initializer to connect to server
          *
-         * @param  object   Service object
-         * @param  string   Username
-         * @param  string   Password
-         * @param  string   Name of calling program
-         * @param  string   Version of calling program
-         * @param  string   Target DBMS
-         * @param  string   Version of target DBMS
-         * @param  string   Connection Technology
-         * @param  string   version of Connection Technology
-         * @param  integer  boolean of 1/0 to specify if we are an interactive system
+         * @param object   Service object
+         * @param string   Username
+         * @param string   Password
+         * @param string   Name of calling program
+         * @param string   Version of calling program
+         * @param string   Target DBMS
+         * @param string   Version of target DBMS
+         * @param string   Connection Technology
+         * @param string   version of Connection Technology
+         * @param integer  boolean of 1/0 to specify if we are an interactive system
          *
          * @return object   stdClass return object with data
          *
          * @access private
          */
         function _openSession($obj, $username, $password,
+                              $calling_program, $calling_program_version,
+                              $target_dbms, $target_dbms_version,
+                              $connection_technology, $connection_technology_version,
+                              $interactive)
+        {
+            $use_array = array("a_userName" => $username, "a_password" => $password, "a_callingProgram" => $calling_program, "a_callingProgramVersion" => $calling_program_version, "a_targetDbms" => $target_dbms, "a_targetDbmsVersion" => $target_dbms_version, "a_connectionTechnology" => $connection_technology, "a_connectionTechnologyVersion" => $connection_technology_version, "a_interactive" => $interactive);
+            $ret = $obj->call("openSession", $use_array);
+
+            // This is the old version that needed the overload extension
+            /* $ret = $obj->openSession($username, $password,
                                       $calling_program, $calling_program_version,
                                       $target_dbms, $target_dbms_version,
                                       $connection_technology, $connection_technology_version,
-                                      $interactive)
-        {
-    $use_array = array("a_userName" => $username, "a_password" => $password, "a_callingProgram" => $calling_program, "a_callingProgramVersion" => $calling_program_version, "a_targetDbms" => $target_dbms, "a_targetDbmsVersion" => $target_dbms_version, "a_connectionTechnology" => $connection_technology, "a_connectionTechnologyVersion" => $connection_technology_version, "a_interactive" => $interactive);
-            $ret = $obj->call("openSession", $use_array);
-
-           // This is the old version that needed the overload extension
-           /* $ret = $obj->openSession($username, $password,
-                                     $calling_program, $calling_program_version,
-                                     $target_dbms, $target_dbms_version,
-                                     $connection_technology, $connection_technology_version,
-                                     $interactive); */
+                                      $interactive); */
 
             return $ret;
         } // end of the "_openSession()" function
@@ -127,10 +128,10 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Validator sytem call
          *
-         * @param  object  Service object
-         * @param  object  Session object
-         * @param  string  SQL Query to validate
-         * @param  string  Data return type
+         * @param object  Service object
+         * @param object  Session object
+         * @param string  SQL Query to validate
+         * @param string  Data return type
          *
          * @return object  stClass return with data
          *
@@ -138,11 +139,11 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
          */
         function _validateSQL($obj, $session, $sql, $method)
         {
-    $use_array = array("a_sessionId" => $session->sessionId, "a_sessionKey" => $session->sessionKey, "a_SQL" => $sql, "a_resultType" => $this->output_type);
+            $use_array = array("a_sessionId" => $session->sessionId, "a_sessionKey" => $session->sessionKey, "a_SQL" => $sql, "a_resultType" => $this->output_type);
             $res = $obj->call("validateSQL", $use_array);
 
-           // This is the old version that needed the overload extension
-           // $res = $obj->validateSQL($session->sessionId, $session->sessionKey, $sql, $this->output_type);
+            // This is the old version that needed the overload extension
+            // $res = $obj->validateSQL($session->sessionId, $session->sessionKey, $sql, $this->output_type);
             return $res;
         } // end of the "validateSQL()" function
 
@@ -150,7 +151,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Validator sytem call
          *
-         * @param  string  SQL Query to validate
+         * @param string  SQL Query to validate
          *
          * @return object  stdClass return with data
          *
@@ -161,7 +162,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         function _validate($sql)
         {
             $ret = $this->_validateSQL($this->service_link, $this->session_data,
-                                               $sql, $this->output_type);
+                $sql, $this->output_type);
             return $ret;
         } // end of the "validate()" function
 
@@ -177,19 +178,19 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
          */
         function __construct()
         {
-            $this->url                           = 'http://sqlvalidator.mimer.com/v1/services';
-            $this->service_name                  = 'SQL99Validator';
-            $this->wsdl                          = '?wsdl';
+            $this->url = 'http://sqlvalidator.mimer.com/v1/services';
+            $this->service_name = 'SQL99Validator';
+            $this->wsdl = '?wsdl';
 
-            $this->output_type                   = 'html';
+            $this->output_type = 'html';
 
-            $this->username                      = 'anonymous';
-            $this->password                      = '';
-            $this->calling_program               = 'PHP_SQLValidator';
-            $this->calling_program_version       = '$Revision: 11990 $';
-            $this->target_dbms                   = 'N/A';
-            $this->target_dbms_version           = 'N/A';
-            $this->connection_technology         = 'PHP';
+            $this->username = 'anonymous';
+            $this->password = '';
+            $this->calling_program = 'PHP_SQLValidator';
+            $this->calling_program_version = '$Revision: 11990 $';
+            $this->target_dbms = 'N/A';
+            $this->target_dbms_version = 'N/A';
+            $this->connection_technology = 'PHP';
             $this->connection_technology_version = phpversion();
             $this->interactive = 1;
 
@@ -201,8 +202,8 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Sets credentials
          *
-         * @param  string  the username
-         * @param  string  the password
+         * @param string  the username
+         * @param string  the password
          *
          * @access public
          */
@@ -216,14 +217,14 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Sets the calling program
          *
-         * @param  string  the calling program name
-         * @param  string  the calling program revision
+         * @param string  the calling program name
+         * @param string  the calling program revision
          *
          * @access public
          */
         function setCallingProgram($calling_program, $calling_program_version)
         {
-            $this->calling_program         = $calling_program;
+            $this->calling_program = $calling_program;
             $this->calling_program_version = $calling_program_version;
         } // end of the "setCallingProgram()" function
 
@@ -231,14 +232,14 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Appends the calling program
          *
-         * @param  string  the calling program name
-         * @param  string  the calling program revision
+         * @param string  the calling program name
+         * @param string  the calling program revision
          *
          * @access public
          */
         function appendCallingProgram($calling_program, $calling_program_version)
         {
-            $this->calling_program         .= ' - ' . $calling_program;
+            $this->calling_program .= ' - ' . $calling_program;
             $this->calling_program_version .= ' - ' . $calling_program_version;
         } // end of the "appendCallingProgram()" function
 
@@ -246,14 +247,14 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Sets the target DBMS
          *
-         * @param  string  the target DBMS name
-         * @param  string  the target DBMS revision
+         * @param string  the target DBMS name
+         * @param string  the target DBMS revision
          *
          * @access public
          */
         function setTargetDbms($target_dbms, $target_dbms_version)
         {
-            $this->target_dbms         = $target_dbms;
+            $this->target_dbms = $target_dbms;
             $this->target_dbms_version = $target_dbms_version;
         } // end of the "setTargetDbms()" function
 
@@ -261,14 +262,14 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Appends the target DBMS
          *
-         * @param  string  the target DBMS name
-         * @param  string  the target DBMS revision
+         * @param string  the target DBMS name
+         * @param string  the target DBMS revision
          *
          * @access public
          */
         function appendTargetDbms($target_dbms, $target_dbms_version)
         {
-            $this->target_dbms         .= ' - ' . $target_dbms;
+            $this->target_dbms .= ' - ' . $target_dbms;
             $this->target_dbms_version .= ' - ' . $target_dbms_version;
         } // end of the "appendTargetDbms()" function
 
@@ -276,14 +277,14 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Sets the connection technology used
          *
-         * @param  string  the connection technology name
-         * @param  string  the connection technology revision
+         * @param string  the connection technology name
+         * @param string  the connection technology revision
          *
          * @access public
          */
         function setConnectionTechnology($connection_technology, $connection_technology_version)
         {
-            $this->connection_technology         = $connection_technology;
+            $this->connection_technology = $connection_technology;
             $this->connection_technology_version = $connection_technology_version;
         } // end of the "setConnectionTechnology()" function
 
@@ -291,14 +292,14 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Appends the connection technology used
          *
-         * @param  string  the connection technology name
-         * @param  string  the connection technology revision
+         * @param string  the connection technology name
+         * @param string  the connection technology revision
          *
          * @access public
          */
         function appendConnectionTechnology($connection_technology, $connection_technology_version)
         {
-            $this->connection_technology         .= ' - ' . $connection_technology;
+            $this->connection_technology .= ' - ' . $connection_technology;
             $this->connection_technology_version .= ' - ' . $connection_technology_version;
         } // end of the "appendConnectionTechnology()" function
 
@@ -306,7 +307,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Sets whether interactive mode should be used or not
          *
-         * @param  integer  whether interactive mode should be used or not
+         * @param integer  whether interactive mode should be used or not
          *
          * @access public
          */
@@ -319,7 +320,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Sets the output type to use
          *
-         * @param  string  the output type to use
+         * @param string  the output type to use
          *
          * @access public
          */
@@ -350,10 +351,10 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         function startSession()
         {
             $this->session_data = $this->_openSession($this->service_link, $this->username, $this->password,
-                                                              $this->calling_program, $this->calling_program_version,
-                                                              $this->target_dbms, $this->target_dbms_version,
-                                                              $this->connection_technology, $this->connection_technology_version,
-                                                              $this->interactive);
+                $this->calling_program, $this->calling_program_version,
+                $this->target_dbms, $this->target_dbms_version,
+                $this->connection_technology, $this->connection_technology_version,
+                $this->interactive);
 
             if (isset($this->session_data) && ($this->session_data != null)
                 && ($this->session_data->target != $this->url)) {
@@ -379,7 +380,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Call to determine just if a query is valid or not.
          *
-         * @param  string SQL statement to validate
+         * @param string SQL statement to validate
          *
          * @return string Validator string from Mimer
          *
@@ -395,7 +396,7 @@ if (!function_exists('class_exists') || !class_exists('SOAP_Client')) {
         /**
          * Call for complete validator response
          *
-         * @param  string SQL statement to validate
+         * @param string SQL statement to validate
          *
          * @return string Validator string from Mimer
          *

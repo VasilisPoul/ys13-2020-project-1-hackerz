@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /*========================================================================
 *   Open eClass 2.3
@@ -43,20 +43,20 @@ $nameTools = $m['grades'];
 mysql_select_db($currentCourseID);
 
 if ($is_adminOfCourse and isset($_GET['assignment']) and isset($_GET['submission'])) {
-		$assign = get_assignment_details($_GET['assignment']);
-		$navigation[] = array("url"=>"work.php", "name"=>$langWorks);
-		$navigation[] = array("url"=>"work.php?id=$_GET[assignment]", "name"=>$m['WorkView']);
-		show_edit_form($_GET['assignment'], $_GET['submission'], $assign);
-		draw($tool_content, 2);
+    $assign = get_assignment_details($_GET['assignment']);
+    $navigation[] = array("url" => "work.php", "name" => $langWorks);
+    $navigation[] = array("url" => "work.php?id=$_GET[assignment]", "name" => $m['WorkView']);
+    show_edit_form($_GET['assignment'], $_GET['submission'], $assign);
+    draw($tool_content, 2);
 } else {
-		header('Location: work.php');
-		exit;
+    header('Location: work.php');
+    exit;
 }
 
 // Returns an array of the details of assignment $id
 function get_assignment_details($id)
 {
-	return mysql_fetch_array(db_query("SELECT * FROM assignments WHERE id = '$id'"));
+    return mysql_fetch_array(db_query("SELECT * FROM assignments WHERE id = '$id'"));
 }
 
 
@@ -64,17 +64,17 @@ function get_assignment_details($id)
 // $assign contains an array with the assignment's details
 function show_edit_form($id, $sid, $assign)
 {
-	global $m, $langGradeOk, $tool_content, $langGradeWork;
+    global $m, $langGradeOk, $tool_content, $langGradeWork;
 
-	if ($sub = mysql_fetch_array(db_query("SELECT * FROM assignment_submit WHERE id = '$sid'"))) {
-		
-		$uid_2_name = uid_to_name($sub['uid']);
-		if (!empty($sub['group_id'])) {
-					$group_submission = "($m[groupsubmit] ".
-						"<a href='../group/group_space.php?userGroupId=$sub[group_id]'>".
-						"$m[ofgroup] $sub[group_id]</a>)";
-			} else $group_submission = "";
-		$tool_content .= <<<cData
+    if ($sub = mysql_fetch_array(db_query("SELECT * FROM assignment_submit WHERE id = '$sid'"))) {
+
+        $uid_2_name = uid_to_name($sub['uid']);
+        if (!empty($sub['group_id'])) {
+            $group_submission = "($m[groupsubmit] " .
+                "<a href='../group/group_space.php?userGroupId=$sub[group_id]'>" .
+                "$m[ofgroup] $sub[group_id]</a>)";
+        } else $group_submission = "";
+        $tool_content .= <<<cData
 
     <form method="post" action="work.php">
     <input type="hidden" name="assignment" value="${id}">
@@ -98,7 +98,7 @@ function show_edit_form($id, $sid, $assign)
     </tr>
 cData;
 
-	$tool_content .= <<<cData
+        $tool_content .= <<<cData
 
     <tr>
       <th class="left">${m['grade']}:</th>
@@ -119,9 +119,9 @@ cData;
     <br/>
 cData;
 
-	} else {
-		$tool_content .= "<p>error - no such submission with id $sid</p>\n";
-	}
+    } else {
+        $tool_content .= "<p>error - no such submission with id $sid</p>\n";
+    }
 }
 
 ?>

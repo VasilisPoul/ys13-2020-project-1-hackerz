@@ -25,33 +25,33 @@ error_reporting(5);
 
 
 // print out the bar graph
-function create_bargraph ($percent, $a, $b, $type = "")
+function create_bargraph($percent, $a, $b, $type = "")
 {
-    if ($percent == 0) { 
+    if ($percent == 0) {
         return '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/bar_left.gif" alt="">'
-              . '<img src="templates/' . TEMPLATE_SET . '/images/bar_middle.gif" height="' . BAR_HEIGHT . '" width="1" alt="">'
-              . '<img src="templates/' . TEMPLATE_SET . '/images/bar_right.gif" height="' . BAR_HEIGHT . '" alt="">';
+            . '<img src="templates/' . TEMPLATE_SET . '/images/bar_middle.gif" height="' . BAR_HEIGHT . '" width="1" alt="">'
+            . '<img src="templates/' . TEMPLATE_SET . '/images/bar_right.gif" height="' . BAR_HEIGHT . '" alt="">';
     } else if (($percent < 90) || ($type == "iso9660")) {
         return '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/bar_left.gif" alt="">'
-              . '<img src="templates/' . TEMPLATE_SET . '/images/bar_middle.gif" height="' . BAR_HEIGHT . '" width="' . ($a * $b) . '" alt="">'
-              . '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/bar_right.gif" alt="">';
+            . '<img src="templates/' . TEMPLATE_SET . '/images/bar_middle.gif" height="' . BAR_HEIGHT . '" width="' . ($a * $b) . '" alt="">'
+            . '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/bar_right.gif" alt="">';
     } else {
         return '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/redbar_left.gif" alt="">'
-             . '<img src="templates/' . TEMPLATE_SET . '/images/redbar_middle.gif" height="' . BAR_HEIGHT . '" width="' . ($a * $b) . '" alt="">'
-             . '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/redbar_right.gif" alt="">';
+            . '<img src="templates/' . TEMPLATE_SET . '/images/redbar_middle.gif" height="' . BAR_HEIGHT . '" width="' . ($a * $b) . '" alt="">'
+            . '<img height="' . BAR_HEIGHT . '" src="templates/' . TEMPLATE_SET . '/images/redbar_right.gif" alt="">';
     }
 }
 
 
 // Find a system program.  Do path checking
-function find_program ($program)
+function find_program($program)
 {
     $path = array('/bin', '/sbin', '/usr/bin', '/usr/sbin', '/usr/local/bin', '/usr/local/sbin');
     while ($this_path = current($path)) {
         if (is_executable("$this_path/$program")) {
-        return "$this_path/$program";
-    }
-    next($path);
+            return "$this_path/$program";
+        }
+        next($path);
     }
     return;
 }
@@ -61,19 +61,21 @@ function find_program ($program)
 // does very crude pipe checking.  you need ' | ' for it to work
 // ie $program = execute_program('netstat', '-anp | grep LIST');
 // NOT $program = execute_program('netstat', '-anp|grep LIST');
-function execute_program ($program, $args = '')
+function execute_program($program, $args = '')
 {
     $buffer = '';
     $program = find_program($program);
 
-    if (!$program) { return; }
+    if (!$program) {
+        return;
+    }
 
     // see if we've gotten a |, if we have we need to do patch checking on the cmd
     if ($args) {
         $args_list = split(' ', $args);
         for ($i = 0; $i < count($args_list); $i++) {
             if ($args_list[$i] == '|') {
-                $cmd = $args_list[$i+1];
+                $cmd = $args_list[$i + 1];
                 $new_cmd = find_program($cmd);
                 $args = str_replace("| $cmd", "| $new_cmd", $args);
             }
@@ -94,22 +96,22 @@ function execute_program ($program, $args = '')
 
 // function that emulate the compat_array_keys function of PHP4
 // for PHP3 compatability
-function compat_array_keys ($arr)
+function compat_array_keys($arr)
 {
-        $result = array();
+    $result = array();
 
-        while (list($key, $val) = each($arr)) {
-            $result[] = $key;
-        }
-        return $result;
+    while (list($key, $val) = each($arr)) {
+        $result[] = $key;
+    }
+    return $result;
 }
 
 
 // function that emulates the compat_in_array function of PHP4
 // for PHP3 compatability
-function compat_in_array ($value, $arr)
+function compat_in_array($value, $arr)
 {
-    while (list($key,$val) = each($arr)) {
+    while (list($key, $val) = each($arr)) {
         if ($value == $val) {
             return true;
         }
@@ -121,18 +123,18 @@ function compat_in_array ($value, $arr)
 // A helper function, when passed a number representing KB,
 // and optionally the number of decimal places required,
 // it returns a formated number string, with unit identifier.
-function format_bytesize ($kbytes, $dec_places = 2)
+function format_bytesize($kbytes, $dec_places = 2)
 {
     global $text;
     if ($kbytes > 1048576) {
-        $result  = sprintf('%.' . $dec_places . 'f', $kbytes / 1048576);
-        $result .= '&nbsp;'.$text['gb'];
+        $result = sprintf('%.' . $dec_places . 'f', $kbytes / 1048576);
+        $result .= '&nbsp;' . $text['gb'];
     } elseif ($kbytes > 1024) {
-        $result  = sprintf('%.' . $dec_places . 'f', $kbytes / 1024);
-        $result .= '&nbsp;'.$text['mb'];
+        $result = sprintf('%.' . $dec_places . 'f', $kbytes / 1024);
+        $result .= '&nbsp;' . $text['mb'];
     } else {
-        $result  = sprintf('%.' . $dec_places . 'f', $kbytes);
-        $result .= '&nbsp;'.$text['kb'];
+        $result = sprintf('%.' . $dec_places . 'f', $kbytes);
+        $result .= '&nbsp;' . $text['kb'];
     }
     return $result;
 }

@@ -6,7 +6,7 @@
  * @package phpMyAdmin-Export-CSV
  * @version $Id: excel.php 12494 2009-05-25 08:11:32Z helmo $
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -23,17 +23,17 @@ if (isset($plugin_list)) {
             array('type' => 'bool', 'name' => 'removeCRLF', 'text' => 'strRemoveCRLF'),
             array('type' => 'bool', 'name' => 'columns', 'text' => 'strPutColNames'),
             array(
-                'type' => 'select', 
-                'name' => 'edition', 
+                'type' => 'select',
+                'name' => 'edition',
                 'values' => array(
                     'win' => 'Windows',
-                    'mac_excel2003' => 'Excel 2003 / Macintosh', 
-                    'mac_excel2008' => 'Excel 2008 / Macintosh'), 
+                    'mac_excel2003' => 'Excel 2003 / Macintosh',
+                    'mac_excel2008' => 'Excel 2008 / Macintosh'),
                 'text' => 'strExcelEdition'),
             array('type' => 'hidden', 'name' => 'data'),
-            ),
+        ),
         'options_text' => 'strOptions',
-        );
+    );
 } else {
     /* Everything rest is coded in csv plugin */
     require './libraries/export/csv.php';

@@ -33,9 +33,9 @@ include '../../include/baseTheme.php';
 include "../../include/lib/fileDisplayLib.inc.php";
 $tool_content = $head_content = "";
 if ($language == 'greek')
-        $lang_editor = 'el';
+    $lang_editor = 'el';
 else
-        $lang_editor = 'en';
+    $lang_editor = 'en';
 
 $head_content .= "<script type='text/javascript'>
 _editor_url  = '$urlAppend/include/xinha/';
@@ -50,68 +50,77 @@ $id = intval($_REQUEST['id']);
 $q = db_query("SELECT * FROM course_units
                WHERE id=$id AND course_id=$cours_id");
 if (!$q or mysql_num_rows($q) == 0) {
-        $nameTools = $langUnitUnknown;
-        draw('', 2, 'units', $head_content);
-        exit;
+    $nameTools = $langUnitUnknown;
+    draw('', 2, 'units', $head_content);
+    exit;
 }
 
 if (isset($_POST['submit_doc'])) {
-	insert_docs($id);
+    insert_docs($id);
 } elseif (isset($_POST['submit_text'])) {
-	$comments = $_POST['comments'];
-	insert_text($id);
+    $comments = $_POST['comments'];
+    insert_text($id);
 } elseif (isset($_POST['submit_lp'])) {
-	insert_lp($id);
+    insert_lp($id);
 } elseif (isset($_POST['submit_video'])) {
-        insert_video($id);
+    insert_video($id);
 } elseif (isset($_POST['submit_exercise'])) {
-        insert_exercise($id);
+    insert_exercise($id);
 } elseif (isset($_POST['submit_work'])) {
-        insert_work($id);
+    insert_work($id);
 } elseif (isset($_POST['submit_forum'])) {
-        insert_forum($id);
+    insert_forum($id);
 } elseif (isset($_POST['submit_wiki'])) {
-        insert_wiki($id);
+    insert_wiki($id);
 }
 
 
 $info = mysql_fetch_array($q);
-$navigation[] = array("url"=>"index.php?id=$id", "name"=> htmlspecialchars($info['title']));
+$navigation[] = array("url" => "index.php?id=$id", "name" => htmlspecialchars($info['title']));
 
 switch ($_GET['type']) {
-        case 'work': $nameTools = "$langAdd $langInsertWork";
-                include 'insert_work.php';
-                display_assignments();
-                break;
-        case 'doc': $nameTools = "$langAdd $langInsertDoc";
-                include 'insert_doc.php';
-                display_docs();
-                break;
-        case 'exercise': $nameTools = "$langAdd $langInsertExercise";
-                include 'insert_exercise.php';
-                display_exercises();
-                break;
-        case 'text': $nameTools = "$langAdd $langInsertText";
-                include 'insert_text.php';
-                display_text();
-                break;
-	case 'lp': $nameTools = "$langAdd $langLearningPath1";
-                include 'insert_lp.php';
-                display_lp();
-                break;
-	case 'video': $nameTools = "$langAddV";
-                include 'insert_video.php';
-                display_video();
-                break;
-	case 'forum': $nameTools = "$langAdd $langInsertForum";
-                include 'insert_forum.php';
-                display_forum();
-                break;
-        case 'wiki': $nameTools = "$langAdd $langInsertWiki";
-                include 'insert_wiki.php';
-                display_wiki();
-                break;
-        default: break;
+    case 'work':
+        $nameTools = "$langAdd $langInsertWork";
+        include 'insert_work.php';
+        display_assignments();
+        break;
+    case 'doc':
+        $nameTools = "$langAdd $langInsertDoc";
+        include 'insert_doc.php';
+        display_docs();
+        break;
+    case 'exercise':
+        $nameTools = "$langAdd $langInsertExercise";
+        include 'insert_exercise.php';
+        display_exercises();
+        break;
+    case 'text':
+        $nameTools = "$langAdd $langInsertText";
+        include 'insert_text.php';
+        display_text();
+        break;
+    case 'lp':
+        $nameTools = "$langAdd $langLearningPath1";
+        include 'insert_lp.php';
+        display_lp();
+        break;
+    case 'video':
+        $nameTools = "$langAddV";
+        include 'insert_video.php';
+        display_video();
+        break;
+    case 'forum':
+        $nameTools = "$langAdd $langInsertForum";
+        include 'insert_forum.php';
+        display_forum();
+        break;
+    case 'wiki':
+        $nameTools = "$langAdd $langInsertWiki";
+        include 'insert_wiki.php';
+        display_wiki();
+        break;
+    default:
+        break;
 }
 
 draw($tool_content, 2, 'units', $head_content);
@@ -119,94 +128,94 @@ draw($tool_content, 2, 'units', $head_content);
 // insert docs in database
 function insert_docs($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	
-	foreach ($_POST['document'] as $file_id) {
-		$order++;
-		$file = mysql_fetch_array(db_query("SELECT * FROM document
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+
+    foreach ($_POST['document'] as $file_id) {
+        $order++;
+        $file = mysql_fetch_array(db_query("SELECT * FROM document
 			WHERE id =" . intval($file_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-		$title = (empty($file['title']))? $file['filename']: $file['title'];
-		db_query("INSERT INTO unit_resources SET unit_id=$id, type='doc', title=" .
-			 autoquote($title) . ", comments=" . autoquote($file['comment']) .
-			 ", visibility='$file[visibility]', `order`=$order, `date`=NOW(), res_id=$file[id]",
-			 $GLOBALS['mysqlMainDb']); 
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+        $title = (empty($file['title'])) ? $file['filename'] : $file['title'];
+        db_query("INSERT INTO unit_resources SET unit_id=$id, type='doc', title=" .
+            autoquote($title) . ", comments=" . autoquote($file['comment']) .
+            ", visibility='$file[visibility]', `order`=$order, `date`=NOW(), res_id=$file[id]",
+            $GLOBALS['mysqlMainDb']);
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 // insert text in database
 function insert_text($id)
 {
-	global $title, $comments;
-	
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	$order++;
-	db_query("INSERT INTO unit_resources SET unit_id=$id, type='text', title='', 
+    global $title, $comments;
+
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+    $order++;
+    db_query("INSERT INTO unit_resources SET unit_id=$id, type='text', title='', 
 		comments=" . autoquote($comments) . ", visibility='v', `order`=$order, `date`=NOW(), res_id=0",
-		$GLOBALS['mysqlMainDb']);
-			
-	header('Location: index.php?id=' . $id);
-	exit;
+        $GLOBALS['mysqlMainDb']);
+
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 
 // insert lp in database
 function insert_lp($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	
-	foreach ($_POST['lp'] as $lp_id) {
-		$order++;
-		$lp = mysql_fetch_array(db_query("SELECT * FROM lp_learnPath
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+
+    foreach ($_POST['lp'] as $lp_id) {
+        $order++;
+        $lp = mysql_fetch_array(db_query("SELECT * FROM lp_learnPath
 			WHERE learnPath_id =" . intval($lp_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-		if ($lp['visibility'] == 'HIDE') {
-			 $visibility = 'i';
-		} else {
-			$visibility = 'v';
-		}
-			db_query("INSERT INTO unit_resources SET unit_id=$id, type='lp', title=" .
-			quote($lp['name']) . ", comments=" . quote($lp['comment']) .
-			", visibility='$visibility', `order`=$order, `date`=NOW(), res_id=$lp[learnPath_id]",
-			$GLOBALS['mysqlMainDb']);
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+        if ($lp['visibility'] == 'HIDE') {
+            $visibility = 'i';
+        } else {
+            $visibility = 'v';
+        }
+        db_query("INSERT INTO unit_resources SET unit_id=$id, type='lp', title=" .
+            quote($lp['name']) . ", comments=" . quote($lp['comment']) .
+            ", visibility='$visibility', `order`=$order, `date`=NOW(), res_id=$lp[learnPath_id]",
+            $GLOBALS['mysqlMainDb']);
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 // insert video in database
 function insert_video($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	
-	foreach ($_POST['video'] as $video_id) {
-		$order++;
-                list($table, $res_id) = explode(':', $video_id);
-                $res_id = intval($res_id);
-                $table = ($table == 'video')? 'video': 'videolinks';
-		$row = mysql_fetch_array(db_query("SELECT * FROM $table
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+
+    foreach ($_POST['video'] as $video_id) {
+        $order++;
+        list($table, $res_id) = explode(':', $video_id);
+        $res_id = intval($res_id);
+        $table = ($table == 'video') ? 'video' : 'videolinks';
+        $row = mysql_fetch_array(db_query("SELECT * FROM $table
 			WHERE id = $res_id", $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-                db_query("INSERT INTO unit_resources SET unit_id=$id, type='$table', title=" . quote($row['titre']) . ", comments=" . quote($row['description']) . ", visibility='v', `order`=$order, `date`=NOW(), res_id=$res_id", $GLOBALS['mysqlMainDb']);
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+        db_query("INSERT INTO unit_resources SET unit_id=$id, type='$table', title=" . quote($row['titre']) . ", comments=" . quote($row['description']) . ", visibility='v', `order`=$order, `date`=NOW(), res_id=$res_id", $GLOBALS['mysqlMainDb']);
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 // insert work (assignment) in database
 function insert_work($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	
-	foreach ($_POST['work'] as $work_id) {
-		$order++;
-		$work = mysql_fetch_array(db_query("SELECT * FROM assignments
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+
+    foreach ($_POST['work'] as $work_id) {
+        $order++;
+        $work = mysql_fetch_array(db_query("SELECT * FROM assignments
 			WHERE id =" . intval($work_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-		if ($work['active'] == '0') {
-			 $visibility = 'i';
-		} else {
-			$visibility = 'v';
-		}
-		db_query("INSERT INTO unit_resources SET
+        if ($work['active'] == '0') {
+            $visibility = 'i';
+        } else {
+            $visibility = 'v';
+        }
+        db_query("INSERT INTO unit_resources SET
                                 unit_id = $id,
                                 type = 'work',
                                 title = " . quote($work['title']) . ",
@@ -215,79 +224,79 @@ function insert_work($id)
                                 `order` = $order,
                                 `date` = NOW(),
                                 res_id = $work[id]",
-			 $GLOBALS['mysqlMainDb']); 
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+            $GLOBALS['mysqlMainDb']);
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 
 // insert exercise in database
 function insert_exercise($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	
-	foreach ($_POST['exercise'] as $exercise_id) {
-		$order++;
-		$exercise = mysql_fetch_array(db_query("SELECT * FROM exercices
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+
+    foreach ($_POST['exercise'] as $exercise_id) {
+        $order++;
+        $exercise = mysql_fetch_array(db_query("SELECT * FROM exercices
 			WHERE id =" . intval($exercise_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-		if ($exercise['active'] == '0') {
-			 $visibility = 'i';
-		} else {
-			$visibility = 'v';
-		}
-		db_query("INSERT INTO unit_resources SET unit_id=$id, type='exercise', title=" .
-			quote($exercise['titre']) . ", comments=" . quote($exercise['description']) .
-			", visibility='$visibility', `order`=$order, `date`=NOW(), res_id=$exercise[id]",
-			$GLOBALS['mysqlMainDb']); 
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+        if ($exercise['active'] == '0') {
+            $visibility = 'i';
+        } else {
+            $visibility = 'v';
+        }
+        db_query("INSERT INTO unit_resources SET unit_id=$id, type='exercise', title=" .
+            quote($exercise['titre']) . ", comments=" . quote($exercise['description']) .
+            ", visibility='$visibility', `order`=$order, `date`=NOW(), res_id=$exercise[id]",
+            $GLOBALS['mysqlMainDb']);
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 // insert forum in database
 function insert_forum($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	foreach ($_POST['forum'] as $for_id) {
-		$order++;
-		$ids = explode(':', $for_id);
-		if (count($ids) == 2) {
-                        list($forum_id, $topic_id) = $ids;
-			$topic = mysql_fetch_array(db_query("SELECT * FROM topics
-				WHERE topic_id =" . intval($topic_id) ." AND forum_id =" . intval($forum_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-			db_query("INSERT INTO unit_resources SET unit_id=$id, type='topic', title=" .
-				quote($topic['topic_title']) .", visibility='v', `order`=$order, `date`=NOW(), res_id=$topic[topic_id]",
-			$GLOBALS['mysqlMainDb']);		
-		} else {
-                        $forum_id = $ids[0];
-			$forum = mysql_fetch_array(db_query("SELECT * FROM forums
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+    foreach ($_POST['forum'] as $for_id) {
+        $order++;
+        $ids = explode(':', $for_id);
+        if (count($ids) == 2) {
+            list($forum_id, $topic_id) = $ids;
+            $topic = mysql_fetch_array(db_query("SELECT * FROM topics
+				WHERE topic_id =" . intval($topic_id) . " AND forum_id =" . intval($forum_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
+            db_query("INSERT INTO unit_resources SET unit_id=$id, type='topic', title=" .
+                quote($topic['topic_title']) . ", visibility='v', `order`=$order, `date`=NOW(), res_id=$topic[topic_id]",
+                $GLOBALS['mysqlMainDb']);
+        } else {
+            $forum_id = $ids[0];
+            $forum = mysql_fetch_array(db_query("SELECT * FROM forums
 				WHERE forum_id =" . intval($forum_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-			db_query("INSERT INTO unit_resources SET unit_id=$id, type='forum', title=" .
-				quote($forum['forum_name']) . ", comments=" . quote($forum['forum_desc']) .
-				", visibility='v', `order`=$order, `date`=NOW(), res_id=$forum[forum_id]",
-				$GLOBALS['mysqlMainDb']);
-		} 
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+            db_query("INSERT INTO unit_resources SET unit_id=$id, type='forum', title=" .
+                quote($forum['forum_name']) . ", comments=" . quote($forum['forum_desc']) .
+                ", visibility='v', `order`=$order, `date`=NOW(), res_id=$forum[forum_id]",
+                $GLOBALS['mysqlMainDb']);
+        }
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }
 
 
 // insert wiki in database
 function insert_wiki($id)
 {
-	list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
-	
-	foreach ($_POST['wiki'] as $wiki_id) {
-		$order++;
-		$wiki = mysql_fetch_array(db_query("SELECT * FROM wiki_properties
+    list($order) = mysql_fetch_array(db_query("SELECT MAX(`order`) FROM unit_resources WHERE unit_id=$id"));
+
+    foreach ($_POST['wiki'] as $wiki_id) {
+        $order++;
+        $wiki = mysql_fetch_array(db_query("SELECT * FROM wiki_properties
 			WHERE id =" . intval($wiki_id), $GLOBALS['currentCourseID']), MYSQL_ASSOC);
-		db_query("INSERT INTO unit_resources SET unit_id=$id, type='wiki', title=" .
-			quote($wiki['title']) . ", comments=" . quote($wiki['description']) .
-			", visibility='v', `order`=$order, `date`=NOW(), res_id=$wiki[id]",
-			$GLOBALS['mysqlMainDb']); 
-	}
-	header('Location: index.php?id=' . $id);
-	exit;
+        db_query("INSERT INTO unit_resources SET unit_id=$id, type='wiki', title=" .
+            quote($wiki['title']) . ", comments=" . quote($wiki['description']) .
+            ", visibility='v', `order`=$order, `date`=NOW(), res_id=$wiki[id]",
+            $GLOBALS['mysqlMainDb']);
+    }
+    header('Location: index.php?id=' . $id);
+    exit;
 }

@@ -24,13 +24,13 @@
 *  			eMail: info@openeclass.org
 * =========================================================================*/
 
-$path2add=2;
+$path2add = 2;
 include '../include/baseTheme.php';
 $nameTools = $langInfo;
-$tool_content ="";
+$tool_content = "";
 
 
-    $tool_content .= "
+$tool_content .= "
     <p>$langIntro</p>
     <br />
 
@@ -51,17 +51,17 @@ $tool_content ="";
             <th class=\"left\">$langCoursesHeader:</th>
             <td>";
 
-  /*
-  * Make table with general platform information
-  * ophelia neofytou - 2006/09/26
-  */
+/*
+* Make table with general platform information
+* ophelia neofytou - 2006/09/26
+*/
 
 mysql_select_db($mysqlMainDb);
 
-$a=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours"));
-$a1=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours WHERE visible='2'"));
-$a2=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours WHERE visible='1'"));
-$a3=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours WHERE visible='0'"));
+$a = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours"));
+$a1 = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours WHERE visible='2'"));
+$a2 = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours WHERE visible='1'"));
+$a3 = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM cours WHERE visible='0'"));
 
 $tool_content .= "$langAboutCourses <b>$a[0]</b> $langCourses<br />";
 $tool_content .= "
@@ -73,12 +73,12 @@ $tool_content .= "
             </td>
           </tr>";
 
-$e=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user"));
-$b=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='1'"));
-$c=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='5'"));
-$d=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='10'"));
+$e = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user"));
+$b = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='1'"));
+$c = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='5'"));
+$d = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='10'"));
 
-    $tool_content .= "
+$tool_content .= "
           <tr>
             <th class=\"left\">$langUsers:</th>
             <td>$langAboutUsers <b>$e[0]</b> $langUsers
@@ -100,7 +100,7 @@ $d=mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM user where statut='10'"))
 
 
 if (isset($uid) and $uid) {
-        draw($tool_content, 1);
+    draw($tool_content, 1);
 } else {
-        draw($tool_content, 0);
+    draw($tool_content, 0);
 }

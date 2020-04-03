@@ -12,13 +12,13 @@
 /**
  * Displays authentication form
  *
- * @global  string    the font face to use in case of failure
- * @global  string    the default font size to use in case of failure
- * @global  string    the big font size to use in case of failure
- *
  * @return  boolean   always true (no return indeed)
  *
  * @access  public
+ * @global  string    the default font size to use in case of failure
+ * @global  string    the big font size to use in case of failure
+ *
+ * @global  string    the font face to use in case of failure
  */
 function PMA_auth()
 {
@@ -35,10 +35,10 @@ function PMA_auth()
     }
     // remove non US-ASCII to respect RFC2616
     $server_message = preg_replace('/[^\x20-\x7e]/i', '', $server_message);
-    header('WWW-Authenticate: Basic realm="phpMyAdmin ' . $server_message .  '"');
+    header('WWW-Authenticate: Basic realm="phpMyAdmin ' . $server_message . '"');
     header('HTTP/1.0 401 Unauthorized');
     if (php_sapi_name() !== 'cgi-fcgi') {
-	header('status: 401 Unauthorized');
+        header('status: 401 Unauthorized');
     }
 
     // Defines the charset to be used
@@ -47,19 +47,19 @@ function PMA_auth()
     $page_title = $GLOBALS['strAccessDenied'];
     require './libraries/header_meta_style.inc.php';
     ?>
-</head>
-<body>
+    </head>
+    <body>
     <?php
     if (file_exists('./config.header.inc.php')) {
         require './config.header.inc.php';
     }
     ?>
 
-<br /><br />
-<center>
-    <h1><?php echo sprintf($GLOBALS['strWelcome'], ' phpMyAdmin'); ?></h1>
-</center>
-<br />
+    <br/><br/>
+    <center>
+        <h1><?php echo sprintf($GLOBALS['strWelcome'], ' phpMyAdmin'); ?></h1>
+    </center>
+    <br/>
 
     <?php
     PMA_Message::error('strWrongUser')->display();
@@ -69,8 +69,8 @@ function PMA_auth()
     }
     ?>
 
-</body>
-</html>
+    </body>
+    </html>
     <?php
     exit();
 } // end of the 'PMA_auth()' function
@@ -79,6 +79,9 @@ function PMA_auth()
 /**
  * Gets advanced authentication settings
  *
+ * @return  boolean   whether we get authentication settings or not
+ *
+ * @access  public
  * @global  string    the username if register_globals is on
  * @global  string    the password if register_globals is on
  * @global  array     the array of server variables if register_globals is
@@ -91,9 +94,6 @@ function PMA_auth()
  * @global  string    the password for the WebSite Professional server
  * @global  string    the username of the user who logs out
  *
- * @return  boolean   whether we get authentication settings or not
- *
- * @access  public
  */
 function PMA_auth_check()
 {
@@ -140,7 +140,7 @@ function PMA_auth_check()
     // (do not use explode() because a user might have a colon in his password
     if (strcmp(substr($PHP_AUTH_USER, 0, 6), 'Basic ') == 0) {
         $usr_pass = base64_decode(substr($PHP_AUTH_USER, 6));
-        if (! empty($usr_pass)) {
+        if (!empty($usr_pass)) {
             $colon = strpos($usr_pass, ':');
             if ($colon) {
                 $PHP_AUTH_USER = substr($usr_pass, 0, $colon);
@@ -171,15 +171,15 @@ function PMA_auth_check()
 /**
  * Set the user and password after last checkings if required
  *
- * @global  array     the valid servers settings
+ * @return  boolean   always true
+ *
+ * @access  public
  * @global  integer   the id of the current server
  * @global  array     the current server settings
  * @global  string    the current username
  * @global  string    the current password
  *
- * @return  boolean   always true
- *
- * @access  public
+ * @global  array     the valid servers settings
  */
 function PMA_auth_set_user()
 {
@@ -193,14 +193,14 @@ function PMA_auth_set_user()
         for ($i = 1; $i <= $servers_cnt; $i++) {
             if (isset($cfg['Servers'][$i])
                 && ($cfg['Servers'][$i]['host'] == $cfg['Server']['host'] && $cfg['Servers'][$i]['user'] == $PHP_AUTH_USER)) {
-                $server        = $i;
+                $server = $i;
                 $cfg['Server'] = $cfg['Servers'][$i];
                 break;
             }
         } // end for
     } // end if
 
-    $cfg['Server']['user']     = $PHP_AUTH_USER;
+    $cfg['Server']['user'] = $PHP_AUTH_USER;
     $cfg['Server']['password'] = $PHP_AUTH_PW;
 
     return true;

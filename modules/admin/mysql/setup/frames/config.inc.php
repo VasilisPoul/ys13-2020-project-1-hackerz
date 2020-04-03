@@ -25,19 +25,20 @@ check_config_rw($config_readable, $config_writable, $config_exists);
 ?>
 <h2><?php echo $GLOBALS['strSetupConfigurationFile'] ?></h2>
 <?php display_form_top('config.php'); ?>
-<input type="hidden" name="eol" value="<?php echo htmlspecialchars(PMA_ifSetOr($_GET['eol'], 'unix')) ?>" />
+<input type="hidden" name="eol" value="<?php echo htmlspecialchars(PMA_ifSetOr($_GET['eol'], 'unix')) ?>"/>
 <?php display_fieldset_top('', '', null, array('class' => 'simple')); ?>
 <tr>
     <td>
         <textarea cols="50" rows="20" name="textconfig" id="textconfig" spellcheck="false"><?php
             echo htmlspecialchars(ConfigFile::getInstance()->getConfigFile())
-        ?></textarea>
+            ?></textarea>
     </td>
 </tr>
 <tr>
     <td class="lastrow" style="text-align: left">
-        <input type="submit" name="submit_download" value="<?php echo $GLOBALS['strSetupDownload'] ?>" class="green" />
-        <input type="submit" name="submit_save" value="<?php echo $GLOBALS['strSave'] ?>"<?php if (!$config_writable) echo ' disabled="disabled"' ?> />
+        <input type="submit" name="submit_download" value="<?php echo $GLOBALS['strSetupDownload'] ?>" class="green"/>
+        <input type="submit" name="submit_save"
+               value="<?php echo $GLOBALS['strSave'] ?>"<?php if (!$config_writable) echo ' disabled="disabled"' ?> />
     </td>
 </tr>
 <?php

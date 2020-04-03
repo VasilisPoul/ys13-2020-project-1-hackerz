@@ -50,7 +50,8 @@ require_once './libraries/tcpdf/tcpdf.php';
  * @see FPDF
  * @package phpMyAdmin
  */
-class PMA_PDF extends TCPDF {
+class PMA_PDF extends TCPDF
+{
     /**
      * Defines private properties
      */
@@ -82,7 +83,7 @@ class PMA_PDF extends TCPDF {
 
     function SetAlias($name, $value)
     {
-        $this->Alias[$name] = $value ;
+        $this->Alias[$name] = $value;
     }
 
     function _putpages()
@@ -90,8 +91,8 @@ class PMA_PDF extends TCPDF {
         if (count($this->Alias) > 0) {
             $nb = $this->page;
             foreach ($this->Alias AS $alias => $value) {
-                for ($n = 1;$n <= $nb;$n++)
-                    $this->pages[$n]=str_replace($alias, $value, $this->pages[$n]);
+                for ($n = 1; $n <= $nb; $n++)
+                    $this->pages[$n] = str_replace($alias, $value, $this->pages[$n]);
             }
         }
         parent::_putpages();
@@ -119,6 +120,7 @@ class PMA_PDF extends TCPDF {
             $this->t_marg = $t_marg;
         }
     } // end of the "PMA_PDF_setScale" function
+
     /**
      * Outputs a scaled cell
      *
@@ -138,6 +140,7 @@ class PMA_PDF extends TCPDF {
         $w = $w / $this->scale;
         $this->Cell($w, $h, $txt, $border, $ln, $align, $fill, $link);
     } // end of the "PMA_PDF_cellScale" function
+
     /**
      * Draws a scaled line
      *
@@ -156,6 +159,7 @@ class PMA_PDF extends TCPDF {
         $y2 = ($y2 - $this->y_min) / $this->scale + $this->t_marg;
         $this->Line($x1, $y1, $x2, $y2);
     } // end of the "PMA_PDF_lineScale" function
+
     /**
      * Sets x and y scaled positions
      *
@@ -170,6 +174,7 @@ class PMA_PDF extends TCPDF {
         $y = ($y - $this->y_min) / $this->scale + $this->t_marg;
         $this->SetXY($x, $y);
     } // end of the "PMA_PDF_setXyScale" function
+
     /**
      * Sets the X scaled positions
      *
@@ -182,6 +187,7 @@ class PMA_PDF extends TCPDF {
         $x = ($x - $this->x_min) / $this->scale + $this->l_marg;
         $this->SetX($x);
     } // end of the "PMA_PDF_setXScale" function
+
     /**
      * Sets the scaled font size
      *
@@ -195,6 +201,7 @@ class PMA_PDF extends TCPDF {
         $size = $size / $this->scale;
         $this->SetFontSize($size);
     } // end of the "PMA_PDF_setFontSizeScale" function
+
     /**
      * Sets the scaled line width
      *
@@ -207,6 +214,7 @@ class PMA_PDF extends TCPDF {
         $width = $width / $this->scale;
         $this->SetLineWidth($width);
     } // end of the "PMA_PDF_setLineWidthScale" function
+
     /**
      * Displays an error message
      *
@@ -239,11 +247,12 @@ class PMA_PDF extends TCPDF {
         echo '</p>' . "\n";
 
         echo '<a href="db_structure.php?' . PMA_generate_common_url($db)
-         . '">' . $GLOBALS['strBack'] . '</a>';
+            . '">' . $GLOBALS['strBack'] . '</a>';
         echo "\n";
 
         require_once './libraries/footer.inc.php';
     } // end of the "PMA_PDF_die()" function
+
     /**
      * Aliases the "Error()" function from the FPDF class to the
      * "PMA_PDF_die()" one
@@ -256,6 +265,7 @@ class PMA_PDF extends TCPDF {
     {
         $this->PMA_PDF_die($error_message);
     } // end of the "Error()" method
+
     function Header()
     {
         // $datefmt
@@ -265,8 +275,8 @@ class PMA_PDF extends TCPDF {
         global $cfgRelation, $db, $pdf_page_number, $with_doc;
         if ($with_doc) {
             $test_query = 'SELECT * FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['pdf_pages'])
-             . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
-             . ' AND page_nr = \'' . $pdf_page_number . '\'';
+                . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
+                . ' AND page_nr = \'' . $pdf_page_number . '\'';
             $test_rs = PMA_query_as_cu($test_query);
             $pages = @PMA_DBI_fetch_assoc($test_rs);
             $this->SetFont('', 'B', 14);
@@ -275,6 +285,7 @@ class PMA_PDF extends TCPDF {
             $this->Ln();
         }
     }
+
     function Footer()
     {
         // This function must be named "Footer" to work with the FPDF library
@@ -287,6 +298,7 @@ class PMA_PDF extends TCPDF {
             $this->SetY(20);
         }
     }
+
     function Bookmark($txt, $level = 0, $y = 0)
     {
         // Add a bookmark
@@ -316,15 +328,15 @@ class PMA_PDF extends TCPDF {
                 $prev = -1;
                 $next = -1;
                 if ($i > 0) {
-                    $cursor = $i-1;
+                    $cursor = $i - 1;
                     // Take the previous outline in the same level
                     while ($this->Outlines[0][$cursor] > $level && $cursor > 0)
-                    $cursor--;
+                        $cursor--;
                     if ($this->Outlines[0][$cursor] == $level) {
                         $prev = $cursor;
                     }
                 }
-                if ($i < $nb_outlines-1) {
+                if ($i < $nb_outlines - 1) {
                     $cursor = $i + 1;
                     while (isset($this->Outlines[0][$cursor]) && $this->Outlines[0][$cursor] > $level) {
                         // Take the immediate kid in level + 1
@@ -337,7 +349,7 @@ class PMA_PDF extends TCPDF {
                     $cursor = $i + 1;
                     // Take the next outline in the same level
                     while ($this->Outlines[0][$cursor] > $level && ($cursor + 1 < sizeof($this->Outlines[0])))
-                    $cursor++;
+                        $cursor++;
                     if ($this->Outlines[0][$cursor] == $level) {
                         $next = $cursor;
                     }
@@ -372,7 +384,7 @@ class PMA_PDF extends TCPDF {
             $this->_out('/Type');
             $this->_out('/Outlines');
             $this->_out('/First ' . $first_level[0] . ' 0 R');
-            $this->_out('/Last ' . $first_level[sizeof($first_level)-1] . ' 0 R');
+            $this->_out('/Last ' . $first_level[sizeof($first_level) - 1] . ' 0 R');
             $this->_out('/Count ' . sizeof($first_level));
             $this->_out('>>');
             $this->_out('endobj');
@@ -393,6 +405,7 @@ class PMA_PDF extends TCPDF {
             $this->_out('/PageMode /UseOutlines');
         }
     }
+
     function SetWidths($w)
     {
         // column widths
@@ -404,15 +417,15 @@ class PMA_PDF extends TCPDF {
         // line height
         $nb = 0;
         $data_cnt = count($data);
-        for ($i = 0;$i < $data_cnt;$i++)
-        $nb = max($nb, $this->NbLines($this->widths[$i], $data[$i]));
+        for ($i = 0; $i < $data_cnt; $i++)
+            $nb = max($nb, $this->NbLines($this->widths[$i], $data[$i]));
         $il = $this->FontSize;
         $h = ($il + 1) * $nb;
         // page break if necessary
         $this->CheckPageBreak($h);
         // draw the cells
         $data_cnt = count($data);
-        for ($i = 0;$i < $data_cnt;$i++) {
+        for ($i = 0; $i < $data_cnt; $i++) {
             $w = $this->widths[$i];
             // save current position
             $x = $this->GetX();
@@ -446,10 +459,10 @@ class PMA_PDF extends TCPDF {
         if ($w == 0) {
             $w = $this->w - $this->rMargin - $this->x;
         }
-        $wmax = ($w-2 * $this->cMargin) * 1000 / $this->FontSize;
+        $wmax = ($w - 2 * $this->cMargin) * 1000 / $this->FontSize;
         $s = str_replace("\r", '', $txt);
         $nb = strlen($s);
-        if ($nb > 0 and $s[$nb-1] == "\n") {
+        if ($nb > 0 and $s[$nb - 1] == "\n") {
             $nb--;
         }
         $sep = -1;
@@ -470,7 +483,7 @@ class PMA_PDF extends TCPDF {
             if ($c == ' ') {
                 $sep = $i;
             }
-            $l += isset($cw[ord($c)])?$cw[ord($c)]:0 ;
+            $l += isset($cw[ord($c)]) ? $cw[ord($c)] : 0;
             if ($l > $wmax) {
                 if ($sep == -1) {
                     if ($i == $j) {
@@ -499,7 +512,8 @@ class PMA_PDF extends TCPDF {
  * @see PMA_RT
  * @package phpMyAdmin
  */
-class PMA_RT_Table {
+class PMA_RT_Table
+{
     /**
      * Defines private properties
      */
@@ -534,6 +548,7 @@ class PMA_RT_Table {
         $this->width = max($this->width, $pdf->GetStringWidth('  ' . $this->table_name));
         $pdf->SetFont($ff, '');
     } // end of the "PMA_RT_Table_setWidth()" method
+
     /**
      * Sets the height of the table
      *
@@ -543,6 +558,7 @@ class PMA_RT_Table {
     {
         $this->height = (count($this->fields) + 1) * $this->height_cell;
     } // end of the "PMA_RT_Table_setHeight()" method
+
     /**
      * Do draw the table
      *
@@ -605,6 +621,7 @@ class PMA_RT_Table {
             $pdf->PMA_PDF_die($GLOBALS['strScaleFactorSmall']);
         } */
     } // end of the "PMA_RT_Table_draw()" method
+
     /**
      * The "PMA_RT_Table" constructor
      *
@@ -618,7 +635,7 @@ class PMA_RT_Table {
      * @global string    The current db name
      * @access private
      * @see PMA_PDF, PMA_RT_Table::PMA_RT_Table_setWidth,
-          PMA_RT_Table::PMA_RT_Table_setHeight
+     * PMA_RT_Table::PMA_RT_Table_setHeight
      */
     function __construct($table_name, $ff, &$same_wide_width, $show_keys)
     {
@@ -636,7 +653,7 @@ class PMA_RT_Table {
             $indexes = PMA_Index::getFromTable($this->table_name, $db);
             $all_columns = array();
             foreach ($indexes as $index) {
-            $all_columns = array_merge($all_columns, array_flip(array_keys($index->getColumns())));
+                $all_columns = array_merge($all_columns, array_flip(array_keys($index->getColumns())));
             }
             $this->fields = array_keys($all_columns);
         } else {
@@ -652,18 +669,18 @@ class PMA_RT_Table {
         }
         // x and y
         $sql = 'SELECT x, y FROM '
-         . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
-         . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
-         . ' AND   table_name = \'' . PMA_sqlAddslashes($table_name) . '\''
-         . ' AND   pdf_page_number = ' . $pdf_page_number;
+            . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
+            . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
+            . ' AND   table_name = \'' . PMA_sqlAddslashes($table_name) . '\''
+            . ' AND   pdf_page_number = ' . $pdf_page_number;
         $result = PMA_query_as_cu($sql, false, PMA_DBI_QUERY_STORE);
 
         if (!$result || !PMA_DBI_num_rows($result)) {
             $pdf->PMA_PDF_die(sprintf($GLOBALS['strConfigureTableCoord'], $table_name));
         }
         list($this->x, $this->y) = PMA_DBI_fetch_row($result);
-        $this->x = (double) $this->x;
-        $this->y = (double) $this->y;
+        $this->x = (double)$this->x;
+        $this->y = (double)$this->y;
         // displayfield
         $this->displayfield = PMA_getDisplayField($db, $table_name);
         // index
@@ -677,6 +694,7 @@ class PMA_RT_Table {
         } // end if
     } // end of the "PMA_RT_Table()" method
 } // end class "PMA_RT_Table"
+
 /**
  * Draws relation links
  *
@@ -684,12 +702,13 @@ class PMA_RT_Table {
  * @see PMA_RT
  * @package phpMyAdmin
  */
-class PMA_RT_Relation {
+class PMA_RT_Relation
+{
     /**
      * Defines private properties
      */
     var $x_src, $y_src;
-    var $src_dir ;
+    var $src_dir;
     var $dest_dir;
     var $x_dest, $y_dest;
     var $w_tick = 5;
@@ -706,8 +725,9 @@ class PMA_RT_Relation {
     {
         $pos = array_search($column, $table->fields);
         // x_left, x_right, y
-        return array($table->x, $table->x + + $table->width, $table->y + ($pos + 1.5) * $table->height_cell);
+        return array($table->x, $table->x + +$table->width, $table->y + ($pos + 1.5) * $table->height_cell);
     } // end of the "PMA_RT_Relation_getXy()" method
+
     /**
      * Do draws relation links
      *
@@ -733,7 +753,7 @@ class PMA_RT_Relation {
                 array(1, 1, 0),
                 array(1, 0, 1),
                 array(0, 1, 1)
-                );
+            );
             list ($a, $b, $c) = $case[$d];
             $e = (1 - ($j - 1) / 6);
             $pdf->SetDrawColor($a * 255 * $e, $b * 255 * $e, $c * 255 * $e);
@@ -754,6 +774,7 @@ class PMA_RT_Relation {
         $pdf->PMA_PDF_lineScale($this->x_dest + $this->dest_dir * $this->w_tick / 2, $this->y_dest, $this->x_dest + $this->dest_dir * (0.5 + 1 / $root2) * $this->w_tick, $this->y_dest - $this->w_tick / $root2);
         $pdf->SetDrawColor(0);
     } // end of the "PMA_RT_Relation_draw()" method
+
     /**
      * The "PMA_RT_Relation" constructor
      *
@@ -804,6 +825,7 @@ class PMA_RT_Relation {
         $this->y_dest = $dest_pos[2];
     } // end of the "PMA_RT_Relation()" method
 } // end of the "PMA_RT_Relation" class
+
 /**
  * Draws and send the database schema
  *
@@ -811,7 +833,8 @@ class PMA_RT_Relation {
  * @see PMA_PDF
  * @package phpMyAdmin
  */
-class PMA_RT {
+class PMA_RT
+{
     /**
      * Defines private properties
      */
@@ -843,6 +866,7 @@ class PMA_RT {
         $this->x_min = min($this->x_min, $table->x);
         $this->y_min = min($this->y_min, $table->y);
     } // end of the "PMA_RT_setMinMax()" method
+
     /**
      * Defines relation objects
      *
@@ -865,6 +889,7 @@ class PMA_RT {
         }
         $this->relations[] = new PMA_RT_Relation($this->tables[$master_table], $master_field, $this->tables[$foreign_table], $foreign_field);
     } // end of the "PMA_RT_addRelation()" method
+
     /**
      * Draws the grid
      *
@@ -884,18 +909,19 @@ class PMA_RT {
             // Avoid duplicates
             if ($l > 0) {
                 $pdf->SetXY(0, $l * 10);
-                $label = (string) sprintf('%.0f', ($l * 10 - $this->t_marg) * $this->scale + $this->y_min);
+                $label = (string)sprintf('%.0f', ($l * 10 - $this->t_marg) * $this->scale + $this->y_min);
                 $pdf->Cell(5, 5, ' ' . $label);
             } // end if
         } // end for
         // Draws vertical lines
-        for ($j = 0; $j < 30 ;$j++) {
+        for ($j = 0; $j < 30; $j++) {
             $pdf->line($j * 10, 0, $j * 10, $pdf->fw);
             $pdf->SetXY($j * 10, 0);
-            $label = (string) sprintf('%.0f', ($j * 10 - $this->l_marg) * $this->scale + $this->x_min);
+            $label = (string)sprintf('%.0f', ($j * 10 - $this->l_marg) * $this->scale + $this->x_min);
             $pdf->Cell(5, 7, $label);
         } // end for
     } // end of the "PMA_RT_strokeGrid()" method
+
     /**
      * Draws relation arrows
      *
@@ -911,6 +937,7 @@ class PMA_RT {
             $i++;
         } // end while
     } // end of the "PMA_RT_drawRelations()" method
+
     /**
      * Draws tables
      *
@@ -924,6 +951,7 @@ class PMA_RT {
             $table->PMA_RT_Table_draw($show_info, $this->ff, $draw_color);
         }
     } // end of the "PMA_RT_drawTables()" method
+
     /**
      * Ouputs the PDF document to a file
      *
@@ -943,7 +971,7 @@ class PMA_RT {
         $pdf->SetDisplayMode('fullpage');
         // Get the name of this pdfpage to use as filename (Mike Beck)
         $_name_sql = 'SELECT page_descr FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['pdf_pages'])
-         . ' WHERE page_nr = ' . $pdf_page_number;
+            . ' WHERE page_nr = ' . $pdf_page_number;
         $_name_rs = PMA_query_as_cu($_name_sql);
         if ($_name_rs) {
             $_name_row = PMA_DBI_fetch_row($_name_rs);
@@ -956,6 +984,7 @@ class PMA_RT {
         // $pdf->Output($db . '_' . $filename, TRUE);
         $pdf->Output($db . '_' . $filename, 'I'); // destination: Inline
     } // end of the "PMA_RT_showRt()" method
+
     /**
      * The "PMA_RT" constructor
      *
@@ -996,13 +1025,14 @@ class PMA_RT {
         $pdf->SetAutoPageBreak('auto');
         // Gets tables on this page
         $tab_sql = 'SELECT table_name FROM ' . PMA_backquote($GLOBALS['cfgRelation']['db']) . '.' . PMA_backquote($cfgRelation['table_coords'])
-         . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
-         . ' AND pdf_page_number = ' . $which_rel;
+            . ' WHERE db_name = \'' . PMA_sqlAddslashes($db) . '\''
+            . ' AND pdf_page_number = ' . $which_rel;
         $tab_rs = PMA_query_as_cu($tab_sql, null, PMA_DBI_QUERY_STORE);
         if (!$tab_rs || !PMA_DBI_num_rows($tab_rs) > 0) {
             $pdf->PMA_PDF_die($GLOBALS['strPdfNoTables']);
             // die('No tables');
-        } while ($curr_table = @PMA_DBI_fetch_assoc($tab_rs)) {
+        }
+        while ($curr_table = @PMA_DBI_fetch_assoc($tab_rs)) {
             $alltables[] = PMA_sqlAddslashes($curr_table['table_name']);
             // $intable     = '\'' . implode('\', \'', $alltables) . '\'';
         }
@@ -1020,7 +1050,7 @@ class PMA_RT {
         if ($with_doc) {
             $pdf->SetLink($pdf->PMA_links['RT']['-'], -1);
             $pdf->Bookmark($GLOBALS['strRelationalSchema']);
-            $pdf->SetAlias('{00}', $pdf->PageNo()) ;
+            $pdf->SetAlias('{00}', $pdf->PageNo());
             $this->t_marg = 18;
             $this->b_marg = 18;
         }
@@ -1039,10 +1069,10 @@ class PMA_RT {
         }
         // Defines the scale factor
         $this->scale = ceil(
-            max(
-                ($this->x_max - $this->x_min) / ($pdf->getFh() - $this->r_marg - $this->l_marg),
-                ($this->y_max - $this->y_min) / ($pdf->getFw() - $this->t_marg - $this->b_marg))
-             * 100) / 100;
+                max(
+                    ($this->x_max - $this->x_min) / ($pdf->getFh() - $this->r_marg - $this->l_marg),
+                    ($this->y_max - $this->y_min) / ($pdf->getFw() - $this->t_marg - $this->b_marg))
+                * 100) / 100;
 
         $pdf->PMA_PDF_setScale($this->scale, $this->x_min, $this->y_min, $this->l_marg, $this->t_marg);
         // Builds and save the PDF document
@@ -1135,7 +1165,7 @@ function PMA_RT_DOC($alltables)
         $z++;
         $pdf->addpage($GLOBALS['orientation']);
         $pdf->Bookmark($table);
-        $pdf->SetAlias('{' . sprintf("%02d", $z) . '}', $pdf->PageNo()) ;
+        $pdf->SetAlias('{' . sprintf("%02d", $z) . '}', $pdf->PageNo());
         $pdf->PMA_links['RT'][$table]['-'] = $pdf->AddLink();
         $pdf->SetLink($pdf->PMA_links['doc'][$table]['-'], -1);
         $pdf->SetFont('', 'B', 18);
@@ -1152,12 +1182,12 @@ function PMA_RT_DOC($alltables)
         /**
          * Gets table informations
          */
-        $showtable    = PMA_Table::sGetStatusInfo($db, $table);
-        $num_rows     = (isset($showtable['Rows']) ? $showtable['Rows'] : 0);
+        $showtable = PMA_Table::sGetStatusInfo($db, $table);
+        $num_rows = (isset($showtable['Rows']) ? $showtable['Rows'] : 0);
         $show_comment = (isset($showtable['Comment']) ? $showtable['Comment'] : '');
-        $create_time  = (isset($showtable['Create_time']) ? PMA_localisedDate(strtotime($showtable['Create_time'])) : '');
-        $update_time  = (isset($showtable['Update_time']) ? PMA_localisedDate(strtotime($showtable['Update_time'])) : '');
-        $check_time   = (isset($showtable['Check_time']) ? PMA_localisedDate(strtotime($showtable['Check_time'])) : '');
+        $create_time = (isset($showtable['Create_time']) ? PMA_localisedDate(strtotime($showtable['Create_time'])) : '');
+        $update_time = (isset($showtable['Update_time']) ? PMA_localisedDate(strtotime($showtable['Update_time'])) : '');
+        $check_time = (isset($showtable['Check_time']) ? PMA_localisedDate(strtotime($showtable['Check_time'])) : '');
 
         /**
          * Gets table keys and retains them
@@ -1338,13 +1368,12 @@ function PMA_RT_DOC($alltables)
                 ((isset($res_rel[$field_name])) ? $res_rel[$field_name]['foreign_table'] . ' -> ' . $res_rel[$field_name]['foreign_field'] : ''),
                 ((isset($comments[$field_name])) ? $comments[$field_name] : ''),
                 ((isset($mime_map) && isset($mime_map[$field_name])) ? str_replace('_', '/', $mime_map[$field_name]['mimetype']) : '')
-                );
+            );
             $links[0] = $pdf->PMA_links['RT'][$table][$field_name];
             if (isset($res_rel[$field_name]['foreign_table']) AND
-                    isset($res_rel[$field_name]['foreign_field']) AND
-                    isset($pdf->PMA_links['doc'][$res_rel[$field_name]['foreign_table']][$res_rel[$field_name]['foreign_field']])
-                    )
-            {
+                isset($res_rel[$field_name]['foreign_field']) AND
+                isset($pdf->PMA_links['doc'][$res_rel[$field_name]['foreign_table']][$res_rel[$field_name]['foreign_field']])
+            ) {
                 $links[6] = $pdf->PMA_links['doc'][$res_rel[$field_name]['foreign_table']][$res_rel[$field_name]['foreign_field']];
             } else {
                 unset($links[6]);
@@ -1382,14 +1411,14 @@ if (!isset($pdf_page_number)) {
     $pdf_page_number = 1;
 }
 
-$show_grid              = (isset($show_grid) && $show_grid == 'on') ? 1 : 0;
-$show_color             = (isset($show_color) && $show_color == 'on') ? 1 : 0;
-$show_table_dimension   = (isset($show_table_dimension) && $show_table_dimension == 'on') ? 1 : 0;
-$all_tab_same_wide      = (isset($all_tab_same_wide) && $all_tab_same_wide == 'on') ? 1 : 0;
-$with_doc               = (isset($with_doc) && $with_doc == 'on') ? 1 : 0;
-$orientation            = (isset($orientation) && $orientation == 'P') ? 'P' : 'L';
-$paper                  = isset($paper) ? $paper : 'A4';
-$show_keys              = (isset($show_keys) && $show_keys == 'on') ? 1 : 0;
+$show_grid = (isset($show_grid) && $show_grid == 'on') ? 1 : 0;
+$show_color = (isset($show_color) && $show_color == 'on') ? 1 : 0;
+$show_table_dimension = (isset($show_table_dimension) && $show_table_dimension == 'on') ? 1 : 0;
+$all_tab_same_wide = (isset($all_tab_same_wide) && $all_tab_same_wide == 'on') ? 1 : 0;
+$with_doc = (isset($with_doc) && $with_doc == 'on') ? 1 : 0;
+$orientation = (isset($orientation) && $orientation == 'P') ? 'P' : 'L';
+$paper = isset($paper) ? $paper : 'A4';
+$show_keys = (isset($show_keys) && $show_keys == 'on') ? 1 : 0;
 PMA_DBI_select_db($db);
 
 $rt = new PMA_RT($pdf_page_number, $show_table_dimension, $show_color, $show_grid, $all_tab_same_wide, $orientation, $paper, $show_keys);

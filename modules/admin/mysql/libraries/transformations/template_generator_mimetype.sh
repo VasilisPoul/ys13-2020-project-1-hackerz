@@ -7,9 +7,8 @@
 # The suffix '.inc.php' is appended automatically!
 #
 # Example:  template_generator_mimetype.sh 'filename'
-# 
-if [ $# == 0 ]
-then
+#
+if [ $# == 0 ]; then
   echo "Usage: template_generator_mimetype.sh 'filename'"
   echo ""
   exit 65

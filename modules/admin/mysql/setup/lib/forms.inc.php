@@ -151,7 +151,7 @@ $forms['Tabs'] = array(
     'DefaultTabServer',
     'DefaultTabDatabase',
     'DefaultTabTable',
-	'QueryWindowDefTab');
+    'QueryWindowDefTab');
 $forms['Sql_box'] = array('SQLQuery' => array(
     'Edit',
     'Explain',

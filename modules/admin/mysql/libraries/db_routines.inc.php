@@ -15,7 +15,7 @@
  * @version $Id: db_routines.inc.php 11982 2008-11-24 10:32:56Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -24,7 +24,7 @@ if (! defined('PHPMYADMIN')) {
  */
 $url_query .= '&amp;goto=db_structure.php';
 
-$routines = PMA_DBI_fetch_result('SELECT SPECIFIC_NAME,ROUTINE_NAME,ROUTINE_TYPE,DTD_IDENTIFIER FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA= \'' . PMA_sqlAddslashes($db,true) . '\';');
+$routines = PMA_DBI_fetch_result('SELECT SPECIFIC_NAME,ROUTINE_NAME,ROUTINE_TYPE,DTD_IDENTIFIER FROM information_schema.ROUTINES WHERE ROUTINE_SCHEMA= \'' . PMA_sqlAddslashes($db, true) . '\';');
 
 if ($routines) {
     PMA_generate_slider_effect('routines', $strRoutines);
@@ -38,10 +38,10 @@ if ($routines) {
                       <th>%s</th>
                       <th>%s</th>
                 </tr>',
-          $strName,
-          $strType,
-          $strRoutineReturnType);
-    $ct=0;
+        $strName,
+        $strType,
+        $strRoutineReturnType);
+    $ct = 0;
     $delimiter = '//';
     foreach ($routines as $routine) {
 
@@ -51,19 +51,19 @@ if ($routines) {
         // uses SHOW CREATE
 
         $definition = 'DROP ' . $routine['ROUTINE_TYPE'] . ' ' . PMA_backquote($routine['SPECIFIC_NAME']) . $delimiter . "\n"
-            .  PMA_DBI_get_definition($db, $routine['ROUTINE_TYPE'], $routine['SPECIFIC_NAME'])
+            . PMA_DBI_get_definition($db, $routine['ROUTINE_TYPE'], $routine['SPECIFIC_NAME'])
             . "\n";
 
         //if ($routine['ROUTINE_TYPE'] == 'PROCEDURE') {
         //    $sqlUseProc  = 'CALL ' . $routine['SPECIFIC_NAME'] . '()';
         //} else {
         //    $sqlUseProc = 'SELECT ' . $routine['SPECIFIC_NAME'] . '()';
-            /* this won't get us far: to really use the function
-               i'd need to know how many parameters the function needs and then create
-               something to ask for them. As i don't see this directly in
-               the table i am afraid that requires parsing the ROUTINE_DEFINITION
-               and i don't really need that now so i simply don't offer
-               a method for running the function*/
+        /* this won't get us far: to really use the function
+           i'd need to know how many parameters the function needs and then create
+           something to ask for them. As i don't see this directly in
+           the table i am afraid that requires parsing the ROUTINE_DEFINITION
+           and i don't really need that now so i simply don't offer
+           a method for running the function*/
         //}
         if ($routine['ROUTINE_TYPE'] == 'PROCEDURE') {
             $sqlDropProc = 'DROP PROCEDURE ' . PMA_backquote($routine['SPECIFIC_NAME']);
@@ -77,12 +77,12 @@ if ($routines) {
                           <td>%s</td>
                           <td>%s</td>
                      </tr>',
-                     ($ct%2 == 0) ? 'even' : 'odd',
-                     $routine['ROUTINE_NAME'],
-                     ! empty($definition) ? PMA_linkOrButton('db_sql.php?' . $url_query . '&amp;sql_query=' . urlencode($definition) . '&amp;show_query=1&amp;delimiter=' . urlencode($delimiter), $titles['Structure']) : '&nbsp;',
-                     '<a href="sql.php?' . $url_query . '&amp;sql_query=' . urlencode($sqlDropProc) . '" onclick="return confirmLink(this, \'' . PMA_jsFormat($sqlDropProc, false) . '\')">' . $titles['Drop'] . '</a>',
-                     $routine['ROUTINE_TYPE'],
-                     $routine['DTD_IDENTIFIER']);
+            ($ct % 2 == 0) ? 'even' : 'odd',
+            $routine['ROUTINE_NAME'],
+            !empty($definition) ? PMA_linkOrButton('db_sql.php?' . $url_query . '&amp;sql_query=' . urlencode($definition) . '&amp;show_query=1&amp;delimiter=' . urlencode($delimiter), $titles['Structure']) : '&nbsp;',
+            '<a href="sql.php?' . $url_query . '&amp;sql_query=' . urlencode($sqlDropProc) . '" onclick="return confirmLink(this, \'' . PMA_jsFormat($sqlDropProc, false) . '\')">' . $titles['Drop'] . '</a>',
+            $routine['ROUTINE_TYPE'],
+            $routine['DTD_IDENTIFIER']);
         $ct++;
     }
     echo '</table>';

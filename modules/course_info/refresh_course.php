@@ -25,17 +25,17 @@
 * =========================================================================*/
 
 /**===========================================================================
-refresh_course.php
-@last update: 23-10-2006 by Pitsiougas Vagelis
-@authors list: Karatzidis Stratos <kstratos@uom.gr>
-Pitsiougas Vagelis <vagpits@uom.gr>
-==============================================================================
-@Description: Refresh page for a course
+ * refresh_course.php
+ * @last update: 23-10-2006 by Pitsiougas Vagelis
+ * @authors list: Karatzidis Stratos <kstratos@uom.gr>
+ * Pitsiougas Vagelis <vagpits@uom.gr>
+ * ==============================================================================
+ * @Description: Refresh page for a course
+ *
+ * ==============================================================================*/
 
-==============================================================================*/
-
-$require_current_course=TRUE;
-$require_login=TRUE;
+$require_current_course = TRUE;
+$require_login = TRUE;
 $require_prof = true;
 
 include '../../include/baseTheme.php';
@@ -44,46 +44,44 @@ $nameTools = $langRefreshCourse;
 
 $tool_content = "";
 
-if (!$is_adminOfCourse)
-{
-	$tool_content .= "Error! access by non-admin.";
-	exit();
+if (!$is_adminOfCourse) {
+    $tool_content .= "Error! access by non-admin.";
+    exit();
 }
 
-if(isset($submit)) {
-	$output = array();
-	mysql_select_db($mysqlMainDb);
-	if (isset($delusers))
-	$output[] = delete_users();
-	if (isset($delannounces))
-	$output[] = delete_announcements();
+if (isset($submit)) {
+    $output = array();
+    mysql_select_db($mysqlMainDb);
+    if (isset($delusers))
+        $output[] = delete_users();
+    if (isset($delannounces))
+        $output[] = delete_announcements();
 
-	mysql_select_db($currentCourseID);
-	if (isset($delagenda))
-	$output[] = delete_agenda();
-	if (isset($hideworks))
-	$output[] = hide_work();
+    mysql_select_db($currentCourseID);
+    if (isset($delagenda))
+        $output[] = delete_agenda();
+    if (isset($hideworks))
+        $output[] = hide_work();
 
 
-	if (($count_events = count($output)) > 0 ) {
+    if (($count_events = count($output)) > 0) {
 
-		$tool_content .=  "<p class=\"success_small\">$langRefreshSuccess
+        $tool_content .= "<p class=\"success_small\">$langRefreshSuccess
 		<ul class=\"listBullet\">";
-		for ($i=0; $i< $count_events; $i++) {
-			$tool_content .= "
+        for ($i = 0; $i < $count_events; $i++) {
+            $tool_content .= "
 			<li>$output[$i]</li>			";
-		}
+        }
 
-		$tool_content .= "\n		</ul>\n</p><br />";
-	}
+        $tool_content .= "\n		</ul>\n</p><br />";
+    }
 
 
-
-	$tool_content .="<p align=\"right\"><a href='infocours.php'>$langBack</a></p>";
+    $tool_content .= "<p align=\"right\"><a href='infocours.php'>$langBack</a></p>";
 
 } else {
 
-	$tool_content .= "
+    $tool_content .= "
 <form action='refresh_course.php' method='post'>
 
     <table width=\"99%\" class=\"FormData\">
@@ -120,49 +118,54 @@ if(isset($submit)) {
     </table>
 </form>";
 
-  $tool_content .= "<p align=\"right\"><a href=\"infocours.php\">$langBack</a></p>";
+    $tool_content .= "<p align=\"right\"><a href=\"infocours.php\">$langBack</a></p>";
 }
 
 draw($tool_content, 2, 'course_info');
 
 
-function delete_users() {
-	global $cours_id, $langUsersDeleted;
+function delete_users()
+{
+    global $cours_id, $langUsersDeleted;
 
-	db_query("DELETE FROM cours_user WHERE cours_id = $cours_id and statut <> '1'");
-	return "<p>$langUsersDeleted</p>";
+    db_query("DELETE FROM cours_user WHERE cours_id = $cours_id and statut <> '1'");
+    return "<p>$langUsersDeleted</p>";
 }
 
-function delete_announcements() {
-	global $cours_id, $langAnnDeleted;
+function delete_announcements()
+{
+    global $cours_id, $langAnnDeleted;
 
-	db_query("DELETE FROM annonces WHERE cours_id = $cours_id");
-	return "<p>$langAnnDeleted</p>";
+    db_query("DELETE FROM annonces WHERE cours_id = $cours_id");
+    return "<p>$langAnnDeleted</p>";
 }
 
-function delete_agenda() {
-	global $langAgendaDeleted, $currentCourseID, $mysqlMainDb;
+function delete_agenda()
+{
+    global $langAgendaDeleted, $currentCourseID, $mysqlMainDb;
 
-	db_query("DELETE FROM agenda");
+    db_query("DELETE FROM agenda");
 
-	##[BEGIN personalisation modification]############
-	db_query("DELETE FROM ".$mysqlMainDb.".agenda WHERE lesson_code='$currentCourseID'");
-	##[END personalisation modification]############
-	return "<p>$langAgendaDeleted</p>";
+    ##[BEGIN personalisation modification]############
+    db_query("DELETE FROM " . $mysqlMainDb . ".agenda WHERE lesson_code='$currentCourseID'");
+    ##[END personalisation modification]############
+    return "<p>$langAgendaDeleted</p>";
 }
 
-function hide_doc()  {
-	global $langDocsDeleted;
+function hide_doc()
+{
+    global $langDocsDeleted;
 
-	db_query("UPDATE document SET visibility='i'");
-	return "<p>$langDocsDeleted</p>";
+    db_query("UPDATE document SET visibility='i'");
+    return "<p>$langDocsDeleted</p>";
 }
 
-function hide_work()  {
-	global $langWorksDeleted;
+function hide_work()
+{
+    global $langWorksDeleted;
 
-	db_query("UPDATE assignments SET active=0");
-	return "<p>$langWorksDeleted</p>";
+    db_query("UPDATE assignments SET active=0");
+    return "<p>$langWorksDeleted</p>";
 }
 
 

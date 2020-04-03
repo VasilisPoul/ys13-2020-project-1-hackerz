@@ -10,7 +10,7 @@
  * @version $Id: display_tbl_links.lib.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -21,40 +21,40 @@ if ($doWriteModifyAt == 'left') {
 
     if (!empty($del_url) && $is_display['del_lnk'] != 'kp') {
         echo '    <td align="center">' . "\n"
-           . '        <input type="checkbox" id="id_rows_to_delete' . $row_no . '" name="rows_to_delete[' . $unique_condition_html . ']"'
-           . ' onclick="copyCheckboxesRange(\'rowsDeleteForm\', \'id_rows_to_delete' . $row_no . '\',\'l\');"'
-           . ' value="' . htmlspecialchars($del_query) . '" ' . (isset($GLOBALS['checkall']) ? 'checked="checked"' : '') . ' />' . "\n"
-           . '    </td>' . "\n";
+            . '        <input type="checkbox" id="id_rows_to_delete' . $row_no . '" name="rows_to_delete[' . $unique_condition_html . ']"'
+            . ' onclick="copyCheckboxesRange(\'rowsDeleteForm\', \'id_rows_to_delete' . $row_no . '\',\'l\');"'
+            . ' value="' . htmlspecialchars($del_query) . '" ' . (isset($GLOBALS['checkall']) ? 'checked="checked"' : '') . ' />' . "\n"
+            . '    </td>' . "\n";
     }
     if (!empty($edit_url)) {
         echo '    <td align="center">' . "\n"
-           . PMA_linkOrButton($edit_url, $edit_str, '', FALSE)
-           . $bookmark_go
-           . '    </td>' . "\n";
+            . PMA_linkOrButton($edit_url, $edit_str, '', FALSE)
+            . $bookmark_go
+            . '    </td>' . "\n";
     }
     if (!empty($del_url)) {
         echo '    <td align="center">' . "\n"
-           . PMA_linkOrButton($del_url, $del_str, (isset($js_conf) ? $js_conf : ''), FALSE)
-           . '    </td>' . "\n";
+            . PMA_linkOrButton($del_url, $del_str, (isset($js_conf) ? $js_conf : ''), FALSE)
+            . '    </td>' . "\n";
     }
 } elseif ($doWriteModifyAt == 'right') {
     if (!empty($del_url)) {
         echo '    <td align="center">' . "\n"
-           . PMA_linkOrButton($del_url, $del_str, (isset($js_conf) ? $js_conf : ''), FALSE)
-           . '    </td>' . "\n";
+            . PMA_linkOrButton($del_url, $del_str, (isset($js_conf) ? $js_conf : ''), FALSE)
+            . '    </td>' . "\n";
     }
     if (!empty($edit_url)) {
         echo '    <td align="center">' . "\n"
-           . PMA_linkOrButton($edit_url, $edit_str, '', FALSE)
-           . $bookmark_go
-           . '    </td>' . "\n";
+            . PMA_linkOrButton($edit_url, $edit_str, '', FALSE)
+            . $bookmark_go
+            . '    </td>' . "\n";
     }
     if (!empty($del_url) && $is_display['del_lnk'] != 'kp') {
         echo '    <td align="center">' . "\n"
-           . '        <input type="checkbox" id="id_rows_to_delete' . $row_no . 'r" name="rows_to_delete[' . $unique_condition_html . ']"'
-           . ' onclick="copyCheckboxesRange(\'rowsDeleteForm\', \'id_rows_to_delete' . $row_no . '\',\'r\');"'
-           . ' value="' . htmlspecialchars($del_query) . '" ' . (isset($GLOBALS['checkall']) ? 'checked="checked"' : '') . ' />' . "\n"
-           . '    </td>' . "\n";
+            . '        <input type="checkbox" id="id_rows_to_delete' . $row_no . 'r" name="rows_to_delete[' . $unique_condition_html . ']"'
+            . ' onclick="copyCheckboxesRange(\'rowsDeleteForm\', \'id_rows_to_delete' . $row_no . '\',\'r\');"'
+            . ' value="' . htmlspecialchars($del_query) . '" ' . (isset($GLOBALS['checkall']) ? 'checked="checked"' : '') . ' />' . "\n"
+            . '    </td>' . "\n";
     }
 }
 ?>

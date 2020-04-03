@@ -71,7 +71,7 @@ class HTMLPurifier_ContentSets
         foreach ($this->lookup as $key => $lookup) {
             $this->info[$key] = implode(' | ', array_keys($lookup));
         }
-        $this->keys   = array_keys($this->info);
+        $this->keys = array_keys($this->info);
         $this->values = array_values($this->info);
     }
 
@@ -118,7 +118,7 @@ class HTMLPurifier_ContentSets
         $value = $def->content_model;
         if (is_object($value)) {
             trigger_error(
-                'Literal object child definitions should be stored in '.
+                'Literal object child definitions should be stored in ' .
                 'ElementDef->child not ElementDef->content_model',
                 E_USER_NOTICE
             );

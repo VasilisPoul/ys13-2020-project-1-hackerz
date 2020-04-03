@@ -1,19 +1,19 @@
 <table width="100%">
- <tr>
-  <td>
+    <tr>
+        <td>
 
-    <table class="box">
+            <table class="box">
 
-     <tr class="boxheader">
-      <td class="boxheader">{title}</td>
-     </tr>
+                <tr class="boxheader">
+                    <td class="boxheader">{title}</td>
+                </tr>
 
-     <tr class="boxbody">
-      <td>{content}</td>
-     </tr>
+                <tr class="boxbody">
+                    <td>{content}</td>
+                </tr>
 
-    </table>
+            </table>
 
-   </td>
-  </tr>
+        </td>
+    </tr>
 </table>

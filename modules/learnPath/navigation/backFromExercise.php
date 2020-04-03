@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System
@@ -50,34 +50,32 @@
 $require_current_course = TRUE;
 
 require_once("../../../config/config.php");
-require_once ('../../../include/init.php');
+require_once('../../../include/init.php');
 ?>
 <html>
 <head>
- <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset?>">
- <link href="../../../template/classic/tool_content.css" rel="stylesheet" type="text/css" />
- <link href="../tool.css" rel="stylesheet" type="text/css" />
- <script>
-  <!-- //
-   parent.tocFrame.location.href="../viewer_toc.php";
-  //-->
- </script>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset ?>">
+    <link href="../../../template/classic/tool_content.css" rel="stylesheet" type="text/css"/>
+    <link href="../tool.css" rel="stylesheet" type="text/css"/>
+    <script>
+        <!-- //
+        parent.tocFrame.location.href = "../viewer_toc.php";
+        //-->
+    </script>
 </head>
 <body>
- <center>
-  <br /><br /><br />
-  <p>
-<?php
-if($_GET['op'] == 'cancel')
-{
-    echo $langExerciseCancelled;
-}
-elseif($_GET['op'] == 'finish') // exercise done
-{
-    echo $langExerciseDone;
-}
-?>
-   </p>
-  </center>
- </body>
+<center>
+    <br/><br/><br/>
+    <p>
+        <?php
+        if ($_GET['op'] == 'cancel') {
+            echo $langExerciseCancelled;
+        } elseif ($_GET['op'] == 'finish') // exercise done
+        {
+            echo $langExerciseDone;
+        }
+        ?>
+    </p>
+</center>
+</body>
 </html>

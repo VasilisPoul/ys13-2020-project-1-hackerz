@@ -9,7 +9,8 @@
  * @package phpMyAdmin
  */
 
-function PMA_log_user($user, $status = 'ok'){
+function PMA_log_user($user, $status = 'ok')
+{
     if (function_exists('apache_note')) {
         apache_note('userID', $user);
         apache_note('userStatus', $status);

@@ -36,7 +36,8 @@ class HTMLPurifier_DoctypeRegistry
         $aliases = array(),
         $dtd_public = null,
         $dtd_system = null
-    ) {
+    )
+    {
         if (!is_array($modules)) {
             $modules = array($modules);
         }

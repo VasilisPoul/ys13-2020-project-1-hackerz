@@ -50,19 +50,18 @@ $tool_content = "";
 $tool_content .= "
   <div id=\"operations_container\">
     <ul id=\"opslist\">
-      <li><a href='stateclass.php'>".$langPlatformGenStats."</a></li>
-      <li><a href='platformStats.php?first='>".$langVisitsStats."</a></li>
-      <li><a href='visitsCourseStats.php?first='>".$langVisitsCourseStats."</a></li>
-      <li><a href='oldStats.php'>".$langOldStats."</a></li>
+      <li><a href='stateclass.php'>" . $langPlatformGenStats . "</a></li>
+      <li><a href='platformStats.php?first='>" . $langVisitsStats . "</a></li>
+      <li><a href='visitsCourseStats.php?first='>" . $langVisitsCourseStats . "</a></li>
+      <li><a href='oldStats.php'>" . $langOldStats . "</a></li>
     </ul>
   </div>";
 
 $months = "";
-for ($i=0; $i<12; $i++)
-{
-  $mon = mktime(0, 0, 0, date("m")-$i-1, date("d"),  date("Y"));
-  $mval = date("m Y", $mon);
-  $months .= "<option value='$mval'>".$langMonths[date("m", $mon)] . date(" Y", $mon);
+for ($i = 0; $i < 12; $i++) {
+    $mon = mktime(0, 0, 0, date("m") - $i - 1, date("d"), date("Y"));
+    $mval = date("m Y", $mon);
+    $months .= "<option value='$mval'>" . $langMonths[date("m", $mon)] . date(" Y", $mon);
 }
 
 $tool_content .= '
@@ -71,11 +70,11 @@ $tool_content .= '
   <tbody>
   <tr>
     <th width="220"  class="left">&nbsp;</th>
-    <td><select name="selectedMonth">'.$months.'</select></td>
+    <td><select name="selectedMonth">' . $months . '</select></td>
   </tr>
   <tr>
     <th class="left">&nbsp;</th>
-    <td><input type="submit" name="btnUsage" value="'.$langSubmit.'"></td>
+    <td><input type="submit" name="btnUsage" value="' . $langSubmit . '"></td>
   </tr>
   </tbody>
   </table>
@@ -84,30 +83,30 @@ $tool_content .= '
 if (isset($_POST["selectedMonth"])) {
 
     $month = $_POST["selectedMonth"];
-    list($m, $y) = explode(' ',$month);  //only month
-    $sql = "SELECT profesNum, studNum, visitorsNum, coursNum, logins, details FROM monthly_summary ".
+    list($m, $y) = explode(' ', $month);  //only month
+    $sql = "SELECT profesNum, studNum, visitorsNum, coursNum, logins, details FROM monthly_summary " .
         "WHERE `month` = '$month'";
 
     $result = db_query($sql, $mysqlMainDb);
-    $coursNum='';
+    $coursNum = '';
     while ($row = mysql_fetch_assoc($result)) {
-            $profesNum = $row['profesNum'];
-            $studNum = $row['studNum'];
-            $visitorsNum = $row['visitorsNum'];
-            $coursNum = $row['coursNum'];
-            $logins = $row['logins'];
-            $details = $row['details'];
+        $profesNum = $row['profesNum'];
+        $studNum = $row['studNum'];
+        $visitorsNum = $row['visitorsNum'];
+        $coursNum = $row['coursNum'];
+        $logins = $row['logins'];
+        $details = $row['details'];
     }
     mysql_free_result($result);
 
-	if (isset($localize) and $localize == 'greek') {
-		$msg_of_month = substr($langMonths[$m], 0, -1);
-	} else {
-		$msg_of_month = $langMonths[$m];
-	}
+    if (isset($localize) and $localize == 'greek') {
+        $msg_of_month = substr($langMonths[$m], 0, -1);
+    } else {
+        $msg_of_month = $langMonths[$m];
+    }
 
-	if ($coursNum) {
-		$tool_content .= '
+    if ($coursNum) {
+        $tool_content .= '
 		<br />
 		<table class="FormData" width="99%" align="left">
 		<tbody>
@@ -117,30 +116,30 @@ if (isset($_POST["selectedMonth"])) {
 		</tr>
 		<tr>
 		<th width="220"  class="left">&nbsp;</th>
-		<td>'.$langReport.': '.$msg_of_month.' '.$y.'</td>
+		<td>' . $langReport . ': ' . $msg_of_month . ' ' . $y . '</td>
 		</tr>
 		<tr>
-		<th class="left">'.$langNbProf.': </th>
-		<td>'.$profesNum.'</td>
+		<th class="left">' . $langNbProf . ': </th>
+		<td>' . $profesNum . '</td>
 		</tr>
 		<tr>
-		<th class="left">'.$langNbStudents.': </th>
-		<td>'.$studNum.'</td>
+		<th class="left">' . $langNbStudents . ': </th>
+		<td>' . $studNum . '</td>
 		</tr>
 		<tr>
-		<th class="left">'.$langNbVisitors.': </th>
-		<td>'.$visitorsNum.'</td>
+		<th class="left">' . $langNbVisitors . ': </th>
+		<td>' . $visitorsNum . '</td>
 		</tr>
 		<tr>
-		<th class="left">'.$langNbCourses.':  </th>
-		<td>'.$coursNum.'</td>
+		<th class="left">' . $langNbCourses . ':  </th>
+		<td>' . $coursNum . '</td>
 		</tr>
 		<tr>
-		<th class="left">'.$langNbLogin.': </th>
-		<td>'.$logins.'</td>
+		<th class="left">' . $langNbLogin . ': </th>
+		<td>' . $logins . '</td>
 		</tr>
 		<tr>
-		<td colspan="2">'.$details. '</td>
+		<td colspan="2">' . $details . '</td>
 		</tr>
 		</tbody>
 		</table>';           //$details includes an html table with all details
@@ -149,7 +148,7 @@ if (isset($_POST["selectedMonth"])) {
 	<tbody>
 	<tr>
 	<th width="220"  class="left">&nbsp;</th>
-	<td>'.$langNoReport.': '.$msg_of_month.' '.$y.'</td>
+	<td>' . $langNoReport . ': ' . $msg_of_month . ' ' . $y . '</td>
 	</tr>
 	</tbody>
 	</table>';

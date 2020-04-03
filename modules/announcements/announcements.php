@@ -388,8 +388,8 @@ hContent;
             // FORMAT CONTENT
 
             $contenu = $myrow['contenu'];
-            $contenu = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $contenu);
-            $contenu = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $contenu);
+            $contenu = str_replace("<script>", htmlspecialchars("<script>", ENT_QUOTES), $contenu);
+            $contenu = str_replace("</script>", htmlspecialchars("</script>", ENT_QUOTES), $contenu);
 
             $content = make_clickable($contenu);
             $content = nl2br($content);
@@ -472,8 +472,8 @@ else {
             $title = $myrow['title'];
             $title = htmlspecialchars($title, ENT_QUOTES);
             $content = $myrow['contenu'];
-            $content = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $content);
-            $content = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $content);
+            $content = str_replace("<script>", htmlspecialchars("<script>", ENT_QUOTES), $content);
+            $content = str_replace("</script>", htmlspecialchars("</script>", ENT_QUOTES), $content);
             $content = make_clickable($content);
             $content = nl2br($content);
             if ($k % 2 == 0) {

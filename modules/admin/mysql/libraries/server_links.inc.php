@@ -5,7 +5,7 @@
  * @version $Id: server_links.inc.php 12163 2009-01-01 21:39:21Z lem9 $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -66,7 +66,7 @@ if ($is_superuser) {
     $tabs['rights']['text'] = $strPrivileges;
 }
 
-if (! empty($binary_logs)) {
+if (!empty($binary_logs)) {
     $tabs['binlog']['icon'] = 's_tbl.png';
     $tabs['binlog']['link'] = 'server_binlog.php';
     $tabs['binlog']['text'] = $strBinaryLog;

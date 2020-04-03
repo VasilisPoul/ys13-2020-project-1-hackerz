@@ -17,9 +17,8 @@ class PMA_StorageEngine_ndbcluster extends PMA_StorageEngine
     function getVariables()
     {
         return array(
-            'ndb_connectstring' => array(
-            ),
-         );
+            'ndb_connectstring' => array(),
+        );
     }
 
     /**

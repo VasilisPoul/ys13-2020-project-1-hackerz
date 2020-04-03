@@ -19,7 +19,7 @@ var pma_saveframesize_timeout = null;
  */
 function toggle(id, only_open) {
     var el = document.getElementById('subel' + id);
-    if (! el) {
+    if (!el) {
         return false;
     }
 
@@ -41,10 +41,9 @@ function toggle(id, only_open) {
     return true;
 }
 
-function PMA_callFunctionDelayed(myfunction, delay)
-{
+function PMA_callFunctionDelayed(myfunction, delay) {
     if (typeof pma_saveframesize_timeout == "number") {
-         window.clearTimeout(pma_saveframesize_timeout);
+        window.clearTimeout(pma_saveframesize_timeout);
         pma_saveframesize_timeout = null;
     }
 }
@@ -53,12 +52,11 @@ function PMA_callFunctionDelayed(myfunction, delay)
  * saves current navigation frame width in a cookie
  * usally called on resize of the navigation frame
  */
-function PMA_saveFrameSizeReal()
-{
+function PMA_saveFrameSizeReal() {
     if (parent.text_dir == 'ltr') {
         pma_navi_width = parseInt(parent.document.getElementById('mainFrameset').cols)
     } else {
-        pma_navi_width = parent.document.getElementById('mainFrameset').cols.match(/\d+$/) 
+        pma_navi_width = parent.document.getElementById('mainFrameset').cols.match(/\d+$/)
     }
     if ((pma_navi_width > 0) && (pma_navi_width != PMA_getCookie('pma_navi_width'))) {
         PMA_setCookie('pma_navi_width', pma_navi_width, expires);
@@ -68,8 +66,7 @@ function PMA_saveFrameSizeReal()
 /**
  * calls PMA_saveFrameSizeReal with delay
  */
-function PMA_saveFrameSize()
-{
+function PMA_saveFrameSize() {
     //alert(typeof(pma_saveframesize_timeout) + ' : ' + pma_saveframesize_timeout);
 
     if (typeof pma_saveframesize_timeout == "number") {
@@ -84,8 +81,7 @@ function PMA_saveFrameSize()
  * sets navigation frame width to the value stored in the cookie
  * usally called on document load
  */
-function PMA_setFrameSize()
-{
+function PMA_setFrameSize() {
     pma_navi_width = PMA_getCookie('pma_navi_width');
     //alert('from cookie: ' + typeof(pma_navi_width) + ' : ' + pma_navi_width);
     if (pma_navi_width != null) {
@@ -117,7 +113,7 @@ function PMA_getCookie(name) {
     if (end == -1) {
         end = document.cookie.length;
     }
-    return unescape(document.cookie.substring(len,end));
+    return unescape(document.cookie.substring(len, end));
 }
 
 /**
@@ -132,8 +128,8 @@ function PMA_getCookie(name) {
  */
 function PMA_setCookie(name, value, expires, path, domain, secure) {
     document.cookie = name + "=" + escape(value) +
-        ( (expires) ? ";expires=" + expires.toGMTString() : "") +
-        ( (path)    ? ";path=" + path : "") +
-        ( (domain)  ? ";domain=" + domain : "") +
-        ( (secure)  ? ";secure" : "");
+        ((expires) ? ";expires=" + expires.toGMTString() : "") +
+        ((path) ? ";path=" + path : "") +
+        ((domain) ? ";domain=" + domain : "") +
+        ((secure) ? ";secure" : "");
 }

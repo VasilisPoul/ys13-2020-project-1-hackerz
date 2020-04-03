@@ -83,7 +83,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
         restore_error_handler();
 
         $body = $doc->getElementsByTagName('html')->item(0)-> // <html>
-                      getElementsByTagName('body')->item(0);  // <body>
+        getElementsByTagName('body')->item(0);  // <body>
 
         $div = $body->getElementsByTagName('div')->item(0); // <div>
         $tokens = array();
@@ -103,7 +103,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
      * Iterative function that tokenizes a node, putting it into an accumulator.
      * To iterate is human, to recurse divine - L. Peter Deutsch
      * @param DOMNode $node DOMNode to be tokenized.
-     * @param HTMLPurifier_Token[] $tokens   Array-list of already tokenized tokens.
+     * @param HTMLPurifier_Token[] $tokens Array-list of already tokenized tokens.
      * @return HTMLPurifier_Token of node appended to previously passed tokens.
      */
     protected function tokenizeDOM($node, &$tokens, $config)
@@ -173,8 +173,8 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
 
     /**
      * @param DOMNode $node DOMNode to be tokenized.
-     * @param HTMLPurifier_Token[] $tokens   Array-list of already tokenized tokens.
-     * @param bool $collect  Says whether or start and close are collected, set to
+     * @param HTMLPurifier_Token[] $tokens Array-list of already tokenized tokens.
+     * @param bool $collect Says whether or start and close are collected, set to
      *                    false at first recursion because it's the implicit DIV
      *                    tag you're dealing with.
      * @return bool if the token needs an endtoken
@@ -188,7 +188,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
         if ($node->nodeType === XML_TEXT_NODE) {
             $data = $this->getData($node); // Handle variable data property
             if ($data !== null) {
-              $tokens[] = $this->factory->createText($data);
+                $tokens[] = $this->factory->createText($data);
             }
             return false;
         } elseif ($node->nodeType === XML_CDATA_SECTION_NODE) {
@@ -222,7 +222,7 @@ class HTMLPurifier_Lexer_DOMLex extends HTMLPurifier_Lexer
         $attr = $node->hasAttributes() ? $this->transformAttrToAssoc($node->attributes) : array();
         $tag_name = $this->getTagName($node); // Handle variable tagName property
         if (empty($tag_name)) {
-            return (bool) $node->childNodes->length;
+            return (bool)$node->childNodes->length;
         }
         // We still have to make sure that the element actually IS empty
         if (!$node->childNodes->length) {

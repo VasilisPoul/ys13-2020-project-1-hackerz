@@ -1,4 +1,5 @@
 /* vim: set expandtab sw=4 ts=4 sts=4: */
+
 /**
  * function used for index manipulation pages
  *
@@ -15,15 +16,14 @@
  *
  * @return  boolean  whether a valid number has been submitted or not
  */
-function checkFormElementInRange(theForm, theFieldName, message, min, max)
-{
-    var theField         = theForm.elements[theFieldName];
-    var val              = parseInt(theField.value);
+function checkFormElementInRange(theForm, theFieldName, message, min, max) {
+    var theField = theForm.elements[theFieldName];
+    var val = parseInt(theField.value);
 
-    if (typeof(min) == 'undefined') {
+    if (typeof (min) == 'undefined') {
         min = 0;
     }
-    if (typeof(max) == 'undefined') {
+    if (typeof (max) == 'undefined') {
         max = Number.MAX_VALUE;
     }
 
@@ -56,9 +56,8 @@ function checkFormElementInRange(theForm, theFieldName, message, min, max)
  *
  * @return  boolean  false if there is no index form, true else
  */
-function checkIndexName()
-{
-    if (typeof(document.forms['index_frm']) == 'undefined') {
+function checkIndexName() {
+    if (typeof (document.forms['index_frm']) == 'undefined') {
         return false;
     }
 
@@ -69,7 +68,7 @@ function checkIndexName()
     // Index is a primary key
     if (the_idx_type.options[0].value == 'PRIMARY' && the_idx_type.options[0].selected) {
         document.forms['index_frm'].elements['index'].value = 'PRIMARY';
-        if (typeof(the_idx_name.disabled) != 'undefined') {
+        if (typeof (the_idx_name.disabled) != 'undefined') {
             document.forms['index_frm'].elements['index'].disabled = true;
         }
     }
@@ -79,7 +78,7 @@ function checkIndexName()
         if (the_idx_name.value == 'PRIMARY') {
             document.forms['index_frm'].elements['index'].value = '';
         }
-        if (typeof(the_idx_name.disabled) != 'undefined') {
+        if (typeof (the_idx_name.disabled) != 'undefined') {
             document.forms['index_frm'].elements['index'].disabled = false;
         }
     }

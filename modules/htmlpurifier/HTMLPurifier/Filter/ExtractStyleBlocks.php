@@ -116,8 +116,8 @@ class HTMLPurifier_Filter_ExtractStyleBlocks extends HTMLPurifier_Filter
      * @param string $css CSS styling to clean
      * @param HTMLPurifier_Config $config
      * @param HTMLPurifier_Context $context
-     * @throws HTMLPurifier_Exception
      * @return string Cleaned CSS
+     * @throws HTMLPurifier_Exception
      */
     public function cleanCSS($css, $config, $context)
     {

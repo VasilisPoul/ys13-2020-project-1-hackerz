@@ -38,7 +38,7 @@ $ignore_module_ini = true;
 
 include '../../include/baseTheme.php';
 include '../../include/lib/textLib.inc.php';
-include('../../include/phpmathpublisher/mathpublisher.php') ;
+include('../../include/phpmathpublisher/mathpublisher.php');
 $nameTools = $langMyAnnouncements;
 $tool_content = "";
 $result = db_query("SELECT annonces.id, annonces.title, annonces.contenu,
@@ -51,7 +51,7 @@ $result = db_query("SELECT annonces.id, annonces.title, annonces.contenu,
                               cours_user.user_id = $uid
                         ORDER BY annonces.temps DESC", $mysqlMainDb);
 
-	$tool_content .= "
+$tool_content .= "
       <table width=\"99%\" class='FormData'>
       <thead>
       <tr>
@@ -61,33 +61,33 @@ $result = db_query("SELECT annonces.id, annonces.title, annonces.contenu,
       </thead>
       </table>
     ";
-	$tool_content .= "
+$tool_content .= "
       <table width=\"99%\" align='left' class=\"announcements\">
       <tbody>";
-        if (mysql_num_rows($result) > 0)  {    // found announcements ?
-        while ($myrow = mysql_fetch_array($result)) {
-                $content = $myrow['contenu'];
-                $content = str_replace("<script>",htmlspecialchars("<script>", ENT_QUOTES), $content);
-                $content = str_replace("</script>",htmlspecialchars("</script>", ENT_QUOTES), $content);
-                $content = make_clickable($content);
-                $content = nl2br($content);
-		        $content = mathfilter($content, 12, "../../include/phpmathpublisher/img/");
-                $title = htmlspecialchars($myrow["title"], ENT_QUOTES);
-		        $row = mysql_fetch_array(db_query("SELECT intitule,titulaires FROM cours
+if (mysql_num_rows($result) > 0) {    // found announcements ?
+    while ($myrow = mysql_fetch_array($result)) {
+        $content = $myrow['contenu'];
+        $content = str_replace("<script>", htmlspecialchars("<script>", ENT_QUOTES), $content);
+        $content = str_replace("</script>", htmlspecialchars("</script>", ENT_QUOTES), $content);
+        $content = make_clickable($content);
+        $content = nl2br($content);
+        $content = mathfilter($content, 12, "../../include/phpmathpublisher/img/");
+        $title = htmlspecialchars($myrow["title"], ENT_QUOTES);
+        $row = mysql_fetch_array(db_query("SELECT intitule,titulaires FROM cours
 			WHERE code='$myrow[fake_code]'"));
-                $tool_content .= "
+        $tool_content .= "
       <tr>
         <td width='3'><img class=\"displayed\" src=../../template/classic/img/announcements_on.gif border=0 title=\"" . $title . "\"></td>
         <td>$m[name]: <b>$row[intitule]</b><br />$content</td>
-        <td align='right' width='300'><small><i>($langAnn: ".$myrow['temps'].")</i></small><br /><br />$langTutor: <b>$row[titulaires]</b></td>
+        <td align='right' width='300'><small><i>($langAnn: " . $myrow['temps'] . ")</i></small><br /><br />$langTutor: <b>$row[titulaires]</b></td>
       </tr>";
-      }  // while loop
-	$tool_content .= "
+    }  // while loop
+    $tool_content .= "
       <tbody>
       </table>";
 
 } else {  // no announcements
-        $tool_content .= "<tr><td class=alert1>".$langNoAnnounce."</td></tr>\n";
+    $tool_content .= "<tr><td class=alert1>" . $langNoAnnounce . "</td></tr>\n";
 }
 
 $tool_content .= "</tbody></table>";

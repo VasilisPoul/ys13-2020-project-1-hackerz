@@ -59,7 +59,7 @@ if (!$is_https) {
     $text = $GLOBALS['strSetupInsecureConnectionMsg1'];
     if (!empty($_SERVER['REQUEST_URI']) && !empty($_SERVER['HTTP_HOST'])) {
         $text .= ' ' . PMA_lang('InsecureConnectionMsg2',
-            'https://' . htmlspecialchars($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
+                'https://' . htmlspecialchars($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']));
     }
     messages_set('warning', 'no_https', 'InsecureConnection', $text);
 }
@@ -68,29 +68,29 @@ if (!$is_https) {
 <form id="select_lang" method="post" action="<?php echo htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
     <?php echo PMA_generate_common_hidden_inputs() ?>
     <bdo xml:lang="en" dir="ltr"><label for="lang">
-    <?php echo $GLOBALS['strLanguage'] . ($GLOBALS['strLanguage'] != 'Language' ? ' - Language' : '') ?>
-    </label></bdo><br />
+            <?php echo $GLOBALS['strLanguage'] . ($GLOBALS['strLanguage'] != 'Language' ? ' - Language' : '') ?>
+        </label></bdo><br/>
     <select id="lang" name="lang" onchange="this.form.submit();" xml:lang="en" dir="ltr">
-    <?php
-    // create language list
-    $lang_list = array();
-    foreach ($all_languages as $each_lang_key => $each_lang) {
-        if (!file_exists($GLOBALS['lang_path'] . $each_lang[1] . '.inc.php')) {
-            continue;
-        }
+        <?php
+        // create language list
+        $lang_list = array();
+        foreach ($all_languages as $each_lang_key => $each_lang) {
+            if (!file_exists($GLOBALS['lang_path'] . $each_lang[1] . '.inc.php')) {
+                continue;
+            }
 
-        $lang_name = ucfirst(substr(strrchr($each_lang[0], '|'), 1));
-        // Include native name if non empty
-        if (!empty($each_lang[3])) {
-            $lang_name = $each_lang[3] . ' - ' . $lang_name;
-        }
+            $lang_name = ucfirst(substr(strrchr($each_lang[0], '|'), 1));
+            // Include native name if non empty
+            if (!empty($each_lang[3])) {
+                $lang_name = $each_lang[3] . ' - ' . $lang_name;
+            }
 
-        //Is current one active?
-        $selected = ($GLOBALS['lang'] == $each_lang_key) ? ' selected="selected"' : '';
-        echo '<option value="' . $each_lang_key . '"' . $selected . '>' . $lang_name
-            . '</option>' . "\n";
-    }
-    ?>
+            //Is current one active?
+            $selected = ($GLOBALS['lang'] == $each_lang_key) ? ' selected="selected"' : '';
+            echo '<option value="' . $each_lang_key . '"' . $selected . '>' . $lang_name
+                . '</option>' . "\n";
+        }
+        ?>
     </select>
 </form>
 
@@ -115,45 +115,46 @@ display_form_top('index.php', 'get', array(
 ));
 ?>
 <div class="form">
-<?php if ($cf->getServerCount() > 0): ?>
-<table cellspacing="0" class="datatable" style="table-layout: fixed">
-<tr>
-    <th>#</th>
-    <th><?php echo $GLOBALS['strName'] ?></th>
-    <th>Authentication type</th>
-    <th colspan="2">DSN</th>
-</tr>
-<?php foreach ($_SESSION['ConfigFile']['Servers'] as $id => $server): ?>
-<tr>
-    <td><?php echo $id ?></td>
-    <td><?php echo $cf->getServerName($id) ?></td>
-    <td><?php echo htmlspecialchars($cf->getValue("Servers/$id/auth_type")) ?></td>
-    <td><?php echo htmlspecialchars($cf->getServerDSN($id)) ?></td>
-    <td style="white-space: nowrap">
-        <small>
-        <a href="<?php echo "?page=servers{$separator}mode=edit{$separator}id=$id" ?>"><?php echo $GLOBALS['strEdit'] ?></a>
-        | <a href="<?php echo "?page=servers{$separator}mode=remove{$separator}id=$id" ?>"><?php echo $GLOBALS['strDelete'] ?></a>
-        </small>
-    </td>
-</tr>
-<?php endforeach; ?>
-</table>
-<?php else: ?>
-<table width="100%">
-<tr>
-    <td>
-        <i><?php echo $GLOBALS['strSetupNoServers'] ?></i>
-    </td>
-</tr>
-</table>
-<?php endif; ?>
-<table width="100%">
-<tr>
-    <td class="lastrow" style="text-align: left">
-        <input type="submit" name="submit" value="<?php echo $GLOBALS['strSetupNewServer'] ?>" />
-    </td>
-</tr>
-</table>
+    <?php if ($cf->getServerCount() > 0): ?>
+        <table cellspacing="0" class="datatable" style="table-layout: fixed">
+            <tr>
+                <th>#</th>
+                <th><?php echo $GLOBALS['strName'] ?></th>
+                <th>Authentication type</th>
+                <th colspan="2">DSN</th>
+            </tr>
+            <?php foreach ($_SESSION['ConfigFile']['Servers'] as $id => $server): ?>
+                <tr>
+                    <td><?php echo $id ?></td>
+                    <td><?php echo $cf->getServerName($id) ?></td>
+                    <td><?php echo htmlspecialchars($cf->getValue("Servers/$id/auth_type")) ?></td>
+                    <td><?php echo htmlspecialchars($cf->getServerDSN($id)) ?></td>
+                    <td style="white-space: nowrap">
+                        <small>
+                            <a href="<?php echo "?page=servers{$separator}mode=edit{$separator}id=$id" ?>"><?php echo $GLOBALS['strEdit'] ?></a>
+                            |
+                            <a href="<?php echo "?page=servers{$separator}mode=remove{$separator}id=$id" ?>"><?php echo $GLOBALS['strDelete'] ?></a>
+                        </small>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    <?php else: ?>
+        <table width="100%">
+            <tr>
+                <td>
+                    <i><?php echo $GLOBALS['strSetupNoServers'] ?></i>
+                </td>
+            </tr>
+        </table>
+    <?php endif; ?>
+    <table width="100%">
+        <tr>
+            <td class="lastrow" style="text-align: left">
+                <input type="submit" name="submit" value="<?php echo $GLOBALS['strSetupNewServer'] ?>"/>
+            </td>
+        </tr>
+    </table>
 </div>
 <?php
 display_form_bottom();
@@ -225,14 +226,17 @@ display_input('eol', $GLOBALS['strSetupEndOfLine'], '', 'select',
 ?>
 <tr>
     <td colspan="2" class="lastrow" style="text-align: left">
-        <input type="submit" name="submit_display" value="<?php echo $GLOBALS['strSetupDisplay'] ?>" />
-        <input type="submit" name="submit_download" value="<?php echo $GLOBALS['strSetupDownload'] ?>" />
+        <input type="submit" name="submit_display" value="<?php echo $GLOBALS['strSetupDisplay'] ?>"/>
+        <input type="submit" name="submit_download" value="<?php echo $GLOBALS['strSetupDownload'] ?>"/>
         &nbsp; &nbsp;
-        <input type="submit" name="submit_save" value="<?php echo $GLOBALS['strSave'] ?>"<?php if (!$config_writable) echo ' disabled="disabled"' ?> />
-        <input type="submit" name="submit_load" value="<?php echo $GLOBALS['strSetupLoad'] ?>"<?php if (!$config_exists) echo ' disabled="disabled"' ?> />
-        <input type="submit" name="submit_delete" value="<?php echo $GLOBALS['strDelete'] ?>"<?php if (!$config_exists || !$config_writable) echo ' disabled="disabled"' ?> />
+        <input type="submit" name="submit_save"
+               value="<?php echo $GLOBALS['strSave'] ?>"<?php if (!$config_writable) echo ' disabled="disabled"' ?> />
+        <input type="submit" name="submit_load"
+               value="<?php echo $GLOBALS['strSetupLoad'] ?>"<?php if (!$config_exists) echo ' disabled="disabled"' ?> />
+        <input type="submit" name="submit_delete"
+               value="<?php echo $GLOBALS['strDelete'] ?>"<?php if (!$config_exists || !$config_writable) echo ' disabled="disabled"' ?> />
         &nbsp; &nbsp;
-        <input type="submit" name="submit_clear" value="<?php echo $GLOBALS['strSetupClear'] ?>" class="red" />
+        <input type="submit" name="submit_clear" value="<?php echo $GLOBALS['strSetupClear'] ?>" class="red"/>
     </td>
 </tr>
 <?php

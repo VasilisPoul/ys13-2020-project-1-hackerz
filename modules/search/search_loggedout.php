@@ -38,11 +38,11 @@ $nameTools = $langSearch;
 $tool_content = "";
 
 //elegxos ean *yparxoun* oroi anazhthshs
-if(empty($search_terms_title) && empty($search_terms_keywords) && empty($search_terms_instructor) && empty($search_terms_coursecode)) {
-/**********************************************************************************************
-	emfanish formas anahzthshs ean oi oroi anazhthshs einai kenoi
-***********************************************************************************************/
-	$tool_content .= "
+if (empty($search_terms_title) && empty($search_terms_keywords) && empty($search_terms_instructor) && empty($search_terms_coursecode)) {
+    /**********************************************************************************************
+     * emfanish formas anahzthshs ean oi oroi anazhthshs einai kenoi
+     ***********************************************************************************************/
+    $tool_content .= "
     <form method=\"post\" action=\"$_SERVER[PHP_SELF]\">
 		<table width=\"99%\">
         <tbody>
@@ -77,23 +77,22 @@ if(empty($search_terms_title) && empty($search_terms_keywords) && empty($search_
         </table>
     </form>";
 
-}else
-{
-/**********************************************************************************************
-		ektelesh anazhthshs afou yparxoun oroi anazhthshs
-		 emfanish arikown mhnymatwn anazhthshs
-***********************************************************************************************/
+} else {
+    /**********************************************************************************************
+     * ektelesh anazhthshs afou yparxoun oroi anazhthshs
+     * emfanish arikown mhnymatwn anazhthshs
+     ***********************************************************************************************/
 
-	//to pedio visible exei times 2 kai 1 gia Public kai Open mathimata
-	$result = mysql_query("SELECT * FROM cours WHERE visible='2' OR visible='1'");
+    //to pedio visible exei times 2 kai 1 gia Public kai Open mathimata
+    $result = mysql_query("SELECT * FROM cours WHERE visible='2' OR visible='1'");
 
-	$results_found = 0; //arithmos apotelesmatwn pou exoun emfanistei (ena gia kathe grammh tou $mycours)
+    $results_found = 0; //arithmos apotelesmatwn pou exoun emfanistei (ena gia kathe grammh tou $mycours)
 
 
-	//*****************************************************************************************************
-	//vrogxos gia na diatreksoume ola ta mathimata sta opoia enai anoixta (public OR open for registration)
+    //*****************************************************************************************************
+    //vrogxos gia na diatreksoume ola ta mathimata sta opoia enai anoixta (public OR open for registration)
 
-	$tool_content .= "
+    $tool_content .= "
     <div id=\"operations_container\">
       <ul id=\"opslist\">
         <li><a href=\"search.php\">$langNewSearch</a></li>
@@ -103,40 +102,38 @@ if(empty($search_terms_title) && empty($search_terms_keywords) && empty($search_
 
     $k = 0;
     $tbl_content = "";
-    while ($mycours = mysql_fetch_array($result))
-    {
-		$show_entry = FALSE; //flag gia emfanish apotelesmatwn se mia grammh tou array efoson entopistoun apotelesmata
+    while ($mycours = mysql_fetch_array($result)) {
+        $show_entry = FALSE; //flag gia emfanish apotelesmatwn se mia grammh tou array efoson entopistoun apotelesmata
 
-		if (!empty($search_terms_title)) $show_entry = match_arrays($search_terms_title, $mycours['intitule']);
-		if (!empty($search_terms_keywords)) if($show_entry == FALSE) $show_entry = match_arrays($search_terms_keywords, $mycours['course_keywords']);
-		if (!empty($search_terms_instructor)) if($show_entry == FALSE) $show_entry = match_arrays($search_terms_instructor, $mycours['titulaires']);
-		if (!empty($search_terms_coursecode)) if($show_entry == FALSE) $show_entry = match_arrays($search_terms_coursecode, $mycours['code']);
+        if (!empty($search_terms_title)) $show_entry = match_arrays($search_terms_title, $mycours['intitule']);
+        if (!empty($search_terms_keywords)) if ($show_entry == FALSE) $show_entry = match_arrays($search_terms_keywords, $mycours['course_keywords']);
+        if (!empty($search_terms_instructor)) if ($show_entry == FALSE) $show_entry = match_arrays($search_terms_instructor, $mycours['titulaires']);
+        if (!empty($search_terms_coursecode)) if ($show_entry == FALSE) $show_entry = match_arrays($search_terms_coursecode, $mycours['code']);
 
-		//EMFANISH APOTELESMATOS:
-		//ean to flag $show_entry exei allaxtei se TRUE (ara kapoios apo tous orous anazhthshs entopistike sto
-		//$mycours, emfanise thn eggrafh
-		if($show_entry)
-		{
-		  if ($k%2==0) {
-	        $tbl_content .= "\n    <tr>";
-	      } else {
-	        $tbl_content .= "\n    <tr class=\"odd\">";
-          }
+        //EMFANISH APOTELESMATOS:
+        //ean to flag $show_entry exei allaxtei se TRUE (ara kapoios apo tous orous anazhthshs entopistike sto
+        //$mycours, emfanise thn eggrafh
+        if ($show_entry) {
+            if ($k % 2 == 0) {
+                $tbl_content .= "\n    <tr>";
+            } else {
+                $tbl_content .= "\n    <tr class=\"odd\">";
+            }
             $tbl_content .= "\n      <td><img src=\"../../template/classic/img/arrow_grey.gif\" alt=\"\" border=\"0\" /></td>";
-            $tbl_content .= "\n      <td><a href=\"../../courses/".$mycours['code']."/\">".$mycours['intitule']."</a> (".$mycours['code'].")</td>";
-            $tbl_content .= "\n      <td>".$mycours['titulaires']."</td>";
-            $tbl_content .= "\n      <td>".$mycours['course_keywords']."</td>";
+            $tbl_content .= "\n      <td><a href=\"../../courses/" . $mycours['code'] . "/\">" . $mycours['intitule'] . "</a> (" . $mycours['code'] . ")</td>";
+            $tbl_content .= "\n      <td>" . $mycours['titulaires'] . "</td>";
+            $tbl_content .= "\n      <td>" . $mycours['course_keywords'] . "</td>";
             $tbl_content .= "\n    </tr>";
-			//afkhsh tou arithmou apotelesmatwn
-			$results_found++;
-    		$k++;
-		}
+            //afkhsh tou arithmou apotelesmatwn
+            $results_found++;
+            $k++;
+        }
     }
     //elegxos tou arithmou twn apotelesmatwn pou exoun emfanistei. ean den emfanistike kanena apotelesma, ektypwsh analogou mhnymatos
-    if($results_found == 0) {
+    if ($results_found == 0) {
         $tool_content .= "\n<br />    \n    <p class=\"alert1\">$langNoResult</p>";
     } else {
-    $tool_content .= "
+        $tool_content .= "
     <table width=\"99%\" class=\"Search\" align=\"left\">
     <tbody>
     <tr class=\"odd\">
@@ -144,16 +141,14 @@ if(empty($search_terms_title) && empty($search_terms_keywords) && empty($search_
     </tr>
     <tr>
       <th width=\"1%\">&nbsp;</th>
-      <th width=\"40%\"><div align=\"left\">".$langCourse." ($langCode)</div></th>
+      <th width=\"40%\"><div align=\"left\">" . $langCourse . " ($langCode)</div></th>
       <th width=\"30%\"><div align=\"left\">$langTeacher</div></th>
       <th width=\"30%\"><div align=\"left\">$langKeywords</div></th>
     </tr>";
-    $tool_content .=  $tbl_content;
-    $tool_content .= "\n    </tbody>";
-    $tool_content .= "\n    </table>";
+        $tool_content .= $tbl_content;
+        $tool_content .= "\n    </tbody>";
+        $tool_content .= "\n    </table>";
     }
-
-
 
 
     //ektypwsh syndesmou gia nea anazhthsh
@@ -167,28 +162,27 @@ draw($tool_content, 0, 'search');
 $search_terms_title = "";
 $search_terms_keywords = "";
 $search_terms_instructor = "";
-$search_terms_coursecode ="";
+$search_terms_coursecode = "";
 
 //voithitiki function gia ton entopismo strings se array mesa se string
 function match_arrays($search_terms_array, $mycours_string)
 {
-	//elegxos gia to an yparxoun apotelesmata sthn trexousa grammh toy $mycours_array
-		if(!empty($search_terms_array) || $search_terms_array != "" || !empty($mycours_string) || $mycours_string != "")
-		{
-			$ret = my_stripos($mycours_string, $search_terms_array);
-			if($ret !== FALSE) return TRUE;
-		}
+    //elegxos gia to an yparxoun apotelesmata sthn trexousa grammh toy $mycours_array
+    if (!empty($search_terms_array) || $search_terms_array != "" || !empty($mycours_string) || $mycours_string != "") {
+        $ret = my_stripos($mycours_string, $search_terms_array);
+        if ($ret !== FALSE) return TRUE;
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 
 function my_stripos($string, $word)
 {
-	$source = array('ά', 'έ', 'ή', 'ί', 'ύ', 'ό', 'ώ', 'ϊ', 'ϋ', 'ΐ', 'ΰ');
-      $target = array('α', 'ε', 'η', 'ι', 'υ', 'ο', 'ω', 'ι', 'υ', 'ι', 'υ');
+    $source = array('ά', 'έ', 'ή', 'ί', 'ύ', 'ό', 'ώ', 'ϊ', 'ϋ', 'ΐ', 'ΰ');
+    $target = array('α', 'ε', 'η', 'ι', 'υ', 'ο', 'ω', 'ι', 'υ', 'ι', 'υ');
 
-      return strpos(
-	str_replace($source, $target, mb_strtolower($string, 'UTF-8')),
-	str_replace($source, $target, mb_strtolower($word, 'UTF-8')));
+    return strpos(
+        str_replace($source, $target, mb_strtolower($string, 'UTF-8')),
+        str_replace($source, $target, mb_strtolower($word, 'UTF-8')));
 }

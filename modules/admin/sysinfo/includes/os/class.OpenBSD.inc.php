@@ -31,13 +31,13 @@ class sysinfo extends bsd_common
 
     // Our contstructor
     // this function is run on the initialization of this class
-    function sysinfo ()
+    function sysinfo()
     {
         $this->cpu_regexp = "^cpu.* @ (.*) MHz";
         $this->scsi_regexp = "^(.*) at scsibus.*: <(.*)> .*";
     }
 
-    function get_sys_ticks ()
+    function get_sys_ticks()
     {
         $a = $this->grab_key('kern.boottime');
         $sys_ticks = time() - $a;
@@ -45,23 +45,23 @@ class sysinfo extends bsd_common
     }
 
     // get the pci device information out of dmesg
-    function pci ()
+    function pci()
     {
         $results = array();
 
-        for ($i=0; $i < count($this->read_dmesg()); $i++) {
+        for ($i = 0; $i < count($this->read_dmesg()); $i++) {
             $buf = $this->dmesg[$i];
             if (preg_match('/(.*) at pci[0-9] (.*) "(.*)" (.*)$/', $buf, $ar_buf)) {
-                $results[$i] = $ar_buf[1].": ".$ar_buf[3];
+                $results[$i] = $ar_buf[1] . ": " . $ar_buf[3];
             } elseif (preg_match('/"(.*)" (.*).* at [.0-9]+ irq/', $buf, $ar_buf)) {
-                $results[$i] = $ar_buf[1].": ".$ar_buf[2];
+                $results[$i] = $ar_buf[1] . ": " . $ar_buf[2];
             }
             sort($results);
         }
         return $results;
     }
 
-    function network ()
+    function network()
     {
         $netstat_b = execute_program('netstat', '-nbdi | cut -c1-25,44- | grep Link | grep -v \'* \'');
         $netstat_n = execute_program('netstat', '-ndi | cut -c1-25,44- | grep Link | grep -v \'* \'');
@@ -92,19 +92,19 @@ class sysinfo extends bsd_common
     }
 
     // get the ide device information out of dmesg
-    function ide ()
+    function ide()
     {
         $results = array();
 
         $s = 0;
-        for ($i=0; $i < count($this->read_dmesg()); $i++) {
+        for ($i = 0; $i < count($this->read_dmesg()); $i++) {
             $buf = $this->dmesg[$i];
             if (preg_match('/^(.*) at pciide[0-9] (.*): <(.*)>/', $buf, $ar_buf)) {
                 $s = $ar_buf[1];
                 $results[$s]['model'] = $ar_buf[3];
                 $results[$s]['media'] = 'Hard Disk';
                 // now loop again and find the capacity
-                for ($j=0; $j < count($this->read_dmesg()); $j++) {
+                for ($j = 0; $j < count($this->read_dmesg()); $j++) {
                     $buf_n = $this->dmesg[$j];
                     if (preg_match("/^($s): (.*), (.*), (.*)MB, .*$/", $buf_n, $ar_buf_n)) {
                         $results[$s]['capacity'] = $ar_buf_n[4] * 2048 * 1.049;;

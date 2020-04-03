@@ -35,7 +35,7 @@ $sql_query .= ';';
 
 $result = PMA_DBI_try_query($sql_query);
 
-if (! $result) {
+if (!$result) {
     $message = PMA_Message::rawError(PMA_DBI_getError());
     // avoid displaying the not-created db name in header or navi panel
     $GLOBALS['db'] = '';

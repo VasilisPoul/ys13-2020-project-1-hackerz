@@ -18,7 +18,7 @@ require_once './libraries/common.inc.php';
 
 // $sub_part is also used in db_info.inc.php to see if we are coming from
 // db_export.php, in which case we don't obey $cfg['MaxTableList']
-$sub_part  = '_export';
+$sub_part = '_export';
 require_once './libraries/db_common.inc.php';
 $url_query .= '&amp;goto=db_export.php';
 require_once './libraries/db_info.inc.php';
@@ -36,8 +36,8 @@ if ($num_tables < 1) {
 } // end if
 
 $checkall_url = 'db_export.php?'
-              . PMA_generate_common_url($db)
-              . '&amp;goto=db_export.php';
+    . PMA_generate_common_url($db)
+    . '&amp;goto=db_export.php';
 
 $multi_values = '<div align="center">';
 $multi_values .= '<a href="' . $checkall_url . '" onclick="setSelectOptions(\'dump\', \'table_select[]\', true); return false;">' . $strSelectAll . '</a>
@@ -50,17 +50,17 @@ $multi_values .= "\n";
 foreach ($tables as $each_table) {
     // ok we show also views
     //if (is_null($each_table['Engine'])) {
-        // Don't offer to export views yet.
+    // Don't offer to export views yet.
     //    continue;
     //}
-    if (! empty($unselectall)
-      || (isset($tmp_select)
-           && false !== strpos($tmp_select, '|' . $each_table['Name'] . '|'))) {
+    if (!empty($unselectall)
+        || (isset($tmp_select)
+            && false !== strpos($tmp_select, '|' . $each_table['Name'] . '|'))) {
         $is_selected = '';
     } else {
         $is_selected = ' selected="selected"';
     }
-    $table_html   = htmlspecialchars($each_table['Name']);
+    $table_html = htmlspecialchars($each_table['Name']);
     $multi_values .= '                <option value="' . $table_html . '"'
         . $is_selected . '>'
         . str_replace(' ', '&nbsp;', $table_html) . '</option>' . "\n";

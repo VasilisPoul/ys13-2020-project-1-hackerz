@@ -24,21 +24,21 @@ class PMA_Error extends PMA_Message
      *
      * @var array
      */
-    static public $errortype = array (
-        E_ERROR              => 'Error',
-        E_WARNING            => 'Warning',
-        E_PARSE              => 'Parsing Error',
-        E_NOTICE             => 'Notice',
-        E_CORE_ERROR         => 'Core Error',
-        E_CORE_WARNING       => 'Core Warning',
-        E_COMPILE_ERROR      => 'Compile Error',
-        E_COMPILE_WARNING    => 'Compile Warning',
-        E_USER_ERROR         => 'User Error',
-        E_USER_WARNING       => 'User Warning',
-        E_USER_NOTICE        => 'User Notice',
-        E_STRICT             => 'Runtime Notice',
-        E_DEPRECATED         => 'Deprecation Notice',
-        E_RECOVERABLE_ERROR  => 'Catchable Fatal Error',
+    static public $errortype = array(
+        E_ERROR => 'Error',
+        E_WARNING => 'Warning',
+        E_PARSE => 'Parsing Error',
+        E_NOTICE => 'Notice',
+        E_CORE_ERROR => 'Core Error',
+        E_CORE_WARNING => 'Core Warning',
+        E_COMPILE_ERROR => 'Compile Error',
+        E_COMPILE_WARNING => 'Compile Warning',
+        E_USER_ERROR => 'User Error',
+        E_USER_WARNING => 'User Warning',
+        E_USER_NOTICE => 'User Notice',
+        E_STRICT => 'Runtime Notice',
+        E_DEPRECATED => 'Deprecation Notice',
+        E_RECOVERABLE_ERROR => 'Catchable Fatal Error',
     );
 
     /**
@@ -46,21 +46,21 @@ class PMA_Error extends PMA_Message
      *
      * @var array
      */
-    static public $errorlevel = array (
-        E_ERROR              => 'error',
-        E_WARNING            => 'warning',
-        E_PARSE              => 'error',
-        E_NOTICE             => 'notice',
-        E_CORE_ERROR         => 'error',
-        E_CORE_WARNING       => 'warning',
-        E_COMPILE_ERROR      => 'error',
-        E_COMPILE_WARNING    => 'warning',
-        E_USER_ERROR         => 'error',
-        E_USER_WARNING       => 'warning',
-        E_USER_NOTICE        => 'notice',
-        E_STRICT             => 'notice',
-        E_DEPRECATED         => 'notice',
-        E_RECOVERABLE_ERROR  => 'error',
+    static public $errorlevel = array(
+        E_ERROR => 'error',
+        E_WARNING => 'warning',
+        E_PARSE => 'error',
+        E_NOTICE => 'notice',
+        E_CORE_ERROR => 'error',
+        E_CORE_WARNING => 'warning',
+        E_COMPILE_ERROR => 'error',
+        E_COMPILE_WARNING => 'warning',
+        E_USER_ERROR => 'error',
+        E_USER_WARNING => 'warning',
+        E_USER_NOTICE => 'notice',
+        E_STRICT => 'notice',
+        E_DEPRECATED => 'notice',
+        E_RECOVERABLE_ERROR => 'error',
     );
 
     /**
@@ -102,6 +102,11 @@ class PMA_Error extends PMA_Message
     /**
      * Constructor
      *
+     * @param integer $errno
+     * @param string $errstr
+     * @param string $errfile
+     * @param integer $errline
+     * @param array $errcontext
      * @uses    debug_backtrace()
      * @uses    PMA_Error::setNumber()
      * @uses    PMA_Error::setMessage()
@@ -109,11 +114,6 @@ class PMA_Error extends PMA_Message
      * @uses    PMA_Error::setLine()
      * @uses    PMA_Error::setContext()
      * @uses    PMA_Error::setBacktrace()
-     * @param   integer $errno
-     * @param   string  $errstr
-     * @param   string  $errfile
-     * @param   integer $errline
-     * @param   array   $errcontext
      */
     public function __construct($errno, $errstr, $errfile, $errline, $errcontext)
     {
@@ -134,8 +134,8 @@ class PMA_Error extends PMA_Message
     /**
      * sets PMA_Error::$_backtrace
      *
+     * @param array $backtrace
      * @uses    PMA_Error::$_backtrace to set it
-     * @param   array $backtrace
      */
     public function setBacktrace($backtrace)
     {
@@ -145,8 +145,8 @@ class PMA_Error extends PMA_Message
     /**
      * sets PMA_Error::$_context
      *
+     * @param array $context
      * @uses    PMA_Error::$_context to set it
-     * @param   array $context
      */
     public function setContext($context)
     {
@@ -156,8 +156,8 @@ class PMA_Error extends PMA_Message
     /**
      * sets PMA_Error::$_line
      *
+     * @param integer $line
      * @uses    PMA_Error::$_line to set it
-     * @param   integer $line
      */
     public function setLine($line)
     {
@@ -167,9 +167,9 @@ class PMA_Error extends PMA_Message
     /**
      * sets PMA_Error::$_file
      *
-     * @uses    PMA_Error::$_file to set it
+     * @param string $file
      * @uses    PMA_Error::relPath()
-     * @param   string $file
+     * @uses    PMA_Error::$_file to set it
      */
     public function setFile($file)
     {
@@ -180,15 +180,15 @@ class PMA_Error extends PMA_Message
     /**
      * returns unique PMA_Error::$_hash, if not exists it will be created
      *
-     * @uses    PMA_Error::$_hash as return value and to set it if required
-     * @uses    PMA_Error::getNumber()
+     * @param string $file
+     * @return  string PMA_Error::$_hash
      * @uses    PMA_Error::getMessage()
      * @uses    PMA_Error::getFile()
      * @uses    PMA_Error::getLine()
      * @uses    PMA_Error::getBacktrace()
      * @uses    md5()
-     * @param   string $file
-     * @return  string PMA_Error::$_hash
+     * @uses    PMA_Error::$_hash as return value and to set it if required
+     * @uses    PMA_Error::getNumber()
      */
     public function getHash()
     {
@@ -208,8 +208,8 @@ class PMA_Error extends PMA_Message
     /**
      * returns PMA_Error::$_backtrace
      *
-     * @uses    PMA_Error::$_backtrace as return value
      * @return  array PMA_Error::$_backtrace
+     * @uses    PMA_Error::$_backtrace as return value
      */
     public function getBacktrace()
     {
@@ -219,8 +219,8 @@ class PMA_Error extends PMA_Message
     /**
      * returns PMA_Error::$_file
      *
-     * @uses    PMA_Error::$_file as return value
      * @return  string PMA_Error::$_file
+     * @uses    PMA_Error::$_file as return value
      */
     public function getFile()
     {
@@ -230,8 +230,8 @@ class PMA_Error extends PMA_Message
     /**
      * returns PMA_Error::$_line
      *
-     * @uses    PMA_Error::$_line as return value
      * @return  integer PMA_Error::$_line
+     * @uses    PMA_Error::$_line as return value
      */
     public function getLine()
     {
@@ -241,9 +241,9 @@ class PMA_Error extends PMA_Message
     /**
      * returns type of error
      *
-     * @uses    PMA_Error::$errortype
-     * @uses    PMA_Error::getNumber()
      * @return  string  type of error
+     * @uses    PMA_Error::getNumber()
+     * @uses    PMA_Error::$errortype
      */
     public function getType()
     {
@@ -253,9 +253,9 @@ class PMA_Error extends PMA_Message
     /**
      * returns level of error
      *
-     * @uses    PMA_Error::$$errorlevel
-     * @uses    PMA_Error::getNumber()
      * @return  string  level of error
+     * @uses    PMA_Error::getNumber()
+     * @uses    PMA_Error::$$errorlevel
      */
     public function getLevel()
     {
@@ -265,10 +265,10 @@ class PMA_Error extends PMA_Message
     /**
      * returns title prepared for HTML Title-Tag
      *
-     * @uses    PMA_Error::getTitle()
+     * @return  string   HTML escaped and truncated title
      * @uses    htmlspecialchars()
      * @uses    substr()
-     * @return  string   HTML escaped and truncated title
+     * @uses    PMA_Error::getTitle()
      */
     public function getHtmlTitle()
     {
@@ -278,9 +278,9 @@ class PMA_Error extends PMA_Message
     /**
      * returns title for error
      *
-     * @uses    PMA_Error::getType()
-     * @uses    PMA_Error::getMessage()
      * @return string
+     * @uses    PMA_Error::getMessage()
+     * @uses    PMA_Error::getType()
      */
     public function getTitle()
     {
@@ -323,11 +323,11 @@ class PMA_Error extends PMA_Message
      * Display a single function argument
      * if $function is one of include/require the $arg is converted te relative path
      *
-     * @uses    PMA_Error::relPath()
-     * @uses    in_array()
-     * @uses    gettype()
      * @param string $arg
      * @param string $function
+     * @uses    gettype()
+     * @uses    PMA_Error::relPath()
+     * @uses    in_array()
      */
     protected function displayArg($arg, $function)
     {
@@ -359,13 +359,13 @@ class PMA_Error extends PMA_Message
     public function display()
     {
         echo '<div class="' . $this->getLevel() . '">';
-        if (! $this->isUserError()) {
+        if (!$this->isUserError()) {
             echo '<strong>' . $this->getType() . '</strong>';
             echo ' in ' . $this->getFile() . '#' . $this->getLine();
             echo "<br />\n";
         }
         echo $this->getMessage();
-        if (! $this->isUserError()) {
+        if (!$this->isUserError()) {
             echo "<br />\n";
             echo "<br />\n";
             echo "<strong>Backtrace</strong><br />\n";
@@ -379,11 +379,11 @@ class PMA_Error extends PMA_Message
     /**
      * whether this error is a user error
      *
-     * @uses    E_USER_WARNING
+     * @return  boolean
      * @uses    E_USER_ERROR
      * @uses    E_USER_NOTICE
      * @uses    PMA_Error::getNumber()
-     * @return  boolean
+     * @uses    E_USER_WARNING
      */
     public function isUserError()
     {
@@ -397,6 +397,8 @@ class PMA_Error extends PMA_Message
      * and make users feel save to submit error reports
      *
      * @static
+     * @param string $dest path to be shorten
+     * @return  string shortened path
      * @uses    PHP_OS()
      * @uses    __FILE__()
      * @uses    realpath()
@@ -407,8 +409,6 @@ class PMA_Error extends PMA_Message
      * @uses    count()
      * @uses    array_pop()
      * @uses    str_replace()
-     * @param   string $dest  path to be shorten
-     * @return  string shortened path
      */
     static function relPath($dest)
     {
@@ -437,4 +437,5 @@ class PMA_Error extends PMA_Message
         return str_replace($path_separator . $path_separator, $path_separator, $path);
     }
 }
+
 ?>

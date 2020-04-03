@@ -22,14 +22,14 @@
  * @version $Id: sqlparser.data.php 12432 2009-05-17 22:20:16Z helmo $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
 /**
  * @global array MySQL function names
  */
-$PMA_SQPdata_function_name = array (
+$PMA_SQPdata_function_name = array(
     'ABS',
     'ACOS',
     'ADDDATE',
@@ -351,7 +351,7 @@ if ($PMA_SQPdata_function_name != $test_PMA_SQPdata_function_name) {
 /**
  * @global array MySQL attributes
  */
-$PMA_SQPdata_column_attrib = array (
+$PMA_SQPdata_column_attrib = array(
     'ARCHIVE',          // Engine
     'ASCII',
     'AUTO_INCREMENT',
@@ -397,7 +397,7 @@ $PMA_SQPdata_column_attrib_cnt = 30;
  *
  * @global array MySQL reserved words
  */
-$PMA_SQPdata_reserved_word = array (
+$PMA_SQPdata_reserved_word = array(
     'ACCESSIBLE',       // 5.1
     'ACTION',
     'ADD',
@@ -720,7 +720,7 @@ echo '</pre>';
  *
  * @global array MySQL forbidden words
  */
-$PMA_SQPdata_forbidden_word = array (
+$PMA_SQPdata_forbidden_word = array(
     'ACCESSIBLE',       // 5.1
     'ACTION',
     'ADD',
@@ -1220,7 +1220,7 @@ $PMA_SQPdata_forbidden_word_cnt = 483;
  *
  * @global array MySQL column types
  */
-$PMA_SQPdata_column_type = array (
+$PMA_SQPdata_column_type = array(
     'BIGINT',
     'BINARY',
     'BIT',

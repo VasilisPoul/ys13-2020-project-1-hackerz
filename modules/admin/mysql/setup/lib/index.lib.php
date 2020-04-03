@@ -260,7 +260,7 @@ function perform_config_checks()
         $cookie_auth_used |= $cookie_auth_server;
         $server_name = $cf->getServerName($i);
         if ($server_name == 'localhost') {
-            $server_name .=  " [$i]";
+            $server_name .= " [$i]";
         }
 
         if ($cookie_auth_server && $blowfish_secret === null) {
@@ -324,7 +324,7 @@ function perform_config_checks()
         if ($blowfish_secret_set) {
             // 'cookie' auth used, blowfish_secret was generated
             messages_set('notice', 'blowfish_secret_created', 'blowfish_secret_name',
-                 PMA_lang('BlowfishSecretMsg'));
+                PMA_lang('BlowfishSecretMsg'));
         } else {
             $blowfish_warnings = array();
             // check length
@@ -333,9 +333,9 @@ function perform_config_checks()
                 $blowfish_warnings[] = PMA_lang('BlowfishSecretLengthMsg');
             }
             // check used characters
-            $has_digits = (bool) preg_match('/\d/', $blowfish_secret);
-            $has_chars = (bool) preg_match('/\S/', $blowfish_secret);
-            $has_nonword = (bool) preg_match('/\W/', $blowfish_secret);
+            $has_digits = (bool)preg_match('/\d/', $blowfish_secret);
+            $has_chars = (bool)preg_match('/\S/', $blowfish_secret);
+            $has_nonword = (bool)preg_match('/\W/', $blowfish_secret);
             if (!$has_digits || !$has_chars || !$has_nonword) {
                 $blowfish_warnings[] = PMA_lang('BlowfishSecretCharsMsg');
             }
@@ -435,4 +435,5 @@ function perform_config_checks()
             PMA_lang('ZipDumpExportWarning', 'gzcompress'));
     }
 }
+
 ?>

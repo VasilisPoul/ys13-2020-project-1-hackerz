@@ -34,36 +34,36 @@ foreach ($types['mimetype'] as $key => $mimetype) {
 
 }
 ?>
-<br />
+<br/>
 <i>(<?php echo $strMIME_without; ?>)</i>
 
-<br />
-<br />
-<br />
+<br/>
+<br/>
+<br/>
 <h2><?php echo $strMIME_available_transform; ?></h2>
 <table border="0" width="90%">
-<thead>
-<tr>
-    <th><?php echo $strMIME_transformation; ?></th>
-    <th><?php echo $strMIME_description; ?></th>
-</tr>
-</thead>
-<tbody>
-<?php
-$odd_row = true;
-foreach ($types['transformation'] as $key => $transform) {
-    $func = strtolower(str_ireplace('.inc.php', '', $types['transformation_file'][$key]));
-    $desc = 'strTransformation_' . $func;
-    ?>
-    <tr class="<?php echo $odd_row ? 'odd' : 'even'; ?>">
-        <td><?php echo $transform; ?></td>
-        <td><?php echo (isset($$desc) ? $$desc : '<i>' . sprintf($strMIME_nodescription, 'PMA_transformation_' . $func . '()') . '</i>'); ?></td>
+    <thead>
+    <tr>
+        <th><?php echo $strMIME_transformation; ?></th>
+        <th><?php echo $strMIME_description; ?></th>
     </tr>
+    </thead>
+    <tbody>
     <?php
-    $odd_row = !$odd_row;
-}
-?>
-</tbody>
+    $odd_row = true;
+    foreach ($types['transformation'] as $key => $transform) {
+        $func = strtolower(str_ireplace('.inc.php', '', $types['transformation_file'][$key]));
+        $desc = 'strTransformation_' . $func;
+        ?>
+        <tr class="<?php echo $odd_row ? 'odd' : 'even'; ?>">
+            <td><?php echo $transform; ?></td>
+            <td><?php echo(isset($$desc) ? $$desc : '<i>' . sprintf($strMIME_nodescription, 'PMA_transformation_' . $func . '()') . '</i>'); ?></td>
+        </tr>
+        <?php
+        $odd_row = !$odd_row;
+    }
+    ?>
+    </tbody>
 </table>
 
 <?php

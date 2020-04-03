@@ -12,7 +12,7 @@
  * @uses    ini_set()
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -68,7 +68,7 @@ session_cache_limiter('private');
 $session_name = 'phpMyAdmin';
 @session_name($session_name);
 
-if (! isset($_COOKIE[$session_name])) {
+if (!isset($_COOKIE[$session_name])) {
     // on first start of session we check for errors
     // f.e. session dir cannot be accessed - session file not created
     $orig_error_count = $GLOBALS['error_handler']->countErrors();
@@ -102,4 +102,5 @@ function PMA_secureSession()
     // prevent session fixation and XSS
     session_regenerate_id(true);
 }
+
 ?>

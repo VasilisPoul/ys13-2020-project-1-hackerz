@@ -319,7 +319,7 @@ class HTMLPurifier_Config
         if (isset($def->isAlias)) {
             if ($this->aliasMode) {
                 $this->triggerError(
-                    'Double-aliases not allowed, please fix '.
+                    'Double-aliases not allowed, please fix ' .
                     'ConfigSchema bug with' . $key,
                     E_USER_ERROR
                 );
@@ -467,8 +467,8 @@ class HTMLPurifier_Config
      *        We probably won't ever change this default, as much as the
      *        maybe semantics is the "right thing to do."
      *
-     * @throws HTMLPurifier_Exception
      * @return HTMLPurifier_Definition
+     * @throws HTMLPurifier_Exception
      */
     public function getDefinition($type, $raw = false, $optimized = false)
     {
@@ -653,7 +653,7 @@ class HTMLPurifier_Config
     {
         return $this->getDefinition('HTML', true, true);
     }
-    
+
     /**
      * @return HTMLPurifier_CSSDefinition
      */
@@ -661,7 +661,7 @@ class HTMLPurifier_Config
     {
         return $this->getDefinition('CSS', true, true);
     }
-    
+
     /**
      * @return HTMLPurifier_URIDefinition
      */
@@ -689,7 +689,7 @@ class HTMLPurifier_Config
                 $namespace = $key;
                 $namespace_values = $value;
                 foreach ($namespace_values as $directive => $value2) {
-                    $this->set($namespace .'.'. $directive, $value2);
+                    $this->set($namespace . '.' . $directive, $value2);
                 }
             }
         }
@@ -782,8 +782,8 @@ class HTMLPurifier_Config
      */
     public function mergeArrayFromForm($array, $index = false, $allowed = true, $mq_fix = true)
     {
-         $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $this->def);
-         $this->loadArray($ret);
+        $ret = HTMLPurifier_Config::prepareArrayFromForm($array, $index, $allowed, $mq_fix, $this->def);
+        $this->loadArray($ret);
     }
 
     /**

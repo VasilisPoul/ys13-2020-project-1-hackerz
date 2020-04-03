@@ -8,7 +8,8 @@
 /**
  *
  */
-function PMA_transformation_text_plain__sql($buffer, $options = array(), $meta = '') {
+function PMA_transformation_text_plain__sql($buffer, $options = array(), $meta = '')
+{
     $result = PMA_SQP_formatHtml(PMA_SQP_parse($buffer));
     // Need to clear error state not to break subsequent queries display.
     PMA_SQP_resetError();

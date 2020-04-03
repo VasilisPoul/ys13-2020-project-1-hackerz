@@ -30,17 +30,17 @@
  * echo PMA_ifSetOr($cfg['ForceSSL'], false, 'boolean'); // true
  * </code>
  *
- * @todo create some testsuites
+ * @param mixed $var param to check
+ * @param mixed $default default value
+ * @param mixed $type var type or array of values to check against $var
+ * @return  mixed   $var or $default
  * @uses    PMA_isValid()
  * @see     PMA_isValid()
- * @param   mixed   $var        param to check
- * @param   mixed   $default    default value
- * @param   mixed   $type       var type or array of values to check against $var
- * @return  mixed   $var or $default
+ * @todo create some testsuites
  */
 function PMA_ifSetOr(&$var, $default = null, $type = 'similar')
 {
-    if (! PMA_isValid($var, $type, $default)) {
+    if (!PMA_isValid($var, $type, $default)) {
         return $default;
     }
 
@@ -80,6 +80,10 @@ function PMA_ifSetOr(&$var, $default = null, $type = 'similar')
  *
  * to avoid this we set this var to null if not isset
  *
+ * @param mixed $var variable to check
+ * @param mixed $type var type or array of valid values to check against $var
+ * @param mixed $compare var to compare with $var
+ * @return  boolean whether valid or not
  * @todo create some testsuites
  * @todo add some more var types like hex, bin, ...?
  * @uses    is_scalar()
@@ -89,14 +93,10 @@ function PMA_ifSetOr(&$var, $default = null, $type = 'similar')
  * @uses    gettype()
  * @uses    strtolower()
  * @see     http://php.net/gettype
- * @param   mixed   $var        variable to check
- * @param   mixed   $type       var type or array of valid values to check against $var
- * @param   mixed   $compare    var to compare with $var
- * @return  boolean whether valid or not
  */
 function PMA_isValid(&$var, $type = 'length', $compare = null)
 {
-    if (! isset($var)) {
+    if (!isset($var)) {
         // var is not even set
         return false;
     }
@@ -159,7 +159,7 @@ function PMA_isValid(&$var, $type = 'length', $compare = null)
     if ($type === 'length' || $type === 'scalar') {
         $is_scalar = is_scalar($var);
         if ($is_scalar && $type === 'length') {
-            return (bool) strlen($var);
+            return (bool)strlen($var);
         }
         return $is_scalar;
     }
@@ -180,7 +180,7 @@ function PMA_isValid(&$var, $type = 'length', $compare = null)
  * require() when a part of the path comes from an insecure source
  * like a cookie or form.
  *
- * @param    string  The path to check
+ * @param string  The path to check
  *
  * @return   string  The secured path
  *
@@ -201,6 +201,9 @@ function PMA_securePath($path)
  *
  * loads language file if not loaded already
  *
+ * @param string $error_message the error message or named error message
+ * @param string|array $message_args arguments applied to $error_message
+ * @return  exit
  * @todo    use detected argument separator (PMA_Config)
  * @uses    $GLOBALS['session_name']
  * @uses    $GLOBALS['text_dir']
@@ -218,16 +221,13 @@ function PMA_securePath($path)
  * @uses    vsprintf()
  * @uses    strtr()
  * @uses    defined()
- * @param   string $error_message the error message or named error message
- * @param   string|array $message_args arguments applied to $error_message
- * @return  exit
  */
 function PMA_fatalError($error_message, $message_args = null)
 {
     // it could happen PMA_fatalError() is called before language file is loaded
-    if (! isset($GLOBALS['available_languages'])) {
+    if (!isset($GLOBALS['available_languages'])) {
         $GLOBALS['cfg'] = array(
-            'DefaultLang'           => 'en-utf-8',
+            'DefaultLang' => 'en-utf-8',
             'AllowAnywhereRecoding' => false);
 
         // Loads the language file
@@ -264,13 +264,13 @@ function PMA_fatalError($error_message, $message_args = null)
     // Displays the error message
     // (do not use &amp; for parameters sent by header)
     $query_params = array(
-        'lang'  => $GLOBALS['available_languages'][$GLOBALS['lang']][2],
-        'dir'   => $GLOBALS['text_dir'],
-        'type'  => $GLOBALS['strError'],
+        'lang' => $GLOBALS['available_languages'][$GLOBALS['lang']][2],
+        'dir' => $GLOBALS['text_dir'],
+        'type' => $GLOBALS['strError'],
         'error' => $error_message,
     );
     header('Location: ' . (defined('PMA_SETUP') ? '../' : '') . 'error.php?'
-            . http_build_query($query_params, null, '&'));
+        . http_build_query($query_params, null, '&'));
 
     // on fatal errors it cannot hurt to always delete the current session
     if (isset($GLOBALS['session_name']) && isset($_COOKIE[$GLOBALS['session_name']])) {
@@ -283,13 +283,13 @@ function PMA_fatalError($error_message, $message_args = null)
 /**
  * returns count of tables in given db
  *
- * @uses    PMA_DBI_try_query()
- * @uses    PMA_backquote()
+ * @param string $db database to count tables for
+ * @return  integer count of tables in $db
  * @uses    PMA_DBI_QUERY_STORE()
  * @uses    PMA_DBI_num_rows()
  * @uses    PMA_DBI_free_result()
- * @param   string  $db database to count tables for
- * @return  integer count of tables in $db
+ * @uses    PMA_DBI_try_query()
+ * @uses    PMA_backquote()
  */
 function PMA_getTableCount($db)
 {
@@ -306,18 +306,16 @@ function PMA_getTableCount($db)
         $PMA_Config = $_SESSION['PMA_Config'];
 
         // if PMA configuration exists
-        if (!empty($PMA_Config))
-        {
+        if (!empty($PMA_Config)) {
             // load BS tables
             $session_bs_tables = $_SESSION['PMA_Config']->get('BLOBSTREAMING_TABLES');
 
             // if BS tables exist
             if (isset ($session_bs_tables))
                 while ($data = PMA_DBI_fetch_assoc($tables))
-                    foreach ($session_bs_tables as $table_key=>$table_val)
+                    foreach ($session_bs_tables as $table_key => $table_val)
                         // if the table is a blobstreaming table, reduce the table count
-                        if ($data['Tables_in_' . $db] == $table_key)
-                        {
+                        if ($data['Tables_in_' . $db] == $table_key) {
                             if ($num_tables > 0)
                                 $num_tables--;
 
@@ -339,29 +337,29 @@ function PMA_getTableCount($db)
  * (renamed with PMA prefix to avoid double definition when embedded
  * in Moodle)
  *
+ * @param string $size
+ * @return  integer $size
+ * @uses    substr()
  * @uses    each()
  * @uses    strlen()
- * @uses    substr()
- * @param   string  $size
- * @return  integer $size
  */
 function PMA_get_real_size($size = 0)
 {
-    if (! $size) {
+    if (!$size) {
         return 0;
     }
 
     $scan['gb'] = 1073741824; //1024 * 1024 * 1024;
-    $scan['g']  = 1073741824; //1024 * 1024 * 1024;
+    $scan['g'] = 1073741824; //1024 * 1024 * 1024;
     $scan['mb'] = 1048576;
-    $scan['m']  = 1048576;
-    $scan['kb'] =    1024;
-    $scan['k']  =    1024;
-    $scan['b']  =       1;
+    $scan['m'] = 1048576;
+    $scan['kb'] = 1024;
+    $scan['k'] = 1024;
+    $scan['b'] = 1;
 
     foreach ($scan as $unit => $factor) {
         if (strlen($size) > strlen($unit)
-         && strtolower(substr($size, strlen($size) - strlen($unit))) == $unit) {
+            && strtolower(substr($size, strlen($size) - strlen($unit))) == $unit) {
             return substr($size, 0, strlen($size) - strlen($unit)) * $factor;
         }
     }
@@ -381,14 +379,14 @@ function PMA_get_real_size($size = 0)
  * @uses    func_get_arg()
  * @uses    is_array()
  * @uses    call_user_func_array()
- * @param   array   array to merge
- * @param   array   array to merge
- * @param   array   ...
+ * @param array   array to merge
+ * @param array   array to merge
+ * @param array   ...
  * @return  array   merged array
  */
 function PMA_array_merge_recursive()
 {
-    switch(func_num_args()) {
+    switch (func_num_args()) {
         case 0 :
             return false;
             break;
@@ -439,8 +437,8 @@ function PMA_array_merge_recursive()
  * @uses    PMA_arrayWalkRecursive()
  * @uses    is_array()
  * @uses    is_string()
- * @param   array   $array      array to walk
- * @param   string  $function   function to call for every array element
+ * @param array $array array to walk
+ * @param string $function function to call for every array element
  */
 function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
 {
@@ -472,17 +470,17 @@ function PMA_arrayWalkRecursive(&$array, $function, $apply_to_keys_also = false)
  * checks given given $page against given $whitelist and returns true if valid
  * it ignores optionaly query paramters in $page (script.php?ignored)
  *
+ * @param string  &$page page to check
+ * @param array $whitelist whitelist to check page against
+ * @return  boolean whether $page is valid or not (in $whitelist or not)
+ * @uses    strpos()
  * @uses    in_array()
  * @uses    urldecode()
  * @uses    substr()
- * @uses    strpos()
- * @param   string  &$page      page to check
- * @param   array   $whitelist  whitelist to check page against
- * @return  boolean whether $page is valid or not (in $whitelist or not)
  */
 function PMA_checkPageValidity(&$page, $whitelist)
 {
-    if (! isset($page) || !is_string($page)) {
+    if (!isset($page) || !is_string($page)) {
         return false;
     }
 
@@ -505,15 +503,16 @@ function PMA_checkPageValidity(&$page, $whitelist)
  * searchs in $_SERVER, $_ENV than trys getenv() and apache_getenv()
  * in this order
  *
- * @uses    $_SERVER
- * @uses    $_ENV
+ * @param string $var_name variable name
+ * @return  string  value of $var or empty string
  * @uses    getenv()
  * @uses    function_exists()
  * @uses    apache_getenv()
- * @param   string  $var_name   variable name
- * @return  string  value of $var or empty string
+ * @uses    $_SERVER
+ * @uses    $_ENV
  */
-function PMA_getenv($var_name) {
+function PMA_getenv($var_name)
+{
     if (isset($_SERVER[$var_name])) {
         return $_SERVER[$var_name];
     } elseif (isset($_ENV[$var_name])) {
@@ -521,7 +520,7 @@ function PMA_getenv($var_name) {
     } elseif (getenv($var_name)) {
         return getenv($var_name);
     } elseif (function_exists('apache_getenv')
-     && apache_getenv($var_name, true)) {
+        && apache_getenv($var_name, true)) {
         return apache_getenv($var_name, true);
     }
 
@@ -531,12 +530,12 @@ function PMA_getenv($var_name) {
 /**
  * removes cookie
  *
- * @uses    PMA_Config::isHttps()
- * @uses    PMA_Config::getCookiePath()
+ * @param string $cookie name of cookie to remove
+ * @return  boolean result of setcookie()
  * @uses    setcookie()
  * @uses    time()
- * @param   string  $cookie     name of cookie to remove
- * @return  boolean result of setcookie()
+ * @uses    PMA_Config::isHttps()
+ * @uses    PMA_Config::getCookiePath()
  */
 function PMA_removeCookie($cookie)
 {
@@ -548,18 +547,18 @@ function PMA_removeCookie($cookie)
  * sets cookie if value is different from current cokkie value,
  * or removes if value is equal to default
  *
+ * @param string $cookie name of cookie to remove
+ * @param mixed $value new cookie value
+ * @param string $default default value
+ * @param int $validity validity of cookie in seconds (default is one month)
+ * @param bool $httponlt whether cookie is only for HTTP (and not for scripts)
+ * @return  boolean result of setcookie()
  * @uses    PMA_Config::isHttps()
  * @uses    PMA_Config::getCookiePath()
  * @uses    $_COOKIE
  * @uses    PMA_removeCookie()
  * @uses    setcookie()
  * @uses    time()
- * @param   string  $cookie     name of cookie to remove
- * @param   mixed   $value      new cookie value
- * @param   string  $default    default value
- * @param   int     $validity   validity of cookie in seconds (default is one month)
- * @param   bool    $httponlt   whether cookie is only for HTTP (and not for scripts)
- * @return  boolean result of setcookie()
  */
 function PMA_setCookie($cookie, $value, $default = null, $validity = null, $httponly = true)
 {
@@ -567,17 +566,17 @@ function PMA_setCookie($cookie, $value, $default = null, $validity = null, $http
         $validity = 2592000;
     }
     if (strlen($value) && null !== $default && $value === $default
-     && isset($_COOKIE[$cookie])) {
+        && isset($_COOKIE[$cookie])) {
         // remove cookie, default value is used
         return PMA_removeCookie($cookie);
     }
 
-    if (! strlen($value) && isset($_COOKIE[$cookie])) {
+    if (!strlen($value) && isset($_COOKIE[$cookie])) {
         // remove cookie, value is empty
         return PMA_removeCookie($cookie);
     }
 
-    if (! isset($_COOKIE[$cookie]) || $_COOKIE[$cookie] !== $value) {
+    if (!isset($_COOKIE[$cookie]) || $_COOKIE[$cookie] !== $value) {
         // set cookie with new value
         /* Calculate cookie validity */
         if ($validity == 0) {
@@ -592,4 +591,5 @@ function PMA_setCookie($cookie, $value, $default = null, $validity = null, $http
     // cookie has already $value as value
     return true;
 }
+
 ?>

@@ -33,7 +33,7 @@ while ($name = $languageDirectory->read()) {
 $languageDirectory->close();
 
 // 2. Checking results
-$start      = '';
+$start = '';
 $failed_cnt = count($failed);
 sort($failed);
 $passed_cnt = count($passed);

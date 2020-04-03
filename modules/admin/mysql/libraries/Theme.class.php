@@ -17,7 +17,8 @@
  *
  * @package phpMyAdmin
  */
-class PMA_Theme {
+class PMA_Theme
+{
     /**
      * @var string theme version
      * @access  protected
@@ -70,18 +71,18 @@ class PMA_Theme {
 
     /**
      * @access  public
-     * @uses    PMA_Theme::getPath()
+     * @return  boolean     whether loading them info was successful or not
      * @uses    PMA_Theme::$mtime_info
      * @uses    PMA_Theme::setVersion()
      * @uses    PMA_Theme::setName()
      * @uses    filemtime()
      * @uses    filesize()
      * @uses    file_exists()
-     * @return  boolean     whether loading them info was successful or not
+     * @uses    PMA_Theme::getPath()
      */
     function loadInfo()
     {
-        if (! file_exists($this->getPath() . '/info.inc.php')) {
+        if (!file_exists($this->getPath() . '/info.inc.php')) {
             return false;
         }
 
@@ -92,7 +93,7 @@ class PMA_Theme {
         @include $this->getPath() . '/info.inc.php';
 
         // was it set correctly?
-        if (! isset($theme_name)) {
+        if (!isset($theme_name)) {
             return false;
         }
 
@@ -115,12 +116,12 @@ class PMA_Theme {
      *
      * @static
      * @access  public
-     * @uses    PMA_Theme
-     * @uses    PMA_Theme::setPath()
+     * @param string $folder path to theme
+     * @return  object  PMA_Theme
      * @uses    PMA_Theme::loadInfo()
      * @uses    PMA_Theme::checkImgPath()
-     * @param   string  $folder path to theme
-     * @return  object  PMA_Theme
+     * @uses    PMA_Theme
+     * @uses    PMA_Theme::setPath()
      */
     static public function load($folder)
     {
@@ -128,7 +129,7 @@ class PMA_Theme {
 
         $theme->setPath($folder);
 
-        if (! $theme->loadInfo()) {
+        if (!$theme->loadInfo()) {
             return false;
         }
 
@@ -169,8 +170,8 @@ class PMA_Theme {
      * returns path to theme
      *
      * @access  public
-     * @uses    PMA_Theme::$path    as return value
      * @return  string  $path   path to theme
+     * @uses    PMA_Theme::$path    as return value
      */
     function getPath()
     {
@@ -181,8 +182,8 @@ class PMA_Theme {
      * returns layout file
      *
      * @access  public
-     * @uses    PMA_Theme::getPath()
      * @return  string  layout file
+     * @uses    PMA_Theme::getPath()
      */
     function getLayoutFile()
     {
@@ -193,8 +194,8 @@ class PMA_Theme {
      * set path to theme
      *
      * @access  public
+     * @param string $path path to theme
      * @uses    PMA_Theme::$path    to set it
-     * @param   string  $path   path to theme
      */
     function setPath($path)
     {
@@ -205,8 +206,8 @@ class PMA_Theme {
      * sets version
      *
      * @access  public
+     * @param string new version
      * @uses    PMA_Theme::$version
-     * @param   string new version
      */
     function setVersion($version)
     {
@@ -217,8 +218,8 @@ class PMA_Theme {
      * returns version
      *
      * @access  public
-     * @uses    PMA_Theme::$version
      * @return  string  version
+     * @uses    PMA_Theme::$version
      */
     function getVersion()
     {
@@ -230,10 +231,10 @@ class PMA_Theme {
      * returns true if theme version is equal or higher to $version
      *
      * @access  public
+     * @param string $version version to compare to
+     * @return  boolean
      * @uses    version_compare()
      * @uses    PMA_Theme::getVersion()
-     * @param   string  $version    version to compare to
-     * @return  boolean
      */
     function checkVersion($version)
     {
@@ -244,9 +245,9 @@ class PMA_Theme {
      * sets name
      *
      * @access  public
-     * @uses    PMA_Theme::$name to set it
+     * @param string $name new name
      * @uses    trim()
-     * @param   string  $name   new name
+     * @uses    PMA_Theme::$name to set it
      */
     function setName($name)
     {
@@ -257,8 +258,8 @@ class PMA_Theme {
      * returns name
      *
      * @access  public
-     * @uses    PMA_Theme::$name    as return value
      * @return  string name
+     * @uses    PMA_Theme::$name    as return value
      */
     function getName()
     {
@@ -269,8 +270,8 @@ class PMA_Theme {
      * sets id
      *
      * @access  public
+     * @param string $id new id
      * @uses    PMA_Theme::$id to set it
-     * @param   string  $id   new id
      */
     function setId($id)
     {
@@ -281,8 +282,8 @@ class PMA_Theme {
      * returns id
      *
      * @access  public
-     * @uses    PMA_Theme::$id as return value
      * @return  string  id
+     * @uses    PMA_Theme::$id as return value
      */
     function getId()
     {
@@ -291,8 +292,8 @@ class PMA_Theme {
 
     /**
      * @access  public
+     * @param string  path to images for this theme
      * @uses    PMA_Theme::$img_path to set it
-     * @param   string  path to images for this theme
      */
     function setImgPath($path)
     {
@@ -301,8 +302,8 @@ class PMA_Theme {
 
     /**
      * @access  public
-     * @uses    PMA_Theme::$img_path as retunr value
      * @return  string image path for this theme
+     * @uses    PMA_Theme::$img_path as retunr value
      */
     function getImgPath()
     {
@@ -313,16 +314,16 @@ class PMA_Theme {
      * load css (send to stdout, normally the browser)
      *
      * @access  public
-     * @uses    PMA_Theme::getPath()
+     * @param string $type left, right or print
      * @uses    PMA_Theme::$types
      * @uses    PMA_SQP_buildCssData()
      * @uses    file_exists()
      * @uses    in_array()
-     * @param   string  $type   left, right or print
+     * @uses    PMA_Theme::getPath()
      */
     function loadCss(&$type)
     {
-        if (empty($type) || ! in_array($type, $this->types)) {
+        if (empty($type) || !in_array($type, $this->types)) {
             $type = 'left';
         }
 
@@ -331,9 +332,9 @@ class PMA_Theme {
         }
 
         $_css_file = $this->getPath()
-                   . '/css/theme_' . $type . '.css.php';
+            . '/css/theme_' . $type . '.css.php';
 
-        if (! file_exists($_css_file)) {
+        if (!file_exists($_css_file)) {
             return false;
         }
 
@@ -368,25 +369,26 @@ class PMA_Theme {
     {
         echo '<div class="theme_preview">';
         echo '<h2>' . htmlspecialchars($this->getName())
-            .' (' . htmlspecialchars($this->getVersion()) . ')</h2>'
-            .'<p>'
-            .'<a target="_top" href="index.php'
-            .PMA_generate_common_url(array('set_theme' => $this->getId())) . '"'
-            .' onclick="takeThis(\'' . addslashes($this->getId()) . '\');'
-            .' return false;">';
+            . ' (' . htmlspecialchars($this->getVersion()) . ')</h2>'
+            . '<p>'
+            . '<a target="_top" href="index.php'
+            . PMA_generate_common_url(array('set_theme' => $this->getId())) . '"'
+            . ' onclick="takeThis(\'' . addslashes($this->getId()) . '\');'
+            . ' return false;">';
         if (@file_exists($this->getPath() . '/screen.png')) {
             // if screen exists then output
 
             echo '<img src="' . $this->getPath() . '/screen.png" border="1"'
-                .' alt="' . htmlspecialchars($this->getName()) . '"'
-                .' title="' . htmlspecialchars($this->getName()) . '" /><br />';
+                . ' alt="' . htmlspecialchars($this->getName()) . '"'
+                . ' title="' . htmlspecialchars($this->getName()) . '" /><br />';
         } else {
             echo $GLOBALS['strThemeNoPreviewAvailable'];
         }
 
         echo '[ <strong>' . $GLOBALS['strTakeIt'] . '</strong> ]</a>'
-            .'</p>'
-            .'</div>';
+            . '</p>'
+            . '</div>';
     }
 }
+
 ?>

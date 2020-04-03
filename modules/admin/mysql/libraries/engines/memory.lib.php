@@ -20,7 +20,7 @@ class PMA_StorageEngine_memory extends PMA_StorageEngine
     {
         return array(
             'max_heap_table_size' => array(
-                'type'  => PMA_ENGINE_DETAILS_TYPE_SIZE,
+                'type' => PMA_ENGINE_DETAILS_TYPE_SIZE,
             ),
         );
     }

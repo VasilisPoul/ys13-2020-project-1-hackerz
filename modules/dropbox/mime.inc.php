@@ -25,13 +25,13 @@
 * =========================================================================*/
 /**
  * creates variable $mimetype containing all known mimetypes based on the file extension
- * This is included in the download script and is used to give hints to browser about what 
+ * This is included in the download script and is used to give hints to browser about what
  * mimetype is being used
- * 
+ *
  */
 
-$mimetype = array( 
-'ez' => 'application/andrew-inset'
+$mimetype = array(
+    'ez' => 'application/andrew-inset'
 , 'hqx' => 'application/mac-binhex40'
 , 'cpt' => 'application/mac-compactpro'
 , 'doc' => 'application/msword'
@@ -167,6 +167,6 @@ $mimetype = array(
 , 'avi' => 'video/x-msvideo'
 , 'movie' => 'video/x-sgi-movie'
 , 'ice' => 'x-conference/x-cooltalk'
-    );
+);
 
 ?>

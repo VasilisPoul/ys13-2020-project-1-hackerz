@@ -24,7 +24,7 @@
 *  			eMail: info@openeclass.org
 * =========================================================================*/
 
-$path2add=2;
+$path2add = 2;
 include '../include/baseTheme.php';
 
 $nameTools = $contactpoint;
@@ -56,7 +56,7 @@ $tool_content .= "
     </tr>
     <tr>
       <th class='left'>$langEmail:</th>
-      <td>".mailto($emailhelpdesk, str_replace('@', ' &lt;at> ', $emailhelpdesk))."
+      <td>" . mailto($emailhelpdesk, str_replace('@', ' &lt;at> ', $emailhelpdesk)) . "
     </td>
   </tr>
   </tbody>
@@ -68,7 +68,7 @@ $tool_content .= "
 </table>";
 
 if (isset($uid) and $uid) {
-        draw($tool_content, 1);
+    draw($tool_content, 1);
 } else {
-        draw($tool_content, 0);
+    draw($tool_content, 0);
 }

@@ -48,39 +48,40 @@
  *
  */
 
-function latex_content($text) {
-     
+function latex_content($text)
+{
+
     global $webDir, $urlAppend, $have_latex;
 
     if (!isset($have_latex) or !$have_latex) {
-			return $text;
-		}
-    
-		include_once("class.latexrender.php");
+        return $text;
+    }
 
-    preg_match_all("#\[tex\](.*?)\[/tex\]#si",$text,$tex_matches);
+    include_once("class.latexrender.php");
 
-		$latex = new LatexRender('latex_picture_path', 'latex_picture_path_httpd');
+    preg_match_all("#\[tex\](.*?)\[/tex\]#si", $text, $tex_matches);
 
-    for ($i=0; $i < count($tex_matches[0]); $i++) {
+    $latex = new LatexRender('latex_picture_path', 'latex_picture_path_httpd');
+
+    for ($i = 0; $i < count($tex_matches[0]); $i++) {
         $pos = strpos($text, $tex_matches[0][$i]);
         $latex_formula = $tex_matches[1][$i];
-				$latex_formula = trim($latex_formula);
-				if (substr($latex_formula, 0, 5) != '\frac') {
-        	$latex_formula = "\n\n" .$latex_formula;
-				}
-	// replace tags & characters put in by htmlArea
-        $latex_formula = str_replace("&amp;","&",$latex_formula);
-        $latex_formula = str_replace("&nbsp;"," ",$latex_formula);
-        $latex_formula = str_replace("<BR>","",$latex_formula);
-        $latex_formula = str_replace("<P>","",$latex_formula);
-        $latex_formula = str_replace("</P>","",$latex_formula);
-	$url = $latex->getFormulaURL($latex_formula);
+        $latex_formula = trim($latex_formula);
+        if (substr($latex_formula, 0, 5) != '\frac') {
+            $latex_formula = "\n\n" . $latex_formula;
+        }
+        // replace tags & characters put in by htmlArea
+        $latex_formula = str_replace("&amp;", "&", $latex_formula);
+        $latex_formula = str_replace("&nbsp;", " ", $latex_formula);
+        $latex_formula = str_replace("<BR>", "", $latex_formula);
+        $latex_formula = str_replace("<P>", "", $latex_formula);
+        $latex_formula = str_replace("</P>", "", $latex_formula);
+        $url = $latex->getFormulaURL($latex_formula);
 
         if ($url != false) {
-            $text = substr_replace($text, "<img src='".$url."' alt='".$latex_formula."' align=absmiddle>",$pos,strlen($tex_matches[0][$i]));
+            $text = substr_replace($text, "<img src='" . $url . "' alt='" . $latex_formula . "' align=absmiddle>", $pos, strlen($tex_matches[0][$i]));
         } else {
-            $text = substr_replace($text, "[unparseable or potentially dangerous latex formula]",$pos,strlen($tex_matches[0][$i]));
+            $text = substr_replace($text, "[unparseable or potentially dangerous latex formula]", $pos, strlen($tex_matches[0][$i]));
         }
     }
     return $text;

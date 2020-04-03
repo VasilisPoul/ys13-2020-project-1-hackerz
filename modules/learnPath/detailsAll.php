@@ -51,19 +51,19 @@ require_once("../../include/lib/learnPathLib.inc.php");
 $require_current_course = TRUE;
 $require_prof = TRUE;
 
-$TABLECOURSUSER	        = "cours_user";
-$TABLEUSER              = "user";
-$TABLELEARNPATH         = "lp_learnPath";
-$TABLEMODULE            = "lp_module";
-$TABLELEARNPATHMODULE   = "lp_rel_learnPath_module";
-$TABLEASSET             = "lp_asset";
-$TABLEUSERMODULEPROGRESS= "lp_user_module_progress";
+$TABLECOURSUSER = "cours_user";
+$TABLEUSER = "user";
+$TABLELEARNPATH = "lp_learnPath";
+$TABLEMODULE = "lp_module";
+$TABLELEARNPATHMODULE = "lp_rel_learnPath_module";
+$TABLEASSET = "lp_asset";
+$TABLEUSERMODULEPROGRESS = "lp_user_module_progress";
 
 require_once("../../include/baseTheme.php");
 $head_content = "";
 $tool_content = "";
 
-$navigation[] = array("url"=>"learningPathList.php", "name"=> $langLearningPaths);
+$navigation[] = array("url" => "learningPathList.php", "name" => $langLearningPaths);
 $nameTools = $langTrackAllPathExplanation;
 
 // display a list of user and their respective progress
@@ -84,7 +84,7 @@ $tool_content .= "<table width='99%' align='left' class='Users_Operations'>
         </td></tr>
 	</thead>
 	</table>";
-	
+
 // display tab header
 $tool_content .= "<table width='99%' class='LearnPathSum'><thead><tr>
 	<th class='left'>&nbsp;</th>
@@ -97,52 +97,46 @@ $tool_content .= "<table width='99%' class='LearnPathSum'><thead><tr>
 mysql_select_db($currentCourseID);
 
 // display tab content
-$k=0;
-foreach ($usersList as $user)
-{
-	// list available learning paths
-	$sql = "SELECT LP.`learnPath_id` FROM `".$TABLELEARNPATH."` AS LP";
+$k = 0;
+foreach ($usersList as $user) {
+    // list available learning paths
+    $sql = "SELECT LP.`learnPath_id` FROM `" . $TABLELEARNPATH . "` AS LP";
 
-	$learningPathList = db_query_fetch_all($sql);
+    $learningPathList = db_query_fetch_all($sql);
 
-	$iterator = 1;
-	$globalprog = 0;
-	if ($k%2 == 0) {
-		$tool_content .= "\n    <tr>";
-	} else {
-		$tool_content .= "\n    <tr class=\"odd\">";
-	}
-	foreach($learningPathList as $learningPath)
-	{
-		// % progress
-		$prog = get_learnPath_progress($learningPath['learnPath_id'], $user['user_id']);
-		if ($prog >= 0)
-		{
-			$globalprog += $prog;
-		}
-		$iterator++;
-	}
-	if($iterator == 1)
-	{
-		$tool_content .= '<td align="center" colspan="8">'.$langNoLearningPath.'</td></tr>'."\n";
-	}
-	else
-	{
-		$total = round($globalprog/($iterator-1));
-		$tool_content .= '<td width="1"><img src="../../template/classic/img/arrow_grey.gif" alt="bullet" title="bullet" border="0"></td>'."\n"
-		.'<td><a href="detailsUser.php?uInfo='.$user['user_id'].'">'.$user['nom'].' '.$user['prenom'].'</a></td>'."\n"
-		.'<td>'.uid_to_am($user['user_id']).'</td>'
-		.'<td align="center">'.gid_to_name(user_group($user['user_id'])).'</td>'
-		.'<td align="right">'
-		.disp_progress_bar($total, 1)
-		.'</td>'."\n"
-		.'<td align="left"><small>'.$total.'%</small></td>'."\n"
-		.'</tr>'."\n";
-	}
-	$k++;
+    $iterator = 1;
+    $globalprog = 0;
+    if ($k % 2 == 0) {
+        $tool_content .= "\n    <tr>";
+    } else {
+        $tool_content .= "\n    <tr class=\"odd\">";
+    }
+    foreach ($learningPathList as $learningPath) {
+        // % progress
+        $prog = get_learnPath_progress($learningPath['learnPath_id'], $user['user_id']);
+        if ($prog >= 0) {
+            $globalprog += $prog;
+        }
+        $iterator++;
+    }
+    if ($iterator == 1) {
+        $tool_content .= '<td align="center" colspan="8">' . $langNoLearningPath . '</td></tr>' . "\n";
+    } else {
+        $total = round($globalprog / ($iterator - 1));
+        $tool_content .= '<td width="1"><img src="../../template/classic/img/arrow_grey.gif" alt="bullet" title="bullet" border="0"></td>' . "\n"
+            . '<td><a href="detailsUser.php?uInfo=' . $user['user_id'] . '">' . $user['nom'] . ' ' . $user['prenom'] . '</a></td>' . "\n"
+            . '<td>' . uid_to_am($user['user_id']) . '</td>'
+            . '<td align="center">' . gid_to_name(user_group($user['user_id'])) . '</td>'
+            . '<td align="right">'
+            . disp_progress_bar($total, 1)
+            . '</td>' . "\n"
+            . '<td align="left"><small>' . $total . '%</small></td>' . "\n"
+            . '</tr>' . "\n";
+    }
+    $k++;
 }
 
 // foot of table
-$tool_content .= '</tbody>'."\n".'</table>'."\n\n";
+$tool_content .= '</tbody>' . "\n" . '</table>' . "\n\n";
 draw($tool_content, 2, "learnPath", $head_content);
 ?>

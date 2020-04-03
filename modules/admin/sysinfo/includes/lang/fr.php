@@ -19,61 +19,61 @@
 //
 // $Id: fr.php,v 1.1.1.1 2006/01/10 15:02:11 adia Exp $
 
-$text['title']		    = 'Information Système ';
+$text['title'] = 'Information Système ';
 
-$text['vitals']         = 'Système';
-$text['hostname']       = 'Nom d\'hôte cannonique';
-$text['ip']             = 'IP';
-$text['kversion']       = 'Version du noyau';
-$text['uptime']         = 'Uptime';
-$text['users']          = 'Utilisateurs';
-$text['loadavg']        = 'Charge système';
+$text['vitals'] = 'Système';
+$text['hostname'] = 'Nom d\'hôte cannonique';
+$text['ip'] = 'IP';
+$text['kversion'] = 'Version du noyau';
+$text['uptime'] = 'Uptime';
+$text['users'] = 'Utilisateurs';
+$text['loadavg'] = 'Charge système';
 
-$text['hardware']       = 'Information Matériel';
-$text['numcpu']         = 'Processeurs';
-$text['cpumodel']       = 'Modèle';
-$text['mhz']            = 'Fréquence';
-$text['cache']          = 'Taille Cache';
-$text['bogomips']       = 'Bogomips';
-$text['pci']            = 'Périph. PCI';
-$text['ide']            = 'Périph. IDE';
-$text['scsi']           = 'Périph. SCSI';
+$text['hardware'] = 'Information Matériel';
+$text['numcpu'] = 'Processeurs';
+$text['cpumodel'] = 'Modèle';
+$text['mhz'] = 'Fréquence';
+$text['cache'] = 'Taille Cache';
+$text['bogomips'] = 'Bogomips';
+$text['pci'] = 'Périph. PCI';
+$text['ide'] = 'Périph. IDE';
+$text['scsi'] = 'Périph. SCSI';
 
-$text['netusage']       = 'Réseau';
-$text['device']         = 'Périphérique';
-$text['received']       = 'Réception';
-$text['sent']           = 'Envoi';
-$text['errors']         = 'Err/Drop';
+$text['netusage'] = 'Réseau';
+$text['device'] = 'Périphérique';
+$text['received'] = 'Réception';
+$text['sent'] = 'Envoi';
+$text['errors'] = 'Err/Drop';
 
-$text['memusage']       = 'Utilisation mémoire';
-$text['phymem']         = 'Mémoire Physique';
-$text['swap']           = 'Swap disque';
+$text['memusage'] = 'Utilisation mémoire';
+$text['phymem'] = 'Mémoire Physique';
+$text['swap'] = 'Swap disque';
 
-$text['fs']             = 'Systèmes de fichiers montés';
-$text['mount']          = 'Point';
-$text['partition']      = 'Partition';
+$text['fs'] = 'Systèmes de fichiers montés';
+$text['mount'] = 'Point';
+$text['partition'] = 'Partition';
 
-$text['percent']        = 'Utilisation';
-$text['type']           = 'Type';
-$text['free']           = 'Libre';
-$text['used']           = 'Utililisé';
-$text['size']           = 'Taille';
-$text['totals']         = 'Totaux';
+$text['percent'] = 'Utilisation';
+$text['type'] = 'Type';
+$text['free'] = 'Libre';
+$text['used'] = 'Utililisé';
+$text['size'] = 'Taille';
+$text['totals'] = 'Totaux';
 
-$text['kb']             = 'Ko';
-$text['mb']             = 'Mo';
-$text['gb']             = 'Go';
+$text['kb'] = 'Ko';
+$text['mb'] = 'Mo';
+$text['gb'] = 'Go';
 
-$text['none']           = 'aucun';
+$text['none'] = 'aucun';
 
-$text['capacity']       = 'Capacité';
-  
-$text['template']       = 'Modèle ';
-$text['language']       = 'Langue ';
-$text['submit']         = 'Valider';
-$text['created']        = 'Créé par';
+$text['capacity'] = 'Capacité';
 
-$text['days']           = 'jours';
-$text['hours']          = 'heures';
-$text['minutes']        = 'minutes';
+$text['template'] = 'Modèle ';
+$text['language'] = 'Langue ';
+$text['submit'] = 'Valider';
+$text['created'] = 'Créé par';
+
+$text['days'] = 'jours';
+$text['hours'] = 'heures';
+$text['minutes'] = 'minutes';
 ?>

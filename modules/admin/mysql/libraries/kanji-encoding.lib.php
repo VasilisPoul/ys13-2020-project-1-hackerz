@@ -12,7 +12,7 @@
  * @version $Id: kanji-encoding.lib.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -21,12 +21,13 @@ if (! defined('PHPMYADMIN')) {
  * codes list
  * 2002/1/4 by Y.Kawada
  *
- * @global  string   the current encoding code
+ * @return  boolean  always true
  * @global  string   the available encoding codes list
  *
- * @return  boolean  always true
+ * @global  string   the current encoding code
  */
-function PMA_internal_enc_check() {
+function PMA_internal_enc_check()
+{
     global $internal_enc, $enc_list;
 
     $internal_enc = mb_internal_encoding();
@@ -44,14 +45,15 @@ function PMA_internal_enc_check() {
  * Reverses SJIS & EUC-JP position in the encoding codes list
  * 2002/1/4 by Y.Kawada
  *
+ * @return  boolean  always true
  * @global  string   the available encoding codes list
  *
- * @return  boolean  always true
  */
-function PMA_change_enc_order() {
+function PMA_change_enc_order()
+{
     global $enc_list;
 
-    $p            = explode(',', $enc_list);
+    $p = explode(',', $enc_list);
     if ($p[1] == 'EUC-JP') {
         $enc_list = 'ASCII,SJIS,EUC-JP,JIS';
     } else {
@@ -66,25 +68,26 @@ function PMA_change_enc_order() {
  * Kanji string encoding convert
  * 2002/1/4 by Y.Kawada
  *
- * @param   string   the string to convert
- * @param   string   the destinasion encoding code
- * @param   string   set 'kana' convert to JIS-X208-kana
- *
- * @global  string   the available encoding codes list
+ * @param string   the string to convert
+ * @param string   the destinasion encoding code
+ * @param string   set 'kana' convert to JIS-X208-kana
  *
  * @return  string   the converted string
+ * @global  string   the available encoding codes list
+ *
  */
-function PMA_kanji_str_conv($str, $enc, $kana) {
+function PMA_kanji_str_conv($str, $enc, $kana)
+{
     global $enc_list;
 
     if ($enc == '' && $kana == '') {
         return $str;
     }
-    $nw       = mb_detect_encoding($str, $enc_list);
+    $nw = mb_detect_encoding($str, $enc_list);
 
     if ($kana == 'kana') {
         $dist = mb_convert_kana($str, 'KV', $nw);
-        $str  = $dist;
+        $str = $dist;
     }
     if ($nw != $enc && $enc != '') {
         $dist = mb_convert_encoding($str, $enc, $nw);
@@ -99,20 +102,21 @@ function PMA_kanji_str_conv($str, $enc, $kana) {
  * Kanji file encoding convert
  * 2002/1/4 by Y.Kawada
  *
- * @param   string   the name of the file to convert
- * @param   string   the destinasion encoding code
- * @param   string   set 'kana' convert to JIS-X208-kana
+ * @param string   the name of the file to convert
+ * @param string   the destinasion encoding code
+ * @param string   set 'kana' convert to JIS-X208-kana
  *
  * @return  string   the name of the converted file
  */
-function PMA_kanji_file_conv($file, $enc, $kana) {
+function PMA_kanji_file_conv($file, $enc, $kana)
+{
     if ($enc == '' && $kana == '') {
         return $file;
     }
 
     $tmpfname = tempnam('', $enc);
-    $fpd      = fopen($tmpfname, 'wb');
-    $fps      = fopen($file, 'r');
+    $fpd = fopen($tmpfname, 'wb');
+    $fps = fopen($file, 'r');
     PMA_change_enc_order();
     while (!feof($fps)) {
         $line = fgets($fps, 4096);
@@ -132,18 +136,19 @@ function PMA_kanji_file_conv($file, $enc, $kana) {
  * Defines radio form fields to switch between encoding modes
  * 2002/1/4 by Y.Kawada
  *
- * @param   string   spaces character to prepend the output with
+ * @param string   spaces character to prepend the output with
  *
  * @return  string   xhtml code for the radio controls
  */
-function PMA_set_enc_form($spaces) {
+function PMA_set_enc_form($spaces)
+{
     return "\n"
-           . $spaces . '<input type="radio" name="knjenc" value="" checked="checked" />non' . "\n"
-           . $spaces . '<input type="radio" name="knjenc" value="EUC-JP" />EUC' . "\n"
-           . $spaces . '<input type="radio" name="knjenc" value="SJIS" />SJIS' . "\n"
-           . $spaces . '&nbsp;' . $GLOBALS['strEncto'] . '<br />' . "\n"
-           . $spaces . '<input type="checkbox" name="xkana" value="kana" />' . "\n"
-           . $spaces . '&nbsp;' . $GLOBALS['strXkana'] . '<br />' . "\n";
+        . $spaces . '<input type="radio" name="knjenc" value="" checked="checked" />non' . "\n"
+        . $spaces . '<input type="radio" name="knjenc" value="EUC-JP" />EUC' . "\n"
+        . $spaces . '<input type="radio" name="knjenc" value="SJIS" />SJIS' . "\n"
+        . $spaces . '&nbsp;' . $GLOBALS['strEncto'] . '<br />' . "\n"
+        . $spaces . '<input type="checkbox" name="xkana" value="kana" />' . "\n"
+        . $spaces . '&nbsp;' . $GLOBALS['strXkana'] . '<br />' . "\n";
 } // end of the 'PMA_set_enc_form' function
 
 

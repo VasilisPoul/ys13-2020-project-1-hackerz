@@ -48,6 +48,6 @@
  *
  */
 
-    $text = preg_replace("#\[tex\](.*?)\[/tex\]#si", "[tex:$uid]\\1[/tex:$uid]", $text);
-    
+$text = preg_replace("#\[tex\](.*?)\[/tex\]#si", "[tex:$uid]\\1[/tex:$uid]", $text);
+
 ?>

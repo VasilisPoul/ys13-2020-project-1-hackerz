@@ -5,7 +5,7 @@
  * @version $Id: db_events.inc.php 11982 2008-11-24 10:32:56Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -14,7 +14,7 @@ if (! defined('PHPMYADMIN')) {
  */
 $url_query .= '&amp;goto=db_structure.php';
 
-$events = PMA_DBI_fetch_result('SELECT EVENT_NAME, EVENT_TYPE FROM information_schema.EVENTS WHERE EVENT_SCHEMA= \'' . PMA_sqlAddslashes($db,true) . '\';');
+$events = PMA_DBI_fetch_result('SELECT EVENT_NAME, EVENT_TYPE FROM information_schema.EVENTS WHERE EVENT_SCHEMA= \'' . PMA_sqlAddslashes($db, true) . '\';');
 
 if ($events) {
     PMA_generate_slider_effect('events', $strEvents);
@@ -27,9 +27,9 @@ if ($events) {
                       <th>&nbsp;</th>
                       <th>%s</th>
                 </tr>',
-          $strName,
-          $strType);
-    $ct=0;
+        $strName,
+        $strType);
+    $ct = 0;
     $delimiter = '//';
     foreach ($events as $event) {
 
@@ -38,7 +38,7 @@ if ($events) {
         // so we rely on PMA_DBI_get_definition() which uses SHOW CREATE EVENT
 
         $definition = 'DROP EVENT ' . PMA_backquote($event['EVENT_NAME']) . $delimiter . "\n"
-            .  PMA_DBI_get_definition($db, 'EVENT', $event['EVENT_NAME'])
+            . PMA_DBI_get_definition($db, 'EVENT', $event['EVENT_NAME'])
             . "\n";
 
         $sqlDrop = 'DROP EVENT ' . PMA_backquote($event['EVENT_NAME']);
@@ -48,11 +48,11 @@ if ($events) {
                           <td>%s</td>
                           <td>%s</td>
                      </tr>',
-                     ($ct%2 == 0) ? 'even' : 'odd',
-                     $event['EVENT_NAME'],
-                     ! empty($definition) ? PMA_linkOrButton('db_sql.php?' . $url_query . '&amp;sql_query=' . urlencode($definition) . '&amp;show_query=1&amp;delimiter=' . urlencode($delimiter), $titles['Structure']) : '&nbsp;',
-                     '<a href="sql.php?' . $url_query . '&sql_query=' . urlencode($sqlDrop) . '" onclick="return confirmLink(this, \'' . PMA_jsFormat($sqlDrop, false) . '\')">' . $titles['Drop'] . '</a>',
-                     $event['EVENT_TYPE']);
+            ($ct % 2 == 0) ? 'even' : 'odd',
+            $event['EVENT_NAME'],
+            !empty($definition) ? PMA_linkOrButton('db_sql.php?' . $url_query . '&amp;sql_query=' . urlencode($definition) . '&amp;show_query=1&amp;delimiter=' . urlencode($delimiter), $titles['Structure']) : '&nbsp;',
+            '<a href="sql.php?' . $url_query . '&sql_query=' . urlencode($sqlDrop) . '" onclick="return confirmLink(this, \'' . PMA_jsFormat($sqlDrop, false) . '\')">' . $titles['Drop'] . '</a>',
+            $event['EVENT_TYPE']);
         $ct++;
     }
     echo '</table>';

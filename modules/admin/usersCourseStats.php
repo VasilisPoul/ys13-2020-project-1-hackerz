@@ -49,12 +49,12 @@ $tool_content = '';
 $tool_content .= "
   <div id=\"operations_container\">
     <ul id=\"opslist\">
-      <li><a href='stateclass.php'>".$langPlatformGenStats."</a></li>
-      <li><a href='platformStats.php?first='>".$langVisitsStats."</a></li>
-      <li><a href='usersCourseStats.php'>".$langUsersCourse."</a></li>
-      <li><a href='visitsCourseStats.php?first='>".$langVisitsCourseStats."</a></li>
-      <li><a href='oldStats.php'>".$langOldStats."</a></li>
-      <li><a href='monthlyReport.php'>".$langMonthlyReport."</a>></li>
+      <li><a href='stateclass.php'>" . $langPlatformGenStats . "</a></li>
+      <li><a href='platformStats.php?first='>" . $langVisitsStats . "</a></li>
+      <li><a href='usersCourseStats.php'>" . $langUsersCourse . "</a></li>
+      <li><a href='visitsCourseStats.php?first='>" . $langVisitsCourseStats . "</a></li>
+      <li><a href='oldStats.php'>" . $langOldStats . "</a></li>
+      <li><a href='monthlyReport.php'>" . $langMonthlyReport . "</a>></li>
     </ul>
   </div>";
 
@@ -66,32 +66,32 @@ if ($language == 'greek') {
     $lang = 'en';
 }
 
-   if (!extension_loaded('gd')) {
-        $tool_content .= "<p>$langGDRequired</p>";
-    } else {
-        $made_chart = true;
+if (!extension_loaded('gd')) {
+    $tool_content .= "<p>$langGDRequired</p>";
+} else {
+    $made_chart = true;
 
-        //make chart
-        require_once '../../include/libchart/libchart.php';
-        $query = "SELECT cours.intitule AS name, count(user_id) AS cnt FROM cours_user LEFT JOIN cours ON ".
-            " cours.cours_id = cours_user.cours_id GROUP BY cours.cours_id";
+    //make chart
+    require_once '../../include/libchart/libchart.php';
+    $query = "SELECT cours.intitule AS name, count(user_id) AS cnt FROM cours_user LEFT JOIN cours ON " .
+        " cours.cours_id = cours_user.cours_id GROUP BY cours.cours_id";
 
-        $result = db_query($query, $mysqlMainDb);
-        $chart = new VerticalChart(200, 300);
-        while ($row = mysql_fetch_assoc($result)) {
-              $chart->addPoint(new Point($row['name'], $row['cnt']));
-              $chart->width += 25;
-        }
-       $chart->setTitle("$langUsersCourse");
-
-       mysql_free_result($result);
-       $chart_path = 'temp/chart_'.md5(serialize($chart)).'.png';
-
-        $chart->render($webDir.$chart_path);
-
-        $tool_content .= '<img src="'.$urlServer.$chart_path.'" />';
-
+    $result = db_query($query, $mysqlMainDb);
+    $chart = new VerticalChart(200, 300);
+    while ($row = mysql_fetch_assoc($result)) {
+        $chart->addPoint(new Point($row['name'], $row['cnt']));
+        $chart->width += 25;
     }
+    $chart->setTitle("$langUsersCourse");
+
+    mysql_free_result($result);
+    $chart_path = 'temp/chart_' . md5(serialize($chart)) . '.png';
+
+    $chart->render($webDir . $chart_path);
+
+    $tool_content .= '<img src="' . $urlServer . $chart_path . '" />';
+
+}
 
 draw($tool_content, 3, 'admin');
 /*

@@ -60,7 +60,7 @@
 $require_current_course = TRUE;
 $require_login = true;
 
-include 'work_functions.php' ;
+include 'work_functions.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/forcedownload.php';
 
@@ -69,43 +69,42 @@ $tool_content = "";
 mysql_select_db($currentCourseID);
 $gid = user_group($uid);
 
-$coursePath = $webDir."/courses/".$currentCourseID;
+$coursePath = $webDir . "/courses/" . $currentCourseID;
 if (!file_exists($coursePath))
-	mkdir("$coursePath",0777);
+    mkdir("$coursePath", 0777);
 
-$workPath = $coursePath."/work";
-$groupPath = $coursePath."/group/".group_secret($gid);
+$workPath = $coursePath . "/work";
+$groupPath = $coursePath . "/group/" . group_secret($gid);
 
 $nameTools = $langGroupSubmit;
 
 if (isset($_GET['submit'])) {
-	$tool_content .= "<p>$langGroupWorkIntro</p>";
-	show_assignments();
-	draw($tool_content, 2, 'work');
+    $tool_content .= "<p>$langGroupWorkIntro</p>";
+    show_assignments();
+    draw($tool_content, 2, 'work');
 } elseif (isset($_POST['assign'])) {
-	submit_work($uid, $_POST['assign'], $_POST['file']);
-	draw($tool_content, 2, 'work');
+    submit_work($uid, $_POST['assign'], $_POST['file']);
+    draw($tool_content, 2, 'work');
 } else {
-	header("Location: work.php");
+    header("Location: work.php");
 }
 
 
 // show non-expired assignments list to allow selection
 function show_assignments()
 {
-	global $m, $uid, $langSubmit, $langDays, $langNoAssign, $tool_content, $langWorks;
+    global $m, $uid, $langSubmit, $langDays, $langNoAssign, $tool_content, $langWorks;
 
-	$res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
+    $res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
 		FROM assignments");
 
-	if (mysql_num_rows($res) == 0) {
-		$tool_content .=  $langNoAssign;
-		return;
-	}
+    if (mysql_num_rows($res) == 0) {
+        $tool_content .= $langNoAssign;
+        return;
+    }
 
 
-
-$tool_content .= <<<cData
+    $tool_content .= <<<cData
 	<form action="group_work.php" method="post">
 	<input type="hidden" name="file" value="${_GET['submit']}">
     <table class="FormData" width="99%">
@@ -129,68 +128,67 @@ $tool_content .= <<<cData
 	</thead>
 	<tbody>
 cData;
-	while ($row = mysql_fetch_array($res)) {
-		if (!$row['active']) {
-			continue;
-		}
+    while ($row = mysql_fetch_array($res)) {
+        if (!$row['active']) {
+            continue;
+        }
 
-$tool_content .= "
+        $tool_content .= "
     <tr>
       <td width=\"1%\"><img style='border:0px; padding-top:2px;' src='../../template/classic/img/arrow_grey.gif' title='bullet'></td>
-      <td><div align=\"left\"><a href=\"work.php?id=".$row['id']."\">".htmlspecialchars($row['title'])."</a></td>
-      <td align=\"center\">".nice_format($row['deadline']);
+      <td><div align=\"left\"><a href=\"work.php?id=" . $row['id'] . "\">" . htmlspecialchars($row['title']) . "</a></td>
+      <td align=\"center\">" . nice_format($row['deadline']);
 
-				if ($row['days'] > 1) {
-					$tool_content .=  " ($m[in]&nbsp;$row[days]&nbsp;$langDays";
-				} elseif ($row['days'] < 0) {
-					$tool_content .=  " ($m[expired])";
-				} elseif ($row['days'] == 1) {
-					$tool_content .=  " ($m[tomorrow])";
-				} else {
-					$tool_content .=  " ($m[today])";
-				}
+        if ($row['days'] > 1) {
+            $tool_content .= " ($m[in]&nbsp;$row[days]&nbsp;$langDays";
+        } elseif ($row['days'] < 0) {
+            $tool_content .= " ($m[expired])";
+        } elseif ($row['days'] == 1) {
+            $tool_content .= " ($m[tomorrow])";
+        } else {
+            $tool_content .= " ($m[today])";
+        }
 
-				$tool_content .= "</div></td>\n      <td align=\"center\">";
+        $tool_content .= "</div></td>\n      <td align=\"center\">";
 
-						$subm = was_submitted($uid, user_group($uid), $row['id']);
-						if ($subm == 'user') {
-							$tool_content .=  $m['yes'];
-						} elseif ($subm == 'group') {
-							$tool_content .=  $m['by_groupmate'];
-						} else {
-							$tool_content .=  $m['no'];
-						}
-
-
-				$tool_content .= "</td>\n      <td align=\"center\">";
-
-						if ($row['days'] >= 0
-							and !was_graded($uid, $row['id'])
-							and is_group_assignment($row['id'])) {
-							$tool_content .=  "<input type='radio' name='assign' value='$row[id]'>";
-						} else {
-							$tool_content .=  '-';
-						}
-
-					$tool_content .= "</td>\n    </tr>";
-
-	}
+        $subm = was_submitted($uid, user_group($uid), $row['id']);
+        if ($subm == 'user') {
+            $tool_content .= $m['yes'];
+        } elseif ($subm == 'group') {
+            $tool_content .= $m['by_groupmate'];
+        } else {
+            $tool_content .= $m['no'];
+        }
 
 
-		$tool_content .= "\n    </tbody>\n    </table>";
+        $tool_content .= "</td>\n      <td align=\"center\">";
+
+        if ($row['days'] >= 0
+            and !was_graded($uid, $row['id'])
+            and is_group_assignment($row['id'])) {
+            $tool_content .= "<input type='radio' name='assign' value='$row[id]'>";
+        } else {
+            $tool_content .= '-';
+        }
+
+        $tool_content .= "</td>\n    </tr>";
+
+    }
 
 
+    $tool_content .= "\n    </tbody>\n    </table>";
 
-		$tool_content .= "
+
+    $tool_content .= "
       </td>
     </tr>
     <tr>
-      <th class=\"left\">".$m['comments'].":</th>
-      <td><textarea name=\"comments\" rows=\"4\" cols=\"60\">"."</textarea></td>
+      <th class=\"left\">" . $m['comments'] . ":</th>
+      <td><textarea name=\"comments\" rows=\"4\" cols=\"60\">" . "</textarea></td>
     </tr>
     <tr>
       <th>&nbsp;</th>
-      <td><input type=\"submit\" name=\"submit\" value=\"".$langSubmit."\"></td>
+      <td><input type=\"submit\" name=\"submit\" value=\"" . $langSubmit . "\"></td>
     </tr>
     </tbody>
     </table>
@@ -201,35 +199,36 @@ $tool_content .= "
 
 
 // Insert a group work submitted by user uid to assignment id
-function submit_work($uid, $id, $file) {
-	global $groupPath, $langUploadError, $langUploadSuccess,
-		$langBack, $m, $currentCourseID, $tool_content, $workPath;
+function submit_work($uid, $id, $file)
+{
+    global $groupPath, $langUploadError, $langUploadSuccess,
+           $langBack, $m, $currentCourseID, $tool_content, $workPath;
 
-	$group = user_group($uid);
+    $group = user_group($uid);
 
-        $ext = get_file_extension($file);
-	$local_name = greek_to_latin('Group '. $group . (empty($ext)? '': '.' . $ext));
+    $ext = get_file_extension($file);
+    $local_name = greek_to_latin('Group ' . $group . (empty($ext) ? '' : '.' . $ext));
 
-        $r = mysql_fetch_row(db_query('SELECT filename FROM group_documents WHERE path = ' .
-                                      autoquote($file)));
-        $original_filename = $r[0];
+    $r = mysql_fetch_row(db_query('SELECT filename FROM group_documents WHERE path = ' .
+        autoquote($file)));
+    $original_filename = $r[0];
 
-	$source = $groupPath.$file;
-	$destination = work_secret($id)."/$local_name";
+    $source = $groupPath . $file;
+    $destination = work_secret($id) . "/$local_name";
 
 
-        delete_submissions_by_uid($uid, $group, $id, $destination);
-	if (copy($source, "$workPath/$destination")) {
-		db_query("INSERT INTO assignment_submit (uid, assignment_id, submission_date,
+    delete_submissions_by_uid($uid, $group, $id, $destination);
+    if (copy($source, "$workPath/$destination")) {
+        db_query("INSERT INTO assignment_submit (uid, assignment_id, submission_date,
 			             submission_ip, file_path, file_name, comments, group_id)
                           VALUES ('$uid','$id', NOW(), '$_SERVER[REMOTE_ADDR]', '$destination'," .
-				quote($original_filename) . ', ' .
-                                autoquote($_POST['comments']) . ", $group)",
-                        $currentCourseID);
+            quote($original_filename) . ', ' .
+            autoquote($_POST['comments']) . ", $group)",
+            $currentCourseID);
 
-		$tool_content .="<p class=\"success_small\">$langUploadSuccess<br />$m[the_file] \"$original_filename\" $m[was_submitted]<br /><a href='work.php'>$langBack</a></p><br />";
-	} else {
-		$tool_content .="<p class=\"caution_small\">$langUploadError<br /><a href='work.php'>$langBack</a></p><br />";
-	}
+        $tool_content .= "<p class=\"success_small\">$langUploadSuccess<br />$m[the_file] \"$original_filename\" $m[was_submitted]<br /><a href='work.php'>$langBack</a></p><br />";
+    } else {
+        $tool_content .= "<p class=\"caution_small\">$langUploadError<br /><a href='work.php'>$langBack</a></p><br />";
+    }
 }
 

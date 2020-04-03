@@ -5,7 +5,7 @@
  * @version $Id: iconv_wrapper.lib.php 11986 2008-11-24 11:05:40Z nijel $
  * @package phpMyAdmin
  */
-if (! defined('PHPMYADMIN')) {
+if (!defined('PHPMYADMIN')) {
     exit;
 }
 
@@ -14,7 +14,7 @@ if (! defined('PHPMYADMIN')) {
  */
 # GNU iconv code set to IBM AIX libiconv code set table
 # Keys of this table should be in lowercase, and searches should be performed using lowercase!
-$gnu_iconv_to_aix_iconv_codepage_map = array (
+$gnu_iconv_to_aix_iconv_codepage_map = array(
     // "iso-8859-[1-9]" --> "ISO8859-[1-9]" according to http://publibn.boulder.ibm.com/doc_link/en_US/a_doc_lib/libs/basetrf2/setlocale.htm
     'iso-8859-1' => 'ISO8859-1',
     'iso-8859-2' => 'ISO8859-2',
@@ -41,9 +41,9 @@ $gnu_iconv_to_aix_iconv_codepage_map = array (
  * Wrapper around IBM AIX iconv(), whose character set naming differs
  * from the GNU version of iconv().
  *
- * @param   string   input character set
- * @param   string   output character set
- * @param   string   the string to convert
+ * @param string   input character set
+ * @param string   output character set
+ * @param string   the string to convert
  *
  * @return  mixed    converted string or FALSE on failure
  *
@@ -51,7 +51,8 @@ $gnu_iconv_to_aix_iconv_codepage_map = array (
  *
  * @author  bwiberg  Björn Wiberg <Bjorn.Wiberg@its.uu.se>
  */
-function PMA_aix_iconv_wrapper($in_charset, $out_charset, $str) {
+function PMA_aix_iconv_wrapper($in_charset, $out_charset, $str)
+{
 
     global $gnu_iconv_to_aix_iconv_codepage_map;
 

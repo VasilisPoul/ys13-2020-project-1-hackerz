@@ -25,75 +25,65 @@
 * =========================================================================*/
 /**
  * refresh_chat
- * 
+ *
  * @author Dimitris Tsachalis <ditsa@ccf.auth.gr>
  * @version $Id: pass_parameters.php,v 1.10 2008-07-28 13:10:12 antonism Exp $
- * 
- * @abstract 
+ *
+ * @abstract
  *
  */
-header("Content-type: text/html; charset=UTF-8"); 
+header("Content-type: text/html; charset=UTF-8");
 $require_current_course = TRUE;
 include '../../include/baseTheme.php';
 
 $nameTools = "conference";
-$coursePath=$webDir."courses";
-$fileParameter   = $coursePath.'/'.$currentCourseID.'/.parameters.txt';
+$coursePath = $webDir . "courses";
+$fileParameter = $coursePath . '/' . $currentCourseID . '/.parameters.txt';
 
-if (is_file($fileParameter))
-{
-     	$fp = fopen($fileParameter, 'r')
-                or die ('<center>$langChatError</center>');
- 	$URL = unserialize(fread($fp, filesize($fileParameter)));
-	
-	fclose($fp);
+if (is_file($fileParameter)) {
+    $fp = fopen($fileParameter, 'r')
+    or die ('<center>$langChatError</center>');
+    $URL = unserialize(fread($fp, filesize($fileParameter)));
+
+    fclose($fp);
 }
 /* Admin set parameters for conference module*/
 if ($is_adminOfCourse) {
 
-		if(isset($_POST["video_URL"]))
-		{
-		 	$URL["video_URL"]=stripslashes($_POST["video_URL"]);
-		}
-		if(isset($_POST["presantation_URL"]))
-		{
-			$URL["presantation_URL"]=stripslashes($_POST["presantation_URL"]);
-		}
-		if(isset($_POST["netmeeting_show"]))
-		{
-			$URL["netmeeting_show"]=$_POST["netmeeting_show"];
-		}
+    if (isset($_POST["video_URL"])) {
+        $URL["video_URL"] = stripslashes($_POST["video_URL"]);
+    }
+    if (isset($_POST["presantation_URL"])) {
+        $URL["presantation_URL"] = stripslashes($_POST["presantation_URL"]);
+    }
+    if (isset($_POST["netmeeting_show"])) {
+        $URL["netmeeting_show"] = $_POST["netmeeting_show"];
+    }
 
-		if(isset($_POST["action"]))
-		{
-			if($_POST["action"]=="clean_video")
-				{
-					unset($URL["video_URL"]);
-				}
-			if($_POST["action"]=="clean_presantation")
-				{
-					unset($URL["presantation_URL"]);
-				}
-		}
-     		$fp = fopen($fileParameter, 'w+');
-		fwrite($fp,serialize($URL));
-		fclose($fp);
+    if (isset($_POST["action"])) {
+        if ($_POST["action"] == "clean_video") {
+            unset($URL["video_URL"]);
+        }
+        if ($_POST["action"] == "clean_presantation") {
+            unset($URL["presantation_URL"]);
+        }
+    }
+    $fp = fopen($fileParameter, 'w+');
+    fwrite($fp, serialize($URL));
+    fclose($fp);
 }
 
 /*student get parameters for conference module*/
-               if($_POST["variable"]=="netmeeting_show")
-                {
-			if(isset($URL["netmeeting_show"]))
-                       		echo $URL["netmeeting_show"];
-                }
-                if($_POST["variable"]=="video_URL")
-                {
-			if(isset($URL["video_URL"]))
-                       		echo $URL["video_URL"];
-                }
-                if($_POST["variable"]=="presantation_URL")
-                {
-			if(isset($URL["presantation_URL"]))
-                       		echo $URL["presantation_URL"];
-                }
+if ($_POST["variable"] == "netmeeting_show") {
+    if (isset($URL["netmeeting_show"]))
+        echo $URL["netmeeting_show"];
+}
+if ($_POST["variable"] == "video_URL") {
+    if (isset($URL["video_URL"]))
+        echo $URL["video_URL"];
+}
+if ($_POST["variable"] == "presantation_URL") {
+    if (isset($URL["presantation_URL"]))
+        echo $URL["presantation_URL"];
+}
 ?>

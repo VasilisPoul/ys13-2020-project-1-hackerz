@@ -21,13 +21,13 @@ require_once './libraries/zip.lib.php';
 
 // ini file
 $parameters = array(
-    'id'        => 'phpMyAdmin@' . $_SERVER['HTTP_HOST'],
-    'uri'       => $_SESSION['PMA_Config']->get('PmaAbsoluteUri'),
-    'status'    => 'yes',
-    'location'  => 'no',
-    'sidebar'   => 'no',
+    'id' => 'phpMyAdmin@' . $_SERVER['HTTP_HOST'],
+    'uri' => $_SESSION['PMA_Config']->get('PmaAbsoluteUri'),
+    'status' => 'yes',
+    'location' => 'no',
+    'sidebar' => 'no',
     'navigation' => 'no',
-    'icon'      => 'phpMyAdmin',
+    'icon' => 'phpMyAdmin',
 );
 
 // dom sript file
