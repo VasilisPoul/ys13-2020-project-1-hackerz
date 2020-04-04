@@ -78,18 +78,34 @@ include("functions.php"); // application logic for phpBB
 /******************************************************************************
  * Actual code starts here
  *****************************************************************************/
+// Create connection
+$conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-$sql = "SELECT forum_name, forum_access, forum_type FROM forums
-	WHERE (forum_id = '$forum')";
-if (!$result = db_query($sql, $currentCourseID)) {
+/* change character set to utf8 */
+if (!$conn->set_charset("utf8")) {
+    printf("Error loading character set utf8: %s\n", $conn->error);
+    exit();
+}
+
+$stmt = $conn->prepare("SELECT forum_name, forum_access, forum_type FROM forums WHERE (forum_id = ?)");
+$stmt->bind_param("i", $forum);
+$stmt->execute();
+$stmt->bind_result($forum_name, $forum_access, $forum_type);
+$stmt->fetch();
+$err = $stmt->errno;
+$stmt->close();
+$conn->close();
+
+if (!$result) {
     $tool_content .= $langErrorDataForum;
     draw($tool_content, 2, 'phpbb', $head_content);
     exit;
 }
-$myrow = mysql_fetch_array($result);
-$forum_name = $myrow["forum_name"];
-$forum_access = $myrow["forum_access"];
-$forum_type = $myrow["forum_type"];
+
 $forum_id = $forum;
 
 $nameTools = $langNewTopic;
@@ -145,31 +161,22 @@ if (isset($submit) && $submit) {
         $message .= "\n[addsig]";
     }
 
-    // Create connection
     $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
-    // Check connection
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
-
-    /* change character set to utf8 */
     if (!$conn->set_charset("utf8")) {
         printf("Error loading character set utf8: %s\n", $conn->error);
         exit();
     }
-
     $stmt = $conn->prepare("INSERT INTO topics (topic_title, topic_poster, forum_id, topic_time, topic_notify, nom, prenom) VALUES (?, ?, ?, ?, 1, ?, ?)");
     $stmt->bind_param("siisss", autoquote($subject), $uid, $forum, $time, $nom, $prenom);
     $stmt->execute();
     $topic_id = $stmt->insert_id;
     $stmt->close();
 
-    $sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
-			VALUES ('$topic_id', '$forum', '$uid', '$time', '$poster_ip', '$nom', '$prenom')";
-
-    $stmt = $conn->prepare("INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
-			VALUES ('$topic_id', '$forum', '$uid', '$time', '$poster_ip', '$nom', '$prenom')");
-    $stmt->bind_param("siisss", autoquote($subject), $uid, $forum, $time, $nom, $prenom);
+    $stmt = $conn->prepare("INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("iiissss", $topic_id, $forum, $uid, $time, $poster_ip, $nom, $prenom);
     $stmt->execute();
     $post_id = $stmt->insert_id;
     $err = $stmt->errno;
@@ -183,7 +190,6 @@ if (isset($submit) && $submit) {
         $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $message = $purifier->purify($message);
         if ($post_id) {
-
             $stmt = $conn->prepare("INSERT INTO posts_text (post_id, post_text) VALUES (?, ?)");
             $stmt->bind_param("is", $post_id, autoquote($message));
             $stmt->execute();
@@ -221,15 +227,26 @@ if (isset($submit) && $submit) {
     $subject_notify = "$logo - $langNewForumNotify";
     $category_id = forum_category($forum);
     $cat_name = category_name($category_id);
-    $sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
-			WHERE (forum_id = $forum OR cat_id = $category_id) 
-			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
+
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlUser);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    $stmt = $conn->prepare("SELECT DISTINCT user_id FROM forum_notify WHERE (forum_id = ? OR cat_id = ?) AND notify_sent = 1 AND course_id = ?");
+    $stmt->bind_param("iii", $forum, $category_id, $cours_id);
+    $stmt->execute();
+    $stmt->bind_result($user_id);
+
     $c = course_code_to_title($currentCourseID);
     $body_topic_notify = "$langCourse: '$c'\n\n$langBodyForumNotify $langInForums '$forum_name' $langInCat '$cat_name' \n\n$gunet";
-    while ($r = mysql_fetch_array($sql)) {
-        $emailaddr = uid_to_email($r['user_id']);
+    while ($stmt->fetch()) {
+        $emailaddr = uid_to_email($user_id);
         send_mail('', '', '', $emailaddr, $subject_notify, $body_topic_notify, $charset);
     }
+
+    $err = $stmt->errno;
+    $stmt->close();
+    $conn->close();
     // end of notification
 
     $tool_content .= "<table width='99%'><tbody>
