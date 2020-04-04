@@ -78,19 +78,14 @@ include("functions.php"); // application logic for phpBB
 /******************************************************************************
  * Actual code starts here
  *****************************************************************************/
-// Create connection
 $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
-// Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-/* change character set to utf8 */
 if (!$conn->set_charset("utf8")) {
     printf("Error loading character set utf8: %s\n", $conn->error);
     exit();
 }
-
 $stmt = $conn->prepare("SELECT forum_name, forum_access, forum_type FROM forums WHERE (forum_id = ?)");
 $stmt->bind_param("i", $forum);
 $stmt->execute();

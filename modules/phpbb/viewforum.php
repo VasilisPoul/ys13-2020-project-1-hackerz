@@ -168,7 +168,7 @@ $sql = "SELECT t.*, p.post_time, p.nom AS nom1, p.prenom AS prenom1
         FROM topics t
         LEFT JOIN posts p ON t.topic_last_post_id = p.post_id
         WHERE t.forum_id = '$forum' 
-        ORDER BY topic_time DESC LIMIT $first_topic, $topics_per_page";
+        ORDER BY topic_time DESC LIMIT " . intval($first_topic) . " , " . intval($topics_per_page);
 
 $result = db_query($sql, $currentCourseID);
 
@@ -238,7 +238,7 @@ if (mysql_num_rows($result) > 0) { // topics found
         $tool_content .= "<td class='Forum_leftside'>$myrow[topic_views]</td>\n";
         $tool_content .= "<td class='Forum_leftside1'>$myrow[prenom1] $myrow[nom1]<br />$last_post</td>";
         list($topic_action_notify) = mysql_fetch_row(db_query("SELECT notify_sent FROM forum_notify 
-			WHERE user_id = $uid AND topic_id = $myrow[topic_id] AND course_id = $cours_id", $mysqlMainDb));
+			WHERE user_id = " . intval($uid) . " AND topic_id =  " . intval($myrow[topic_id]) . " AND course_id =" . intval($cours_id), $mysqlMainDb));
         if (!isset($topic_action_notify)) {
             $topic_link_notify = FALSE;
             $topic_icon = '_off';

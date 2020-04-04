@@ -78,14 +78,14 @@ if (isset($post_id) && $post_id) {
     // We have a post id, so include that in the checks..
     $sql = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
     $sql .= "FROM forums f, topics t, posts p ";
-    $sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic)";
-    $sql .= " AND (p.post_id = $post_id) AND (t.forum_id = f.forum_id)";
+    $sql .= "WHERE (f.forum_id = " . intval($forum) . ") AND (t.topic_id = " . intval($topic) . ")";
+    $sql .= " AND (p.post_id = " . intval($post_id) . ") AND (t.forum_id = f.forum_id)";
     $sql .= " AND (p.forum_id = f.forum_id) AND (p.topic_id = t.topic_id)";
 } else {
     // No post id, just check forum and topic.
     $sql = "SELECT f.forum_type, f.forum_name, f.forum_access, t.topic_title ";
     $sql .= "FROM forums f, topics t ";
-    $sql .= "WHERE (f.forum_id = '$forum') AND (t.topic_id = $topic) AND (t.forum_id = f.forum_id)";
+    $sql .= "WHERE (f.forum_id = " . intval($forum) . ") AND (t.topic_id = " . intval($topic) . ") AND (t.forum_id = f.forum_id)";
 }
 
 $result = db_query($sql, $currentCourseID);
@@ -95,6 +95,7 @@ $forum_name = $myrow["forum_name"];
 $forum_access = $myrow["forum_access"];
 $forum_type = $myrow["forum_type"];
 $topic_title = $myrow["topic_title"];
+
 $forum_id = $forum;
 
 $nameTools = $langReply;
@@ -168,30 +169,49 @@ if (isset($submit) && $submit) {
     if (isset($sig) && $sig) {
         $message .= "\n[addsig]";
     }
-    $sql = "INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom)
-			VALUES ('$topic', '$forum', '$uid','$time', '$poster_ip', '$nom', '$prenom')";
-    $result = db_query($sql, $currentCourseID);
-    $this_post = mysql_insert_id();
-    if ($this_post) {
 
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+
+    $stmt = $conn->prepare("INSERT INTO posts (topic_id, forum_id, poster_id, post_time, poster_ip, nom, prenom) VALUES (?, ?, ?,?, ?, ?, ?)");
+    $stmt->bind_param("iiissss", $topic, $forum, $uid, $time, $poster_ip, $nom, $prenom);
+    $stmt->execute();
+    $this_post = $stmt->insert_id;
+    $stmt->close();
+
+    if ($this_post) {
         $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $message = $purifier->purify($message);
-
-        $sql = "INSERT INTO posts_text (post_id, post_text) VALUES ($this_post, " .
-            autoquote($message) . ")";
-        $result = db_query($sql, $currentCourseID);
+        $stmt = $conn->prepare("INSERT INTO posts_text (post_id, post_text) VALUES ( ?, ?)");
+        $stmt->bind_param("is", $this_post, $message);
+        $stmt->execute();
+        $stmt->close();
     }
-    $sql = "UPDATE topics SET topic_replies = topic_replies+1, topic_last_post_id = $this_post, topic_time = '$time' 
-		WHERE topic_id = '$topic'";
-    $result = db_query($sql, $currentCourseID);
-    $sql = "UPDATE forums SET forum_posts = forum_posts+1, forum_last_post_id = '$this_post' 
-		WHERE forum_id = '$forum'";
-    $result = db_query($sql, $currentCourseID);
-    if (!$result) {
+
+    $stmt = $conn->prepare("UPDATE topics SET topic_replies = topic_replies+1, topic_last_post_id = ?, topic_time = ? WHERE topic_id = ?");
+    $stmt->bind_param("isi", $this_post, $time, $topic);
+    $stmt->execute();
+    $stmt->close();
+
+    $stmt = $conn->prepare("UPDATE forums SET forum_posts = forum_posts+1, forum_last_post_id = ? WHERE forum_id = ?");
+    $stmt->bind_param("ii", $this_post, $forum);
+    $success = $stmt->execute();
+    $stmt->close();
+
+    if (!$success) {
         $tool_content .= $langErrorUpadatePostCount;
         draw($tool_content, 2, 'phpbb', $head_content);
         exit();
     }
+
+    $conn->close();
+
 
     // --------------------------------
     // notify users
@@ -200,8 +220,8 @@ if (isset($submit) && $submit) {
     $category_id = forum_category($forum);
     $cat_name = category_name($category_id);
     $sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
-			WHERE (topic_id = $topic OR forum_id = $forum OR cat_id = $category_id) 
-			AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
+			WHERE (topic_id = $topic OR forum_id = " . intval($forum) . " OR cat_id = " . intval($category_id) . ") 
+			AND notify_sent = 1 AND course_id = " . intval($cours_id), $mysqlMainDb);
     $c = course_code_to_title($currentCourseID);
     $body_topic_notify = "$langCourse: '$c'\n\n$langBodyTopicNotify $langInForum '$topic_title' $langOfForum '$forum_name' $langInCat '$cat_name' \n\n$gunet";
     while ($r = mysql_fetch_array($sql)) {
@@ -277,7 +297,7 @@ if (isset($submit) && $submit) {
     if (isset($quote) && $quote) {
         $sql = "SELECT pt.post_text, p.post_time, u.username 
 			FROM posts p, posts_text pt 
-			WHERE p.post_id = '$post' AND pt.post_id = p.post_id";
+			WHERE p.post_id = " . intval($post) . " AND pt.post_id = p.post_id";
         if ($r = db_query($sql, $currentCourseID)) {
             $m = mysql_fetch_array($r);
             $text = $m["post_text"];
