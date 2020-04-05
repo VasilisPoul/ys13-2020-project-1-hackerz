@@ -140,7 +140,7 @@ if ($total_categories) {
         $limit_forums = "WHERE f.cat_id = " . intval($viewcat);
     }
     $sql = "SELECT f.*, p.post_time, p.nom, p.prenom, p.topic_id
-		FROM forums f LEFT JOIN posts p ON p.post_id = f.forum_last_post_id	" . intval($limit_forums) . " ORDER BY f.cat_id, f.forum_id";
+		FROM forums f LEFT JOIN posts p ON p.post_id = f.forum_last_post_id	" . $limit_forums . " ORDER BY f.cat_id, f.forum_id";
     $f_res = db_query($sql, $currentCourseID);
     $tool_content .= "<tbody>";
     while ($forum_data = mysql_fetch_array($f_res)) {

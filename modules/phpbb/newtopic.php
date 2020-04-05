@@ -165,7 +165,7 @@ if (isset($submit) && $submit) {
         exit();
     }
     $stmt = $conn->prepare("INSERT INTO topics (topic_title, topic_poster, forum_id, topic_time, topic_notify, nom, prenom) VALUES (?, ?, ?, ?, 1, ?, ?)");
-    $stmt->bind_param("siisss", autoquote($subject), $uid, $forum, $time, $nom, $prenom);
+    $stmt->bind_param("siisss", $subject, $uid, $forum, $time, $nom, $prenom);
     $stmt->execute();
     $topic_id = $stmt->insert_id;
     $stmt->close();
@@ -177,7 +177,7 @@ if (isset($submit) && $submit) {
     $err = $stmt->errno;
     $stmt->close();
 
-    if ($stmt->errno) {
+    if ($err) {
         $tool_content .= $langErrorEnterPost;
         draw($tool_content, 2, 'phpbb', $head_content);
         exit();
@@ -186,7 +186,7 @@ if (isset($submit) && $submit) {
         $message = $purifier->purify($message);
         if ($post_id) {
             $stmt = $conn->prepare("INSERT INTO posts_text (post_id, post_text) VALUES (?, ?)");
-            $stmt->bind_param("is", $post_id, autoquote($message));
+            $stmt->bind_param("is", $post_id, $message);
             $stmt->execute();
             if ($stmt->errno) {
                 echo $stmt->errno;
@@ -223,7 +223,7 @@ if (isset($submit) && $submit) {
     $category_id = forum_category($forum);
     $cat_name = category_name($category_id);
 
-    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlUser);
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }

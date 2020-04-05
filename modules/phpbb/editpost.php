@@ -131,7 +131,25 @@ if ($is_adminOfCourse) { // course admin
             $forum = $forum_id;
 
             //TODO: Use prepare statement here!
-            $sql = "UPDATE posts_text SET post_text = " . autoquote($message) . " WHERE (post_id = " . intval($post_id) . ")";
+//            $sql = "UPDATE posts_text SET post_text = " . $message . " WHERE (post_id = " . intval($post_id) . ")";
+            $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            if (!$conn->set_charset("utf8")) {
+                printf("Error loading character set utf8: %s\n", $conn->error);
+                exit();
+            }
+
+            $stmt = $conn->prepare("UPDATE posts_text SET post_text = ? WHERE (post_id = ? )");
+            $stmt->bind_param("si", $message, $post_id);
+            if ($stmt->errno) {
+                echo $stmt->errno;
+                die;
+            }
+            $stmt->execute();
+            $stmt->close();
+
             if (!$result = db_query($sql, $currentCourseID)) {
                 $tool_content .= $langUnableUpadatePost;
                 draw($tool_content, 2, 'phpbb', $head_content);
@@ -149,10 +167,20 @@ if ($is_adminOfCourse) { // course admin
                 $subject = addslashes($subject);
 
                 //TODO: Use prepare statement here!
-                $sql = "UPDATE topics SET topic_title = '$subject', topic_notify = '$notify' WHERE topic_id = '$topic_id'";
+//                $sql = "UPDATE topics SET topic_title = '$subject', topic_notify = '$notify' WHERE topic_id = '$topic_id'";
+                $stmt = $conn->prepare("UPDATE topics SET topic_title = ?, topic_notify = ? WHERE topic_id = ? ");
+                $stmt->bind_param("sii", $subject, $notify, $topic_id);
+                if ($stmt->errno) {
+                    echo $stmt->errno;
+                    die;
+                }
+                $stmt->execute();
+                $stmt->close();
+
                 if (!$result = db_query($sql, $currentCourseID)) {
                     $tool_content .= $langUnableUpadateTopic;
                 }
+                $conn->close();
             }
 
             $tool_content .= "<div id='operations_container'>
