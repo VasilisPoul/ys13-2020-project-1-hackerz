@@ -115,3 +115,5 @@ courses/garbage/TMA103/work/
 courses/mathimg/
 video/
 /config/config.php
+.idea/dataSources.xml
+config/config.php
