@@ -236,18 +236,23 @@ function show_submission($sid)
 function add_assignment($title, $comments, $desc, $deadline, $group_submissions)
 {
     global $tool_content, $workPath;
-
     $secret = uniqid("");
-
-    //TODO: Use prepare statement here!
-    db_query("INSERT INTO assignments
-		(title, description, comments, deadline, submission_date, secret_directory,
-			group_submissions) VALUES
-		(" . autoquote($title) . ", " . autoquote($desc) . ", " . autoquote($comments) . ", " . autoquote($deadline) . ", NOW(), '$secret',
-			" . autoquote($group_submissions) . ")");
+    $conn = new mysqli($GLOBALS[mysqlServer], $GLOBALS[mysqlUser], $GLOBALS[mysqlPassword], $GLOBALS[currentCourseID]);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("INSERT INTO assignments (title, description, comments, deadline, submission_date, secret_directory, group_submissions) 
+                                VALUES (?,?,?,?,NOW(),?,?)");
+    $stmt->bind_param("ssssss", $title, $desc, $comments, $deadline, $secret, $group_submissions);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
     mkdir("$workPath/$secret", 0777);
 }
-
 
 function submit_work($id)
 {
@@ -317,29 +322,37 @@ function submit_work($id)
             $group_id = user_group($uid, FALSE);
             if ($group_sub == 'yes' and !was_submitted(-1, $group_id, $id)) {
                 delete_submissions_by_uid(-1, $group_id, $id);
-
-
-                //TODO: Use prepare statement here!
-                db_query("INSERT INTO assignment_submit
-				(uid, assignment_id, submission_date, submission_ip, file_path,
-				file_name, comments, group_id) VALUES ('$uid','$id', NOW(),
-				'$REMOTE_ADDR', '$filename','" . $_FILES['userfile']['name'] .
-                    "', '$stud_comments', '$group_id')", $currentCourseID);
-
+                $conn = new mysqli($GLOBALS[mysqlServer], $GLOBALS[mysqlUser], $GLOBALS[mysqlPassword], $GLOBALS[currentCourseID]);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                if (!$conn->set_charset("utf8")) {
+                    printf("Error loading character set utf8: %s\n", $conn->error);
+                    exit();
+                }
+                $stmt = $conn->prepare("INSERT INTO assignment_submit (uid, assignment_id, submission_date, submission_ip, file_path, file_name, comments, group_id) 
+                VALUES (?,?, NOW(), ?, ?,?, ?, ?)");
+                $stmt->bind_param("iissssi", $uid, $id, $REMOTE_ADDR, $filename, $_FILES['userfile']['name'], $stud_comments, $group_id);
+                $stmt->execute();
+                $stmt->close();
+                $conn->close();
 
             } else {
-
-
-                //TODO: Use prepare statement here!
-                db_query("INSERT INTO assignment_submit
-				(uid, assignment_id, submission_date, submission_ip, file_path,
-				file_name, comments) VALUES ('$uid','$id', NOW(), '$REMOTE_ADDR',
-				'$filename','" . $_FILES['userfile']['name'] .
-                    "', '$stud_comments')", $currentCourseID);
-
-
+                $conn = new mysqli($GLOBALS[mysqlServer], $GLOBALS[mysqlUser], $GLOBALS[mysqlPassword], $GLOBALS[currentCourseID]);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                if (!$conn->set_charset("utf8")) {
+                    printf("Error loading character set utf8: %s\n", $conn->error);
+                    exit();
+                }
+                $stmt = $conn->prepare("INSERT INTO assignment_submit (uid, assignment_id, submission_date, submission_ip, file_path, file_name, comments)
+                    VALUES ('$uid','$id', NOW(), '$REMOTE_ADDR', '$filename','" . $_FILES['userfile']['name'] . "', '$stud_comments')");
+                $stmt->bind_param("iissssi", $uid, $id, $REMOTE_ADDR, $filename, $_FILES['userfile']['name'], $stud_comments, $group_id);
+                $stmt->execute();
+                $stmt->close();
+                $conn->close();
             }
-
             $tool_content .= "<p class='success_small'>$msg2<br />$msg1<br /><a href='work.php'>$langBack</a></p><br />";
         } else {
             $tool_content .= "    <p class='caution_small'>$langUploadError<br /><a href='work.php'>$langBack</a></p><br />";
@@ -539,13 +552,22 @@ function edit_assignment($id)
     $nav[] = array("url" => "work.php", "name" => $langWorks);
     $nav[] = array("url" => "work.php?id=$id", "name" => $_POST['title']);
 
+    $conn = new mysqli($GLOBALS[mysqlServer], $GLOBALS[mysqlUser], $GLOBALS[mysqlPassword], $GLOBALS[currentCourseID]);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("UPDATE assignments SET title=? , description= ? , group_submissions=? , comments=? , deadline=? WHERE id=? ");
+    $stmt->bind_param("sssssi", $_POST['title'], $_POST['desc'], $_POST['group_submissions'], $_POST['comments'], $_POST['WorkEnd'], $id);
+    $stmt->execute();
+    $err = $stmt->errno;
+    $stmt->close();
+    $conn->close();
 
-    //TODO: Use prepare statement here!
-    if (db_query("UPDATE assignments SET title=" . autoquote($_POST['title']) . ",
-		description=" . autoquote($_POST['desc']) . ", group_submissions=" . autoquote($_POST['group_submissions']) . ",
-		comments=" . autoquote($_POST['comments']) . ", deadline=" . autoquote($_POST['WorkEnd']) . " WHERE id='$id'")) {
-
-
+    if (!$err) {
         $title = autounquote($_POST['title']);
         $tool_content .= "<p class='success_small'>$langEditSuccess<br /><a href='work.php?id=$id'>$langBackAssignment '$title'</a></p><br />";
     } else {
@@ -805,21 +827,19 @@ function show_assignment($id, $message = FALSE)
         $order = 'nom';
     }
 
-    //TODO: Use prepare statement here!
     $result = db_query("SELECT *
 		FROM `$GLOBALS[code_cours]`.assignment_submit AS assign,
 		`$mysqlMainDb`.user AS user
-		WHERE assign.assignment_id='$id' AND user.user_id = assign.uid
+		WHERE assign.assignment_id=" . intval($id) . " AND user.user_id = assign.uid
 		ORDER BY $order $rev");
 
     /*  The query is changed (AND assign.grade<>'' is appended) in order to constract the chart of
      * grades distribution according to the graded works only (works that are not graded are omitted). */
 
-    //TODO: Use prepare statement here!
     $numOfResults = db_query("SELECT *
 		FROM `$GLOBALS[code_cours]`.assignment_submit AS assign,
 		`$mysqlMainDb`.user AS user
-		WHERE assign.assignment_id='$id' AND user.user_id = assign.uid AND assign.grade<>''
+		WHERE assign.assignment_id=" . intval($id) . " AND user.user_id = assign.uid AND assign.grade<>''
 		ORDER BY $order $rev");
     $num_resultsForChart = mysql_num_rows($numOfResults);
 
@@ -839,8 +859,9 @@ function show_assignment($id, $message = FALSE)
 
         $gradeOccurances = array(); // Named array to hold grade occurances/stats
         $gradesExists = 0;
-        while ($row = mysql_fetch_array($result)) {
 
+
+        while ($row = mysql_fetch_array($result)) {
             $theGrade = $row['grade'];
 
             if ($theGrade) {
@@ -855,12 +876,10 @@ function show_assignment($id, $message = FALSE)
                 }
             }
         }
-
-        //TODO: Use prepare statement here!
         $result = db_query("SELECT *
 					FROM `$GLOBALS[code_cours]`.assignment_submit AS assign,
 					`$mysqlMainDb`.user AS user
-					WHERE assign.assignment_id='$id' AND user.user_id = assign.uid
+					WHERE assign.assignment_id=" . intval($id) . " AND user.user_id = assign.uid
 					ORDER BY $order $rev");
 
         $tool_content .= <<<cData
@@ -1222,10 +1241,21 @@ function submit_grades($grades_id, $grades)
         foreach ($grades as $sid => $grade) {
             $val = mysql_fetch_row(db_query("SELECT grade from assignment_submit WHERE id = " . intval($sid)));
             if ($val[0] != $grade) {
-                //TODO: Use prepared statements here!
-                db_query("UPDATE assignment_submit SET grade='$grade',
-						grade_submission_date=NOW(), grade_submission_ip='$REMOTE_ADDR'
-						WHERE id = '$sid'");
+                $conn = new mysqli($GLOBALS[mysqlServer], $GLOBALS[mysqlUser], $GLOBALS[mysqlPassword], $GLOBALS[currentCourseID]);
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+                if (!$conn->set_charset("utf8")) {
+                    printf("Error loading character set utf8: %s\n", $conn->error);
+                    exit();
+                }
+                $stmt = $conn->prepare("UPDATE assignment_submit SET grade= ?,
+						grade_submission_date=NOW(), grade_submission_ip= ?
+						WHERE id = ? ");
+                $stmt->bind_param("ssi", $grade, $REMOTE_ADDR, $sid);
+                $stmt->execute();
+                $stmt->close();
+                $conn->close();
             }
         }
         show_assignment($grades_id, $langGrades);
