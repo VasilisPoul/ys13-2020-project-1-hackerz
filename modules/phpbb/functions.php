@@ -825,8 +825,6 @@ function sync($thedb, $id, $type)
             if ($row = mysql_fetch_array($result)) {
                 $total_topics = $row["total"];
             }
-
-            //TODO:
             $sql = "UPDATE forums
 			SET forum_last_post_id = " . intval($last_post) . ", forum_posts = " . intval($total_posts) . ", forum_topics = " . intval($total_topics) . "
 			WHERE forum_id = " . intval($id);
@@ -852,7 +850,6 @@ function sync($thedb, $id, $type)
                 $total_posts = $row["total"];
             }
             $total_posts -= 1;
-            //TODO:
             $sql = "UPDATE topics SET topic_replies = " . intval($total_posts) . ", topic_last_post_id = " . intval($last_post) . " WHERE topic_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not update topic $id");
