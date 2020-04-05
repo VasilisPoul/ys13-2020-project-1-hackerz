@@ -87,7 +87,7 @@ $tool_content .= "<li><a href='newtopic.php?forum=$forum'>$langNewTopic</a></li>
 
 $sql = "SELECT f.forum_type, f.forum_name
 	FROM forums f
-	WHERE forum_id = '$forum'";
+	WHERE forum_id = " . intval($forum);
 
 $result = db_query($sql, $currentCourseID);
 $myrow = mysql_fetch_array($result);
@@ -95,7 +95,7 @@ $myrow = mysql_fetch_array($result);
 $forum_name = own_stripslashes($myrow["forum_name"]);
 $nameTools = $forum_name;
 
-$topic_count = mysql_fetch_row(db_query("SELECT COUNT(*) FROM topics WHERE forum_id = '$forum'"));
+$topic_count = mysql_fetch_row(db_query("SELECT COUNT(*) FROM topics WHERE forum_id = " . intval($forum)));
 $total_topics = $topic_count[0];
 
 if ($total_topics > $topics_per_page) {
@@ -144,13 +144,13 @@ if ($total_topics > $topics_per_page) { // navigation
 
 if (isset($topicnotify)) { // modify topic notification
     $rows = mysql_num_rows(db_query("SELECT * FROM forum_notify 
-		WHERE user_id = $uid AND topic_id = $topic_id AND course_id = $cours_id", $mysqlMainDb));
+		WHERE user_id = " . intval($uid) . " AND topic_id = " . intval($topic_id) . " AND course_id = " . intval($cours_id), $mysqlMainDb));
     if ($rows > 0) {
         db_query("UPDATE forum_notify SET notify_sent = '$topicnotify' 
-			WHERE user_id = $uid AND topic_id = $topic_id AND course_id = $cours_id", $mysqlMainDb);
+			WHERE user_id = " . intval($uid) . " AND topic_id = " . intval($topic_id) . " AND course_id = " . intval($cours_id), $mysqlMainDb);
     } else {
-        db_query("INSERT INTO forum_notify SET user_id = $uid,
-		topic_id = $topic_id, notify_sent = 1, course_id = $cours_id", $mysqlMainDb);
+        db_query("INSERT INTO forum_notify SET user_id = " . intval($uid) . ",
+		topic_id = " . intval($topic_id) . ", notify_sent = 1, course_id = " . intval($cours_id), $mysqlMainDb);
     }
 }
 
@@ -167,7 +167,7 @@ $tool_content .= "<table width='99%' class='ForumSum'><thead><tr>
 $sql = "SELECT t.*, p.post_time, p.nom AS nom1, p.prenom AS prenom1
         FROM topics t
         LEFT JOIN posts p ON t.topic_last_post_id = p.post_id
-        WHERE t.forum_id = '$forum' 
+        WHERE t.forum_id = " . intval($forum) . " 
         ORDER BY topic_time DESC LIMIT " . intval($first_topic) . " , " . intval($topics_per_page);
 
 $result = db_query($sql, $currentCourseID);

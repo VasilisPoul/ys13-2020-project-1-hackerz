@@ -64,7 +64,7 @@
 function get_total_topics($forum_id, $thedb)
 {
     global $langError;
-    $sql = "SELECT count(*) AS total FROM topics WHERE forum_id = '$forum_id'";
+    $sql = "SELECT count(*) AS total FROM topics WHERE forum_id = " . intval($forum_id);
     if (!$result = db_query($sql, $thedb))
         return ($langError);
     if (!$myrow = mysql_fetch_array($result))
@@ -87,10 +87,10 @@ function get_total_posts($id, $thedb, $type)
             $sql = "SELECT count(*) AS total FROM posts";
             break;
         case 'forum':
-            $sql = "SELECT count(*) AS total FROM posts WHERE forum_id = '$id'";
+            $sql = "SELECT count(*) AS total FROM posts WHERE forum_id = " . intval($id);
             break;
         case 'topic':
-            $sql = "SELECT count(*) AS total FROM posts WHERE topic_id = '$id'";
+            $sql = "SELECT count(*) AS total FROM posts WHERE topic_id = " . intval($id);
             break;
         // Old, we should never get this.
         case 'user':
@@ -113,16 +113,16 @@ function get_last_post($id, $thedb, $type)
     global $langError, $langNoPosts, $langFrom2;
     switch ($type) {
         case 'time_fix':
-            $sql = "SELECT p.post_time FROM posts p WHERE p.topic_id = '$id' ORDER BY post_time DESC LIMIT 1";
+            $sql = "SELECT p.post_time FROM posts p WHERE p.topic_id = " . intval($id) . " ORDER BY post_time DESC LIMIT 1";
             break;
         case 'forum':
-            $sql = "SELECT p.post_time, p.poster_id FROM posts p WHERE p.forum_id = '$id' ORDER BY post_time DESC LIMIT 1";
+            $sql = "SELECT p.post_time, p.poster_id FROM posts p WHERE p.forum_id = " . intval($id) . " ORDER BY post_time DESC LIMIT 1";
             break;
         case 'topic':
-            $sql = "SELECT p.post_time FROM posts p WHERE p.topic_id = '$id' ORDER BY post_time DESC LIMIT 1";
+            $sql = "SELECT p.post_time FROM posts p WHERE p.topic_id = " . intval($id) . " ORDER BY post_time DESC LIMIT 1";
             break;
         case 'user':
-            $sql = "SELECT p.post_time FROM posts p WHERE p.poster_id = '$id' LIMIT 1";
+            $sql = "SELECT p.post_time FROM posts p WHERE p.poster_id = " . intval($id) . " LIMIT 1";
             break;
     }
     if (!$result = db_query($sql, $thedb))
@@ -145,10 +145,10 @@ function does_exists($id, $thedb, $type)
 {
     switch ($type) {
         case 'forum':
-            $sql = "SELECT forum_id FROM forums WHERE forum_id = '$id'";
+            $sql = "SELECT forum_id FROM forums WHERE forum_id = " . intval($id);
             break;
         case 'topic':
-            $sql = "SELECT topic_id FROM topics WHERE topic_id = '$id'";
+            $sql = "SELECT topic_id FROM topics WHERE topic_id = " . intval($id);
             break;
     }
     if (!$result = db_query($sql, $thedb))
@@ -722,7 +722,7 @@ function undo_htmlspecialchars($input)
  */
 function is_first_post($topic_id, $post_id, $thedb)
 {
-    $sql = "SELECT post_id FROM posts WHERE topic_id = '$topic_id' ORDER BY post_id LIMIT 1";
+    $sql = "SELECT post_id FROM posts WHERE topic_id = " . intval($topic_id) . " ORDER BY post_id LIMIT 1";
     if (!$r = db_query($sql, $thedb))
         return (0);
     if (!$m = mysql_fetch_array($r))
@@ -739,7 +739,7 @@ function is_first_post($topic_id, $post_id, $thedb)
  */
 function check_priv_forum_auth($userid, $forumid, $is_posting, $db)
 {
-    $sql = "SELECT count(*) AS user_count FROM forum_access WHERE (user_id = $userid) AND (forum_id = $forumid) ";
+    $sql = "SELECT count(*) AS user_count FROM forum_access WHERE (user_id = " . intval($userid) . ") AND (forum_id = " . intval($forumid) . ") ";
 
     if ($is_posting) {
         $sql .= "AND (can_post = 1)";
@@ -802,7 +802,7 @@ function sync($thedb, $id, $type)
 {
     switch ($type) {
         case 'forum':
-            $sql = "SELECT max(post_id) AS last_post FROM posts WHERE forum_id = $id";
+            $sql = "SELECT max(post_id) AS last_post FROM posts WHERE forum_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not get post ID");
             }
@@ -810,7 +810,7 @@ function sync($thedb, $id, $type)
                 $last_post = $row["last_post"];
             }
 
-            $sql = "SELECT count(post_id) AS total FROM posts WHERE forum_id = $id";
+            $sql = "SELECT count(post_id) AS total FROM posts WHERE forum_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not get post count");
             }
@@ -818,7 +818,7 @@ function sync($thedb, $id, $type)
                 $total_posts = $row["total"];
             }
 
-            $sql = "SELECT count(topic_id) AS total FROM topics WHERE forum_id = $id";
+            $sql = "SELECT count(topic_id) AS total FROM topics WHERE forum_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not get topic count");
             }
@@ -826,16 +826,17 @@ function sync($thedb, $id, $type)
                 $total_topics = $row["total"];
             }
 
+            //TODO:
             $sql = "UPDATE forums
-			SET forum_last_post_id = '$last_post', forum_posts = $total_posts, forum_topics = $total_topics
-			WHERE forum_id = $id";
+			SET forum_last_post_id = " . intval($last_post) . ", forum_posts = " . intval($total_posts) . ", forum_topics = " . intval($total_topics) . "
+			WHERE forum_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not update forum $id");
             }
             break;
 
         case 'topic':
-            $sql = "SELECT max(post_id) AS last_post FROM posts WHERE topic_id = $id";
+            $sql = "SELECT max(post_id) AS last_post FROM posts WHERE topic_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not get post ID");
             }
@@ -843,7 +844,7 @@ function sync($thedb, $id, $type)
                 $last_post = $row["last_post"];
             }
 
-            $sql = "SELECT count(post_id) AS total FROM posts WHERE topic_id = $id";
+            $sql = "SELECT count(post_id) AS total FROM posts WHERE topic_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not get post count");
             }
@@ -851,7 +852,8 @@ function sync($thedb, $id, $type)
                 $total_posts = $row["total"];
             }
             $total_posts -= 1;
-            $sql = "UPDATE topics SET topic_replies = $total_posts, topic_last_post_id = $last_post WHERE topic_id = $id";
+            //TODO:
+            $sql = "UPDATE topics SET topic_replies = " . intval($total_posts) . ", topic_last_post_id = " . intval($last_post) . " WHERE topic_id = " . intval($id);
             if (!$result = db_query($sql, $thedb)) {
                 error_die("Could not update topic $id");
             }
@@ -930,7 +932,7 @@ function forum_category($id)
 
     global $currentCourseID;
 
-    if ($r = mysql_fetch_row(db_query("SELECT cat_id FROM forums WHERE forum_id=$id", $currentCourseID))) {
+    if ($r = mysql_fetch_row(db_query("SELECT cat_id FROM forums WHERE forum_id=" . intval($id), $currentCourseID))) {
         return $r[0];
     } else {
         return FALSE;
@@ -943,7 +945,7 @@ function category_name($id)
 
     global $currentCourseID;
 
-    if ($r = mysql_fetch_row(db_query("SELECT cat_title FROM catagories WHERE cat_id=$id", $currentCourseID))) {
+    if ($r = mysql_fetch_row(db_query("SELECT cat_title FROM catagories WHERE cat_id=" . intval($id), $currentCourseID))) {
         return $r[0];
     } else {
         return FALSE;
