@@ -373,6 +373,15 @@ if (isset($_POST['create_course'])) {
         draw($tool_content, '1', 'create_course', $head_content);
         exit;
     }
+
+    $f = fopen("../../courses/$repertoire/dropbox/.htaccess", "a+");
+    fwrite($f, "Deny from All\nphp_flag engine off");
+    fclose($f);
+
+    $f = fopen("../../courses/$repertoire/work/.htaccess", "a+");
+    fwrite($f, "Deny from All\nphp_flag engine off");
+    fclose($f);
+
     // ---------------------------------------------------------
     //  all the course db queries are inside the following script
     // ---------------------------------------------------------
