@@ -129,9 +129,6 @@ if ($is_adminOfCourse) { // course admin
             $forward = 1;
             $topic = $topic_id;
             $forum = $forum_id;
-
-            //TODO: Use prepare statement here!
-//            $sql = "UPDATE posts_text SET post_text = " . $message . " WHERE (post_id = " . intval($post_id) . ")";
             $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
             if ($conn->connect_error) {
                 die("Connection failed: " . $conn->connect_error);

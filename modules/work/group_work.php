@@ -63,6 +63,7 @@ $require_login = true;
 include 'work_functions.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/forcedownload.php';
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 
 $tool_content = "";
 
@@ -94,15 +95,11 @@ if (isset($_GET['submit'])) {
 function show_assignments()
 {
     global $m, $uid, $langSubmit, $langDays, $langNoAssign, $tool_content, $langWorks;
-
-    $res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days
-		FROM assignments");
-
+    $res = db_query("SELECT *, (TO_DAYS(deadline) - TO_DAYS(NOW())) AS days	FROM assignments");
     if (mysql_num_rows($res) == 0) {
         $tool_content .= $langNoAssign;
         return;
     }
-
 
     $tool_content .= <<<cData
 	<form action="group_work.php" method="post">
@@ -202,7 +199,7 @@ cData;
 function submit_work($uid, $id, $file)
 {
     global $groupPath, $langUploadError, $langUploadSuccess,
-           $langBack, $m, $currentCourseID, $tool_content, $workPath;
+           $langBack, $m, $currentCourseID, $tool_content, $workPath, $mysqlServer, $mysqlUser, $mysqlPassword;
 
     $group = user_group($uid);
 
@@ -216,16 +213,25 @@ function submit_work($uid, $id, $file)
     $source = $groupPath . $file;
     $destination = work_secret($id) . "/$local_name";
 
-
     delete_submissions_by_uid($uid, $group, $id, $destination);
     if (copy($source, "$workPath/$destination")) {
-        db_query("INSERT INTO assignment_submit (uid, assignment_id, submission_date,
-			             submission_ip, file_path, file_name, comments, group_id)
-                          VALUES ('$uid','$id', NOW(), '$_SERVER[REMOTE_ADDR]', '$destination'," .
-            quote($original_filename) . ', ' .
-            autoquote($_POST['comments']) . ", $group)",
-            $currentCourseID);
 
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("INSERT INTO assignment_submit
+                            (uid, assignment_id, submission_date,submission_ip, file_path, file_name, comments, group_id)
+                          VALUES (?,?,NOW(),?,?,?,?,?)");
+        $stmt->bind_param("iissssi", $uid, $id, $_SERVER[REMOTE_ADDR], $destination, $original_filename, $purifier->purify($_POST['comments']), $group);
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
         $tool_content .= "<p class=\"success_small\">$langUploadSuccess<br />$m[the_file] \"$original_filename\" $m[was_submitted]<br /><a href='work.php'>$langBack</a></p><br />";
     } else {
         $tool_content .= "<p class=\"caution_small\">$langUploadError<br /><a href='work.php'>$langBack</a></p><br />";

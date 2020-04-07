@@ -39,7 +39,7 @@ $require_current_course = TRUE;
 $require_login = true;
 $require_help = TRUE;
 $helpTopic = 'Work';
-
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/forcedownload.php';
 
@@ -134,7 +134,8 @@ if ($is_adminOfCourse) {
     if (isset($grade_comments)) {
         $nameTools = $m['WorkView'];
         $navigation[] = array("url" => "work.php", "name" => $langWorks);
-        submit_grade_comments($assignment, $submission, $grade, $comments);
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        submit_grade_comments($assignment, $submission, $grade, $purifier->purify($comments));
     } elseif (isset($add)) {
         $nameTools = $langNewAssign;
         $navigation[] = array("url" => "work.php", "name" => $langWorks);
@@ -142,7 +143,8 @@ if ($is_adminOfCourse) {
     } elseif (isset($sid)) {
         show_submission($sid);
     } elseif (isset($_POST['new_assign'])) {
-        add_assignment($title, $comments, $desc, "$WorkEnd", $group_submissions);
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        add_assignment($purifier->purify($title), $purifier->purify($comments), $purifier->purify($desc), "$WorkEnd", $group_submissions);
         show_assignments();
     } elseif (isset($grades)) {
         $nameTools = $m['WorkView'];
@@ -245,8 +247,7 @@ function add_assignment($title, $comments, $desc, $deadline, $group_submissions)
         printf("Error loading character set utf8: %s\n", $conn->error);
         exit();
     }
-    $stmt = $conn->prepare("INSERT INTO assignments (title, description, comments, deadline, submission_date, secret_directory, group_submissions) 
-                                VALUES (?,?,?,?,NOW(),?,?)");
+    $stmt = $conn->prepare("INSERT INTO assignments (title, description, comments, deadline, submission_date, secret_directory, group_submissions) VALUES (?,?,?,?,NOW(),?,?)");
     $stmt->bind_param("ssssss", $title, $desc, $comments, $deadline, $secret, $group_submissions);
     $stmt->execute();
     $stmt->close();
@@ -317,6 +318,7 @@ function submit_work($id)
         $secret = work_secret($id);
         $ext = get_file_extension($_FILES['userfile']['name']);
         $filename = "$secret/$local_name" . (empty($ext) ? '' : '.' . $ext);
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         if (move_uploaded_file($_FILES['userfile']['tmp_name'], "$workPath/$filename")) {
             $msg2 = "$langUploadSuccess";//to message
             $group_id = user_group($uid, FALSE);
@@ -330,9 +332,8 @@ function submit_work($id)
                     printf("Error loading character set utf8: %s\n", $conn->error);
                     exit();
                 }
-                $stmt = $conn->prepare("INSERT INTO assignment_submit (uid, assignment_id, submission_date, submission_ip, file_path, file_name, comments, group_id) 
-                VALUES (?,?, NOW(), ?, ?,?, ?, ?)");
-                $stmt->bind_param("iissssi", $uid, $id, $REMOTE_ADDR, $filename, $_FILES['userfile']['name'], $stud_comments, $group_id);
+                $stmt = $conn->prepare("INSERT INTO assignment_submit (uid, assignment_id, submission_date, submission_ip, file_path, file_name, comments, group_id) VALUES (?,?, NOW(),?,?,?,?,?)");
+                $stmt->bind_param("iissssi", $uid, $id, $REMOTE_ADDR, $filename, $_FILES['userfile']['name'], $purifier->purify($stud_comments), $group_id);
                 $stmt->execute();
                 $stmt->close();
                 $conn->close();
@@ -346,9 +347,8 @@ function submit_work($id)
                     printf("Error loading character set utf8: %s\n", $conn->error);
                     exit();
                 }
-                $stmt = $conn->prepare("INSERT INTO assignment_submit (uid, assignment_id, submission_date, submission_ip, file_path, file_name, comments)
-                    VALUES ('$uid','$id', NOW(), '$REMOTE_ADDR', '$filename','" . $_FILES['userfile']['name'] . "', '$stud_comments')");
-                $stmt->bind_param("iissssi", $uid, $id, $REMOTE_ADDR, $filename, $_FILES['userfile']['name'], $stud_comments, $group_id);
+                $stmt = $conn->prepare("INSERT INTO assignment_submit (uid, assignment_id, submission_date, submission_ip, file_path, file_name, comments) VALUES (?,?,NOW(),?,?,?,?)");
+                $stmt->bind_param("iissss", $uid, $id, $REMOTE_ADDR, $filename, $_FILES['userfile']['name'], $purifier->purify($stud_comments));
                 $stmt->execute();
                 $stmt->close();
                 $conn->close();
@@ -547,8 +547,8 @@ cData;
 // edit assignment
 function edit_assignment($id)
 {
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     global $tool_content, $langBackAssignment, $langEditSuccess, $langEditError, $langWorks, $langEdit;
-
     $nav[] = array("url" => "work.php", "name" => $langWorks);
     $nav[] = array("url" => "work.php?id=$id", "name" => $_POST['title']);
 
@@ -561,7 +561,7 @@ function edit_assignment($id)
         exit();
     }
     $stmt = $conn->prepare("UPDATE assignments SET title=? , description= ? , group_submissions=? , comments=? , deadline=? WHERE id=? ");
-    $stmt->bind_param("sssssi", $_POST['title'], $_POST['desc'], $_POST['group_submissions'], $_POST['comments'], $_POST['WorkEnd'], $id);
+    $stmt->bind_param("sssssi", $purifier->purify($_POST['title']), $_POST['desc'], $_POST['group_submissions'], $purifier->purify($_POST['comments']), $_POST['WorkEnd'], $id);
     $stmt->execute();
     $err = $stmt->errno;
     $stmt->close();

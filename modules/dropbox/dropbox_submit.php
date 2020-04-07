@@ -35,6 +35,8 @@
  *
  */
 
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+
 require_once("dropbox_init1.inc.php");
 include "../../include/lib/forcedownload.php";
 $nameTools = $dropbox_lang["dropbox"];
@@ -177,7 +179,8 @@ if (isset($_POST["submitWork"])) {
             if (!$error) {
                 move_uploaded_file($dropbox_filetmpname, $dropbox_cnf["sysPath"] . '/' . $dropbox_filename)
                 or die($dropbox_lang["uploadError"]);
-                new Dropbox_SentWork($uid, $dropbox_title, $_POST['description'], $_POST['authors'], $dropbox_filename, $dropbox_filesize, $newWorkRecipients);
+                $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+                new Dropbox_SentWork($uid, $dropbox_title, $purifier->purify($_POST['description']), $_POST['authors'], $dropbox_filename, $dropbox_filesize, $newWorkRecipients);
             }
         }
         chdir($cwd);
