@@ -32,6 +32,7 @@ $helpTopic = 'CreateCourse';
 
 include '../../include/baseTheme.php';
 require_once("../betacms_bridge/include/bcms.inc.php");
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 
 $nameTools = $langCreateCourse . " (" . $langCreateCourseStep . " 1 " . $langCreateCourseStep2 . " 3)";
 $tool_content = $head_content = "";
@@ -70,7 +71,8 @@ function checkrequired(which, entry, entry2) {
 hContent;
 
 $titulaire_probable = "$prenom $nom";
-
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+$intitule = $purifier->purify($intitule);
 $tool_content .= "<form method='post' name='createform' action='$_SERVER[PHP_SELF]' onsubmit=\"return checkrequired(this, 'intitule', 'titulaires');\">";
 
 // Import from BetaCMS Bridge
@@ -113,7 +115,7 @@ $tool_content .= $intitule_html .
     $visit_html;
 
 if (isset($_POST['back1']) or !isset($_POST['visit'])) {
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     // display form
     $tool_content .= "<table width=\"99%\" align='left' class='FormData'>
 	<tbody>
@@ -124,7 +126,7 @@ if (isset($_POST['back1']) or !isset($_POST['visit'])) {
 	</tr>
 	<tr>
 	<th class='left' width=\"160\">$langTitle&nbsp;:</th>
-	<td width=\"160\"><input class='FormData_InputText' type='text' name='intitule' size='60' value='" . @$intitule . "' /></td>
+	<td width=\"160\"><input class='FormData_InputText' type='text' name='intitule' size='60' value='" . @ $purifier->purify($intitule) . "' /></td>
 	<td><small>$langEx</small></td>
 	</tr>
 	<tr>
@@ -335,6 +337,19 @@ elseif (isset($_POST['create2']) or isset($_POST['back2'])) {
 // create the course and the course database
 if (isset($_POST['create_course'])) {
 
+    // csrf
+    if (!isset($_SESSION['create_course_form_token']) || !isset($_POST['create_course_form_token'])) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    if ($_SESSION['create_course_form_token'] !== $_POST['create_course_form_token']) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    unset($_SESSION['create_course_form_token']);
+
     $nameTools = $langCourseCreate;
     $facid = intval($faculte);
     $facname = find_faculty_by_id($facid);
@@ -390,33 +405,69 @@ if (isset($_POST['create_course'])) {
     // ------------- update main Db------------
     mysql_select_db("$mysqlMainDb");
 
-    db_query("INSERT INTO cours SET
-                        code = '$code',
-                        languageCourse =" . quote($language) . ",
-                        intitule = " . quote($intitule) . ",
-                        description = " . quote($description) . ",
-                        course_addon = " . quote($course_addon) . ",
-                        course_keywords = " . quote($course_keywords) . ",
-                        faculte = " . quote($facname) . ",
-                        visible = " . quote($formvisible) . ",
-                        titulaires = " . quote($titulaires) . ",
-                        fake_code = " . quote($code) . ",
-                        type = " . quote($type) . ",
-                        faculteid = '$facid',
+
+
+
+    // Create connection
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    /* change character set to utf8 */
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    // prepare and bind
+    $stmt = $conn->prepare("INSERT INTO cours SET
+                        code = ?,
+                        languageCourse = ?,
+                        intitule = ?,
+                        description = ?,
+                        course_addon = ?,
+                        course_keywords = ?,
+                        faculte = ?,
+                        visible = ?,
+                        titulaires = ?,
+                        fake_code = ?,
+                        type = ?,
+                        faculteid = ?,
                         first_create = NOW()");
-    $new_cours_id = mysql_insert_id();
-    mysql_query("INSERT INTO cours_user SET
-                        cours_id = $new_cours_id,
-                        user_id = '$uid',
+    $stmt->bind_param("sssssssssssi", $code,
+                        $language,
+                        $purifier->purify($intitule),
+                        $purifier->purify($description),
+                        $purifier->purify($course_addon),
+                        $purifier->purify($course_keywords),
+                        $facname,
+                        $formvisible,
+                        $purifier->purify($titulaires),
+                        $code,
+                        $type,
+                        $facid);
+    $stmt->execute();
+    $new_cours_id = $stmt->insert_id;
+    $stmt->close();
+    $stmt = $conn->prepare("INSERT INTO cours_user SET
+                        cours_id = ?,
+                        user_id = ?,
                         statut = '1',
                         tutor='1',
                         reg_date = CURDATE()");
-
-    mysql_query("INSERT INTO cours_faculte SET
-                        faculte = '$faculte',
-                        code = '$repertoire',
-                        facid = '$facid'");
-
+    $stmt->bind_param("ii", $new_cours_id, $uid);
+    $stmt->execute();
+    $stmt->close();
+    $stmt = $conn->prepare("INSERT INTO cours_faculte SET
+                        faculte = ?,
+                        code = ?, 
+                        facid = ?");
+    $stmt->bind_param("ssi", $faculte, $repertoire, $facid);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
     $titou = '$dbname';
 
     // ----------- main course index.php -----------
@@ -436,13 +487,16 @@ if (isset($_POST['create_course'])) {
     // ----------- Import from BetaCMS Bridge -----------
     $tool_content .= doImportFromBetaCMSAfterCourseCreation($repertoire, $mysqlMainDb, $webDir);
     // --------------------------------------------------
+    $intitule = $purifier->purify($intitule);
     $tool_content .= "
                 <p class=\"success_small\">$langJustCreated: &nbsp;<b>$intitule</b></p>
                 <p><small>$langEnterMetadata</small></p><br />
                 <p align='center'>&nbsp;<a href='../../courses/$repertoire/index.php' class=mainpage>$langEnter</a>&nbsp;</p>";
 } // end of submit
+$form_token = $_SESSION['create_course_form_token'] = md5(mt_rand());
 
-$tool_content .= "</form>";
+$tool_content .= "  <input type=\"hidden\" name=\"create_course_form_token\" value=\"$form_token\">
+  </form>";
 
 draw($tool_content, '1', 'create_course', $head_content);
 ?>

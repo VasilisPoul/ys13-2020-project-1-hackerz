@@ -24,6 +24,9 @@
 *  			Panepistimiopolis Ilissia, 15784, Athens, Greece
 *  			eMail: info@openeclass.org
 * =========================================================================*/
+
+
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 // if we come from the home page
 if (isset($from_home) and ($from_home == TRUE) and isset($_GET['cid'])) {
     session_start();
@@ -57,6 +60,19 @@ $head_content = <<<hContent
 hContent;
 
 if (isset($_POST['submit'])) {
+    // csrf
+    if (!isset($_SESSION['change_course_info_form_token']) || !isset($_POST['change_course_info_form_token'])) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    if ($_SESSION['change_course_info_form_token'] !== $_POST['change_course_info_form_token']) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    unset($_SESSION['change_course_info_form_token']);
+
     if (empty($_POST['title'])) {
         $tool_content .= "<p class='caution_small'>$langNoCourseTitle<br />
                                   <a href='$_SERVER[PHP_SELF]'>$langAgain</a></p><br />";
@@ -87,26 +103,63 @@ if (isset($_POST['submit'])) {
         }
 
         list($facid, $facname) = explode('--', $_POST['facu']);
-        db_query("UPDATE `$mysqlMainDb`.cours
-                          SET intitule = " . autoquote($_POST['title']) . ",
-                              faculte = " . autoquote($facname) . ",
-                              description = " . autoquote($_POST['description']) . ",
-                              course_addon = " . autoquote($_POST['course_addon']) . ",
-                              course_keywords = " . autoquote($_POST['course_keywords']) . ",
-                              visible = " . intval($_POST['formvisible']) . ",
-                              titulaires = " . autoquote($_POST['titulary']) . ",
-                              languageCourse = '$newlang',
-                              type = " . autoquote($_POST['type']) . ",
-                              password = " . autoquote($_POST['password']) . ",
-                              faculteid = " . intval($facid) . "
-                          WHERE cours_id = $cours_id");
-        db_query("UPDATE `$mysqlMainDb`.cours_faculte
-                          SET faculte = " . autoquote($facname) . ",
-                              facid = " . intval($facid) . "
-                          WHERE code='$currentCourseID'");
+
+
+
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+
+        $stmt = $conn->prepare("UPDATE cours SET intitule = ?, faculte = ?,  description = ?,  course_addon = ?, course_keywords = ?, visible = ?,
+                              titulaires = ?,
+                              languageCourse = ?,
+                              type = ?,
+                              password = ?,
+                              faculteid = ?
+                          WHERE cours_id = ?");
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
+        $stmt->bind_param("sssssissssii",
+                          $purifier->purify($_POST['title']),
+                        $facname,
+                        $purifier->purify($_POST['description']),
+                        $purifier->purify($_POST['course_addon']),
+                        $purifier->purify($_POST['course_keywords']),
+                        $_POST['formvisible'],
+                        $purifier->purify($_POST['titulary']),
+                        $newlang,
+                        $_POST['type'],
+                        $_POST['password'],
+                        $facid,
+                        $cours_id);
+        if ($stmt->errno) {
+            echo $stmt->errno;
+            die;
+        }
+        $stmt->execute();
+        $stmt->close();
+
+
+        $stmt = $conn->prepare("UPDATE cours_faculte
+                          SET faculte = ?,
+                              facid = ?
+                          WHERE code= ?");
+        $stmt->bind_param("sis", $facname, $facid, $currentCourseID);
+        if ($stmt->errno) {
+            echo $stmt->errno;
+            die;
+        }
+        $stmt->execute();
+        $stmt->close();
 
         // update Home Page Menu Titles for new language
         mysql_select_db($currentCourseID, $db);
+
         db_query("UPDATE `$currentCourseID`.accueil SET rubrique='$langAgenda' WHERE define_var='MODULE_ID_AGENDA'");
         db_query("UPDATE `$currentCourseID`.accueil SET rubrique='$langLinks' WHERE define_var='MODULE_ID_LINKS'");
         db_query("UPDATE `$currentCourseID`.accueil SET rubrique='$langDoc' WHERE define_var='MODULE_ID_DOCS'");
@@ -128,11 +181,18 @@ if (isset($_POST['submit'])) {
         db_query("UPDATE `$currentCourseID`.accueil SET rubrique='$langWiki' WHERE define_var='MODULE_ID_WIKI'");
         db_query("UPDATE `$currentCourseID`.accueil SET rubrique='$langCourseUnits' WHERE define_var='MODULE_ID_UNITS'");
 
+
+
+
+
+        $conn->close();
         $tool_content .= "<p class='success_small'>$langModifDone<br />
                         <a href='" . $_SERVER['PHP_SELF'] . "'>$langBack</a></p><br />
                         <p><a href='{$urlServer}courses/$currentCourseID/index.php'>$langBackCourse</a></p><br />";
     }
 } else {
+
+    $form_token = $_SESSION['change_course_info_form_token'] = md5(mt_rand());
 
     $tool_content .= "<div id='operations_container'><ul id='opslist'>";
     $tool_content .= "<li><a href='archive_course.php'>$langBackupCourse</a></li>
@@ -296,6 +356,7 @@ if (isset($_POST['submit'])) {
   </tr>
   </thead>
   </table>
+  <input type=\"hidden\" name=\"change_course_info_form_token\" value=\"$form_token\">
 </form>";
 }
 
