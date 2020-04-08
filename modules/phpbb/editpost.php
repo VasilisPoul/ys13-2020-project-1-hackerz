@@ -162,9 +162,6 @@ if ($is_adminOfCourse) { // course admin
                     $notify = 1;
                 }
                 $subject = addslashes($subject);
-
-                //TODO: Use prepare statement here!
-//                $sql = "UPDATE topics SET topic_title = '$subject', topic_notify = '$notify' WHERE topic_id = '$topic_id'";
                 $stmt = $conn->prepare("UPDATE topics SET topic_title = ?, topic_notify = ? WHERE topic_id = ? ");
                 $stmt->bind_param("sii", $subject, $notify, $topic_id);
                 if ($stmt->errno) {

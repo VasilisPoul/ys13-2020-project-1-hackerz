@@ -24,11 +24,10 @@
 *  			eMail: info@openeclass.org
 * =========================================================================*/
 
-include_once('../../modules/SqlFormatter.php');
-
 $require_help = TRUE;
 $require_login = true;
 $helpTopic = 'Profile';
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include "../auth/auth.inc.php";
 $require_valid_uid = TRUE;
@@ -85,23 +84,34 @@ if (isset($submit) && (!isset($ldap_submit)) && !isset($changePass)) {
         ##[BEGIN personalisation modification]############
         $_SESSION['langswitch'] = $language = langcode_to_name($_REQUEST['userLanguage']);
         $langcode = langname_to_code($language);
-
-
-        $sql = "UPDATE user
-	        SET nom='$nom_form', prenom='$prenom_form',
-	        username='$username_form', email='$email_form', am='$am_form',
-	            perso='$persoStatus', lang='$langcode'
-	        WHERE user_id='" . $_SESSION["uid"] . "'";
-        echo $sql;
-        echo SqlFormatter::format($sql);
-
-
         $username_form = escapeSimple($username_form);
-        if (mysql_query("UPDATE user
-	        SET nom='$nom_form', prenom='$prenom_form',
-	        username='$username_form', email='$email_form', am='$am_form',
-	            perso='$persoStatus', lang='$langcode'
-	        WHERE user_id='" . $_SESSION["uid"] . "'")) {
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+
+        $stmt = $conn->prepare("UPDATE user SET nom=?, prenom=?, username=?, email=?, am=?, perso=?, lang=? WHERE user_id=?");
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt->bind_param("sssssssi",
+            $purifier->purify($nom_form),
+            $purifier->purify($prenom_form),
+            $purifier->purify($username_form),
+            $purifier->purify($email_form),
+            $purifier->purify($am_form),
+            $persoStatus,
+            $langcode,
+            $_SESSION["uid"]
+        );
+        $stmt->execute();
+
+        $err = $stmt->error;
+        $stmt->close();
+        $conn->close();
+        if (!$err) {
             if (isset($_SESSION['user_perso_active']) and $persoStatus == "no") {
                 unset($_SESSION['user_perso_active']);
             }
@@ -182,7 +192,7 @@ if (isset($msg)) {
 }
 
 $sqlGetInfoUser = "SELECT nom, prenom, username, password, email, am, perso, lang
-    FROM user WHERE user_id='" . $uid . "'";
+    FROM user WHERE user_id=" . intval($uid);
 $result = mysql_query($sqlGetInfoUser);
 $myrow = mysql_fetch_array($result);
 
