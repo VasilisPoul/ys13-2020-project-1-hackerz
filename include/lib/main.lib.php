@@ -1232,9 +1232,10 @@ function course_code_to_title($code)
     $stmt->execute();
     $stmt->bind_result($intitule);
     $err = $stmt->errno;
+    $stmt->fetch();
     $stmt->close();
     $conn->close();
-    if (!$err && $stmt->fetch()) {
+    if (!$err) {
         return $intitule;
     } else {
         return false;
