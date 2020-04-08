@@ -47,6 +47,19 @@ $passurl = $urlSecure . 'modules/profile/password.php';
 
 if (isset($submit) && isset($changePass) && ($changePass == "do")) {
 
+    if (!isset($_SESSION['change_pwd_form_token']) || !isset($_POST['change_pwd_form_token'])) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    if ($_SESSION['change_pwd_form_token'] !== $_POST['change_pwd_form_token']) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    unset($_SESSION['change_pwd_form_token']);
+
+
     if (empty($_REQUEST['password_form']) || empty($_REQUEST['password_form1']) || empty($_REQUEST['old_pass'])) {
         header("location:" . $passurl . "?msg=3");
         exit();
@@ -58,7 +71,7 @@ if (isset($submit) && isset($changePass) && ($changePass == "do")) {
     }
 
     // check if passwd is too easy
-    $sql = "SELECT `nom`,`prenom` ,`username`,`email`,`am` FROM `user`WHERE `user_id`=" . $_SESSION["uid"] . " ";
+    $sql = "SELECT `nom`,`prenom` ,`username`,`email`,`am` FROM `user`WHERE `user_id`=" . intval($_SESSION["uid"]);
     $result = db_query($sql, $mysqlMainDb);
     $myrow = mysql_fetch_array($result);
 
@@ -72,7 +85,7 @@ if (isset($submit) && isset($changePass) && ($changePass == "do")) {
     }
 
     //all checks ok. Change password!
-    $sql = "SELECT `password` FROM `user` WHERE `user_id`=" . $_SESSION["uid"] . " ";
+    $sql = "SELECT `password` FROM `user` WHERE `user_id`=" . intval($_SESSION["uid"]);
     $result = db_query($sql, $mysqlMainDb);
     $myrow = mysql_fetch_array($result);
 
@@ -82,7 +95,7 @@ if (isset($submit) && isset($changePass) && ($changePass == "do")) {
 
     if ($old_pass == $old_pass_db) {
 
-        $sql = "UPDATE `user` SET `password` = '$new_pass' WHERE `user_id` = " . $_SESSION["uid"] . "";
+        $sql = "UPDATE `user` SET `password` = '$new_pass' WHERE `user_id` = " . intval($_SESSION["uid"]);
         db_query($sql, $mysqlMainDb);
         header("location:" . $passurl . "?msg=4");
         exit();
@@ -154,6 +167,9 @@ if (isset($msg)) {
 }
 
 if (!isset($changePass)) {
+
+    $form_token = $_SESSION['change_pwd_form_token'] = md5(mt_rand());
+
     $tool_content .= "
 <form method=\"post\" action=\"$passurl?submit=yes&changePass=do\">
   <table width=\"99%\">
@@ -178,7 +194,7 @@ if (!isset($changePass)) {
     </tr>
 	</tbody>
     </table>
-
+    <input type=\"hidden\" name=\"change_pwd_form_token\" value=\"$form_token\">
 </form>
    ";
 }
