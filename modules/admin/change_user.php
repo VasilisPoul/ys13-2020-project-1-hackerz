@@ -39,8 +39,19 @@ $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $tool_content = '';
 if (isset($_POST['username'])) {
 
-    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+       // header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
 
+    if ($_SESSION['token'] !== $_POST['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+       // exit();
+    }
+    unset($_SESSION['token']);
+
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
 
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -56,7 +67,6 @@ if (isset($_POST['username'])) {
     $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $stmt->bind_param("s", $purifier->purify($_POST['username']));
     $stmt->execute();
-
     $stmt->bind_result($user_id, $nom, $username, $password, $prenom, $statut, $email, $is_admin, $perso, $lang);
     $stmt->fetch();
     $err = $stmt->errno;
@@ -89,8 +99,12 @@ if (isset($_POST['username'])) {
         header('Location: ' . $urlServer);
         exit;
     } else {
-        $tool_content = "<div class='caution_small'>" . sprintf($langChangeUserNotFound, $_POST['username']) . "</div>";
+        $tool_content = "<div class='caution_small'>" . sprintf($langChangeUserNotFound, $purifier->purify($_POST['username'])) . "</div>";
     }
 }
-$tool_content .= "<form action='$_SERVER[PHP_SELF]' method='post'>$langUsername: <input type='text' name='username' /></form>";
+$form_token = $_SESSION['token'] = md5(mt_rand());
+$tool_content .= "<form action='$_SERVER[PHP_SELF]' method='post'>$langUsername:
+<input type='text' name='username' />
+<input type=\"hidden\" name=\"token\" value=\"$form_token\">
+</form>";
 draw($tool_content, 3, 'admin');
