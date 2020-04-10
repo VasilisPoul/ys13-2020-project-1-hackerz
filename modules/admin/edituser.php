@@ -202,6 +202,8 @@ if ((!empty($u)) && ctype_digit($u))    // validate the user id
             $tool_content .= "<option value='$m'>$m</option>";
         $tool_content .= "</select></td>";
 
+        $form_token = $_SESSION['change_user_info_form_token'] = md5(mt_rand());
+
         $tool_content .= "
   </tr>
   <tr>
@@ -222,6 +224,9 @@ if ((!empty($u)) && ctype_digit($u))    // validate the user id
   </tr>
   </tbody>
   </table>
+  
+   <input type=\"hidden\" name=\"change_user_info_form_token\" value=\"$form_token\">
+  
 </form>";
 
         $sql = mysql_query("SELECT nom, prenom, username FROM user WHERE user_id = '$u'");
@@ -289,6 +294,19 @@ if ((!empty($u)) && ctype_digit($u))    // validate the user id
         }
     } else { // if the form was submitted then update user
 
+        // csrf
+        if (!isset($_SESSION['change_user_info_form_token']) || !isset($_POST['change_user_info_form_token'])) {
+            header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+            exit();
+        }
+
+        if ($_SESSION['change_user_info_form_token'] !== $_POST['change_user_info_form_token']) {
+            header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+            exit();
+        }
+
+        unset($_SESSION['change_user_info_form_token']);
+
         // get the variables from the form and initialize them
         $fname = isset($_POST['fname']) ? $_POST['fname'] : '';
         $lname = isset($_POST['lname']) ? $_POST['lname'] : '';
@@ -344,15 +362,7 @@ if ((!empty($u)) && ctype_digit($u))    // validate the user id
                 printf("Error loading character set utf8: %s\n", $conn->error);
                 exit();
             }
-            $stmt = $conn->prepare("UPDATE user SET nom=?,
-                prenom=?,
-				username=?, 
-                email=?, 
-				statut=?,
-				phone=?,
-				department=?, 
-				expires_at=?,
-                am=? WHERE user_id=?");
+            $stmt = $conn->prepare("UPDATE user SET nom=?, prenom=?, username=?, email=?, statut=?, phone=?, department=?, expires_at=?, am=? WHERE user_id = ?");
             $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
             $stmt->bind_param("ssssisiisi",
                 $purifier->purify($lname),
@@ -364,40 +374,21 @@ if ((!empty($u)) && ctype_digit($u))    // validate the user id
                 $department,
                 $expires_at,
                 $purifier->purify($am),
-                $u);
+                $u
+            );
             $stmt->execute();
             if ($stmt->errno) {
-                 $tool_content .= "$langNoUpdate:" . $u . "!";
-            } else {
-                $num_update = $stmt->affected_rows;
-                if ($num_update>0) {
-
-                    $tool_content .= "<center><br /><b>$langSuccessfulUpdate</b><br><br />";
-                } else {
-                    $tool_content .= "<center><br /><b>$langUpdateNoChange</b><br><br />";
-                }
-            }
-
-            $stmt->close();
-            $conn->close();
-
-
-           $sql = "UPDATE user SET nom = " . autoquote($lname) . ", prenom = " . autoquote($fname) . ",
-                            username = " . autoquote($username) . ", email = " . autoquote($email) . ", 
-                            statut = " . intval($newstatut) . ", phone=" . autoquote($phone) . ",
-                            department = " . intval($department) . ", expires_at=" . $expires_at . ",
-                                            am = " . autoquote($am) . " WHERE user_id = " . intval($u);
-            $qry = db_query($sql);
-            if (!$qry) {
                 $tool_content .= "$langNoUpdate:" . $u . "!";
             } else {
-                $num_update = mysql_affected_rows();
+                $num_update = $stmt->affected_rows;
                 if ($num_update == 1) {
                     $tool_content .= "<center><br /><b>$langSuccessfulUpdate</b><br><br />";
                 } else {
                     $tool_content .= "<center><br /><b>$langUpdateNoChange</b><br><br />";
                 }
             }
+            $stmt->close();
+            $conn->close();
             $tool_content .= "<a href='listusers.php'>$langBack</a></center>";
         }
     }
