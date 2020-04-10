@@ -45,6 +45,7 @@ $version = 1;
 $encoding = 'ISO-8859-7';
 
 if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
+
     $tool_content .= "<table width='99%'><caption>" . $langFileSent . "</caption><tbody>
 	<tr><td width='3%'>$langFileSentName</td><td>" . $_FILES['archiveZipped']['name'] . "</td></tr>
 	<tr><td width='3%'>$langFileSentSize</td><td>" . $_FILES['archiveZipped']['size'] . "</td></tr>
@@ -55,6 +56,7 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
     $tool_content .= "<tr><td>" . unpack_zip_show_files($archiveZipped) . "</td></tr>";
     $tool_content .= "<tbody></table><br />";
 } elseif (isset($_POST['send_path']) and isset($_POST['pathToArchive'])) {
+
     $pathToArchive = $_POST['pathToArchive'];
     if (file_exists($pathToArchive)) {
         $tool_content .= "<table width='99%'><caption>" . $langFileUnzipping . "</caption><tbody>";
@@ -64,6 +66,7 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
         $tool_content .= $langFileNotFound;
     }
 } elseif (isset($create_dir_for_course)) {
+
     $r = $restoreThis . "/html";
     list($new_course_code, $new_course_id) = create_course($course_code, $course_lang, $course_title,
         $course_desc, intval($course_fac), $course_vis, $course_prof, $course_type);
@@ -96,6 +99,7 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
     rename($webDir . "courses/tmpUnzipping", $webDir . "courses/garbage/tmpUnzipping/" . time() . "");
     $tool_content .= "<br /><center><p><a href='../admin/index.php'>$langBack</p></center>";
 } elseif (isset($_POST['pathOf4path'])) {
+
     // we know where is the 4 paths to restore  the  course.
     // 2 Show content
     // $_POST['restoreThis']: contains the path of the archived course

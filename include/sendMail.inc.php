@@ -50,6 +50,8 @@ function send_mail($from, $from_address, $to, $to_address,
 		$headers .= "\n" . preg_replace('/\n+/', "\n", $extra_headers);
 	}
 
+    //TODO: purify subject, body
+
 	return @mail($to_header, qencode($subject, $charset),
                $body, $headers);
 }

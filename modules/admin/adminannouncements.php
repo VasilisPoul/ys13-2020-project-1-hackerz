@@ -105,6 +105,7 @@ if (isset($_GET['delete'])) {
         $message = $langAdminAnnModify;
     } else {
         // add new announcement
+        //TODO: prepare
         db_query("INSERT INTO admin_announcements
                         SET gr_title = $title, gr_body = $newContent, gr_comment = $comment,
                         en_title = $title_en, en_body = $newContent_en, en_comment = $comment_en,

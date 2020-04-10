@@ -31,28 +31,46 @@
          asking for a password
 ==============================================================================
 */
-
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $require_admin = TRUE;
 include '../../include/baseTheme.php';
 $nameTools = $langChangeUser;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $tool_content = '';
-
 if (isset($_POST['username'])) {
-    $result = db_query("SELECT user_id, nom, username, password, prenom, statut, email, iduser is_admin, perso, lang
+
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+
+
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("SELECT user_id, nom, username, password, prenom, statut, email, iduser is_admin, perso, lang
                 FROM user LEFT JOIN admin
                 ON user.user_id = admin.iduser
-                WHERE username=" . autoquote($_POST['username']));
-    if (mysql_num_rows($result) > 0) {
-        $myrow = mysql_fetch_array($result);
-        $_SESSION['uid'] = $myrow["user_id"];
-        $_SESSION['nom'] = $myrow["nom"];
-        $_SESSION['prenom'] = $myrow["prenom"];
-        $_SESSION['statut'] = $myrow["statut"];
-        $_SESSION['email'] = $myrow["email"];
-        $_SESSION['is_admin'] = $myrow["is_admin"];
-        $userPerso = $myrow["perso"];
-        $userLanguage = $myrow["lang"];
+                WHERE username= ?");
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $stmt->bind_param("s", $purifier->purify($_POST['username']));
+    $stmt->execute();
+
+    $stmt->bind_result($user_id, $nom, $username, $password, $prenom, $statut, $email, $is_admin, $perso, $lang);
+    $stmt->fetch();
+    $err = $stmt->errno;
+    $stmt->close();
+    $conn->close();
+    if ($user_id > 0) {
+        $_SESSION['uid'] = $user_id;
+        $_SESSION['nom'] = $nom;
+        $_SESSION['prenom'] = $prenom;
+        $_SESSION['statut'] = $statut;
+        $_SESSION['email'] = $email;
+        $_SESSION['is_admin'] = $is_admin;
+        $userPerso = $perso;
+        $userLanguage = $lang;
         if ($userPerso == "yes" and isset($_SESSION['perso_is_active'])) {
             $_SESSION['user_perso_active'] = false;
         } else {
@@ -74,6 +92,5 @@ if (isset($_POST['username'])) {
         $tool_content = "<div class='caution_small'>" . sprintf($langChangeUserNotFound, $_POST['username']) . "</div>";
     }
 }
-
 $tool_content .= "<form action='$_SERVER[PHP_SELF]' method='post'>$langUsername: <input type='text' name='username' /></form>";
 draw($tool_content, 3, 'admin');

@@ -204,6 +204,8 @@ elseif ($a == 2) {
 elseif ($a == 3) {
     $c = @intval($_REQUEST['c']);
     if (isset($_POST['edit'])) {
+
+        //TODO: prepare and purifier
         // Check for empty fields
         $faculte = $_POST['faculte'];
         if (empty($faculte)) {
