@@ -39,6 +39,9 @@ if (!isset($_GET['cid']))
     $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $cid = $purifier->purify($cid);
 if (!isset($doit) or $doit != "yes") {
+
+    $form_token = $_SESSION['token'] = md5(mt_rand());
+
     $tool_content .= "
     <table width='40%'>
     <tbody>
@@ -47,7 +50,7 @@ if (!isset($doit) or $doit != "yes") {
       	<p>$langConfirmUnregCours:</p><p> <em>" . course_code_to_title($cid) . "</em>&nbsp;? </p>
 	<ul class='listBullet'>
 	<li>$langYes: 
-	<a href='$_SERVER[PHP_SELF]?u=$uid&amp;cid=$cid&amp;doit=yes' class=mainpage>$langUnregCours</a>
+	<a href='$_SERVER[PHP_SELF]?u=$uid&amp;cid=$cid&amp;doit=yes&amp;token=$form_token' class=mainpage>$langUnregCours</a>
 	</li>
 	<li>$langNo: <a href='../../index.php' class=mainpage>$langBack</a>
 	</li></ul>
@@ -58,6 +61,20 @@ if (!isset($doit) or $doit != "yes") {
 
 } else {
     if (isset($uid) and $uid == $_SESSION['uid']) {
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        unset($_SESSION['token']);
+
         db_query("DELETE from cours_user WHERE cours_id = (SELECT cours_id FROM cours WHERE code = " . quote($cid) . ") AND user_id='$uid'");
         if (mysql_affected_rows() > 0) {
             $tool_content .= "<p class='success_small'>$langCoursDelSuccess</p>";
