@@ -45,6 +45,7 @@ include '../../include/baseTheme.php';
 include 'admin.inc.php';
 include '../auth/auth.inc.php';
 include '../../include/jscalendar/calendar.php';
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 
 if (isset($_GET['u']) or isset($_POST['u']))
     $_SESSION['u_tmp'] = $u;
@@ -335,11 +336,57 @@ if ((!empty($u)) && ctype_digit($u))    // validate the user id
             $tool_content .= "<center><br><b>$langExpireBeforeRegister<br><br><a href=\"edituser.php?u=" . $u . "\">$langAgain</a></b><br />";
         } else {
             if ($u == '1') $department = 'NULL';
-            $sql = "UPDATE user SET nom = " . autoquote($lname) . ", prenom = " . autoquote($fname) . ",
-				username = " . autoquote($username) . ", email = " . autoquote($email) . ", 
-				statut = " . intval($newstatut) . ", phone=" . autoquote($phone) . ",
-				department = " . intval($department) . ", expires_at=" . $expires_at . ",
-                                am = " . autoquote($am) . " WHERE user_id = " . intval($u);
+            $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            if (!$conn->set_charset("utf8")) {
+                printf("Error loading character set utf8: %s\n", $conn->error);
+                exit();
+            }
+            $stmt = $conn->prepare("UPDATE user SET nom=?,
+                prenom=?,
+				username=?, 
+                email=?, 
+				statut=?,
+				phone=?,
+				department=?, 
+				expires_at=?,
+                am=? WHERE user_id=?");
+            $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+            $stmt->bind_param("ssssisiisi",
+                $purifier->purify($lname),
+                $purifier->purify($fname),
+                $purifier->purify($username),
+                $purifier->purify($email),
+                $newstatut,
+                $purifier->purify($phone),
+                $department,
+                $expires_at,
+                $purifier->purify($am),
+                $u);
+            $stmt->execute();
+            if ($stmt->errno) {
+                 $tool_content .= "$langNoUpdate:" . $u . "!";
+            } else {
+                $num_update = $stmt->affected_rows;
+                if ($num_update>0) {
+
+                    $tool_content .= "<center><br /><b>$langSuccessfulUpdate</b><br><br />";
+                } else {
+                    $tool_content .= "<center><br /><b>$langUpdateNoChange</b><br><br />";
+                }
+            }
+
+            $stmt->close();
+            $conn->close();
+
+
+           $sql = "UPDATE user SET nom = " . autoquote($lname) . ", prenom = " . autoquote($fname) . ",
+                            username = " . autoquote($username) . ", email = " . autoquote($email) . ", 
+                            statut = " . intval($newstatut) . ", phone=" . autoquote($phone) . ",
+                            department = " . intval($department) . ", expires_at=" . $expires_at . ",
+                                            am = " . autoquote($am) . " WHERE user_id = " . intval($u);
             $qry = db_query($sql);
             if (!$qry) {
                 $tool_content .= "$langNoUpdate:" . $u . "!";
