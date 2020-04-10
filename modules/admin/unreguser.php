@@ -62,12 +62,25 @@ if (!$doit) {
     if ($c) {
         $tool_content .= " $langConfirmDeleteQuestion2 <em>" . htmlspecialchars($c) . "</em>";
     }
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $tool_content .= ";</p>
                 <ul>
-                <li>$langYes: <a href=\"unreguser.php?u=" . htmlspecialchars($u) . "&c=" . htmlspecialchars($c) . "&doit=yes\">$langDelete</a><br>&nbsp;</li>
+                <li>$langYes: <a href=\"unreguser.php?u=" . htmlspecialchars($u) . "&c=" . htmlspecialchars($c) . "&doit=yes&token=$form_token\">$langDelete</a><br>&nbsp;</li>
                 <li>$langNo: <a href=\"edituser.php?u=" . htmlspecialchars($u) . "\">$langBack</a></li>
                 </ul>";
 } else {
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
+    if ($_SESSION['token'] !== $_GET['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['token']);
+
     if (!$c) {
         if ($u == 1) {
             $tool_content .= $langTryDeleteAdmin;

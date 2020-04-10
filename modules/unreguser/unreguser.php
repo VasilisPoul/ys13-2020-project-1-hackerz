@@ -43,12 +43,13 @@ if (!isset($doit) or $doit != "yes") {
         draw($tool_content, 1);
         exit;
     } else {
-        $q = db_query("SELECT code FROM cours, cours_user WHERE cours.cours_id = cours_user.cours_id AND user_id = '$uid' LIMIT 1");
+        $form_token = $_SESSION['token'] = md5(mt_rand());
+        $q = db_query("SELECT code FROM cours, cours_user WHERE cours.cours_id = cours_user.cours_id AND user_id = " . intval($uid) . " LIMIT 1");
         if (mysql_num_rows($q) == 0) {
             $tool_content .= "<p><b>$langConfirm</b></p>";
             $tool_content .= "<ul class=\"listBullet\">";
             $tool_content .= "<li>$langYes: ";
-            $tool_content .= "<a href='$_SERVER[PHP_SELF]?u=$uid&doit=yes'>$langDelete</a>";
+            $tool_content .= "<a href='$_SERVER[PHP_SELF]?u=$uid&doit=yes&token=$form_token'>$langDelete</a>";
             $tool_content .= "</li>";
             $tool_content .= "<li>$langNo: <a href='../profile/profile.php'>$langBack</a>";
             $tool_content .= "</li></ul>";
@@ -62,10 +63,23 @@ if (!isset($doit) or $doit != "yes") {
     }  //endif is admin
 } else {
     if (isset($uid)) {
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
         $tool_content .= "<table width=99%><tbody>";
         $tool_content .= "<tr>";
         $tool_content .= "<td class=\"success\">";
-        db_query("DELETE from user WHERE user_id = '$uid'");
+        db_query("DELETE from user WHERE user_id = " . intval($uid));
         if (mysql_affected_rows() > 0) {
             $tool_content .= "<p><b>$langDelSuccess</b></p>";
             $tool_content .= "<p>$langThanks</p>";
@@ -85,4 +99,3 @@ if (isset($_SESSION['uid'])) {
     draw($tool_content, 0);
 }
 ?>
-
