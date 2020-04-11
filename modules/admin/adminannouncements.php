@@ -27,6 +27,7 @@
 $require_admin = TRUE;
 include '../../include/baseTheme.php';
 include('../../include/lib/textLib.inc.php');
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $nameTools = $langAdminAn;
 $tool_content = $head_content = "";
@@ -93,25 +94,61 @@ if (isset($_GET['delete'])) {
         $displayAnnouncementList = true;
     }
 } elseif (isset($_POST['submitAnnouncement'])) {
-    // submit announcement command
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    if ($_SESSION['token'] !== $_POST['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['token']);
+
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     if (isset($_POST['id'])) {
-        // modify announcement
         $id = intval($_POST['id']);
-        db_query("UPDATE admin_announcements
-                        SET gr_title = $title, gr_body = $newContent, gr_comment = $comment,
-                        en_title = $title_en, en_body = $newContent_en, en_comment = $comment_en,
-                        visible = '$visible', date = NOW()
-                        WHERE id = $id", $mysqlMainDb);
+        $stmt = $conn->prepare("UPDATE admin_announcements 
+        SET gr_title = ?, gr_body = ?, gr_comment = ?, en_title = ?, en_body = ?, en_comment = ?, visible = ?, date = NOW() 
+        WHERE id = ?");
+        $stmt->bind_param("sssssssi",
+            $purifier->purify($title),
+            $purifier->purify($newContent),
+            $purifier->purify($comment),
+            $purifier->purify($title_en),
+            $purifier->purify($newContent_en),
+            $purifier->purify($comment_en),
+            $visible,
+            $id
+        );
+        $stmt->execute();
+        $stmt->close();
         $message = $langAdminAnnModify;
     } else {
-        // add new announcement
-        //TODO: prepare
-        db_query("INSERT INTO admin_announcements
-                        SET gr_title = $title, gr_body = $newContent, gr_comment = $comment,
-                        en_title = $title_en, en_body = $newContent_en, en_comment = $comment_en,
-                        visible = '$visible', date = NOW()");
+        $stmt = $conn->prepare("INSERT INTO admin_announcements 
+        SET gr_title = ?, gr_body = ?, gr_comment = ?, en_title = ?, en_body = ?, en_comment = ?, visible = ?, date = NOW()");
+        $stmt->bind_param("sssssss",
+            $purifier->purify($title),
+            $purifier->purify($newContent),
+            $purifier->purify($comment),
+            $purifier->purify($title_en),
+            $purifier->purify($newContent_en),
+            $purifier->purify($comment_en),
+            $visible
+        );
+        $stmt->execute();
+        $stmt->close();
         $message = $langAdminAnnAdd;
     }
+    $conn->close();
 }
 
 // action message
@@ -142,7 +179,7 @@ if ($displayForm && (@$addAnnouce == 1 || isset($modify))) {
     if (!isset($contentToModifyEn)) $contentToModifyEn = "";
     if (!isset($titleToModifyEn)) $titleToModifyEn = "";
     if (!isset($commentToModifyEn)) $commentToModifyEn = "";
-
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $checked = (isset($visibleToModify) and $visibleToModify == 'V') ? " checked='1'" : '';
     $tool_content .= "
                 <tr><th class='left'>$langAdminAnVis</th>
@@ -174,6 +211,7 @@ if ($displayForm && (@$addAnnouce == 1 || isset($modify))) {
               <tr><td colspan='2'>&nbsp;</td></tr>
           </tbody>
        </table>
+          <input type=\"hidden\" name=\"token\" value=\"$form_token\">
     </form>
     <br /><br />";
 }
