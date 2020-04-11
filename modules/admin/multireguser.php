@@ -12,15 +12,24 @@ define('SUFFIX_LEN', 4);
 $require_admin = TRUE;
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
-
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $nameTools = $langMultiRegUser;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $tool_content = "";
-
 $error = '';
 $acceptable_fields = array('first', 'last', 'email', 'id', 'phone', 'username');
-
 if (isset($_POST['submit'])) {
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    if ($_SESSION['token'] !== $_POST['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['token']);
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $send_mail = isset($_POST['send_mail']) && $_POST['send_mail'];
     $unparsed_lines = '';
     $new_users_info = array();
@@ -46,12 +55,10 @@ if (isset($_POST['submit'])) {
                 foreach ($fields as $field) {
                     $info[$field] = array_shift($user);
                 }
-
                 if (!isset($info['email']) or
                     !email_seems_valid($info['email'])) {
                     $info['email'] = '';
                 }
-
                 if (!empty($am)) {
                     if (!isset($info['id']) or empty($info['id'])) {
                         $info['id'] = $am;
@@ -59,22 +66,22 @@ if (isset($_POST['submit'])) {
                         $info['id'] = $am . ' - ' . $info['id'];
                     }
                 }
-
                 if (!isset($info['username'])) {
                     $info['username'] = create_username($newstatut,
                         $facid,
-                        $nom,
-                        $prenom,
+                        $purifier->purify($nom),
+                        $purifier->purify($prenom),
                         $_POST['prefix']);
                 }
-                $new = create_user($newstatut,
-                    $info['username'],
-                    @$info['last'],
-                    @$info['first'],
-                    @$info['email'],
+                $new = create_user(
+                    $newstatut,
+                    $purifier->purify($info['username']),
+                    $purifier->purify(@$info['last']),
+                    $purifier->purify(@$info['first']),
+                    $purifier->purify(@$info['email']),
                     $facid,
                     @$info['id'],
-                    @$info['phone'],
+                    $purifier->purify(@$info['phone']),
                     $_POST['lang'],
                     $send_mail);
                 if ($new === false) {
@@ -84,6 +91,7 @@ if (isset($_POST['submit'])) {
 
                     // Now, the $user array should contain only course codes
                     foreach ($user as $course_code) {
+                        $course_code = $purifier->purify($course_code);
                         if (!register($new[0], $course_code)) {
                             $unparsed_lines .=
                                 sprintf($langMultiRegCourseInvalid . "\n",
@@ -111,6 +119,7 @@ if (isset($_POST['submit'])) {
     while ($n = mysql_fetch_array($req)) {
         $facs[$n['id']] = $n['name'];
     }
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $tool_content .= "$langMultiRegUserInfo
 <form method='post' action='$_SERVER[PHP_SELF]'>
 <table class='FormData'>
@@ -144,11 +153,11 @@ if (isset($_POST['submit'])) {
     <td><input type='submit' name='submit' value='$langSubmit' /></td>
 </tr>
 </table>
+<input type=\"hidden\" name=\"token\" value=\"$form_token\">
 </form>";
 }
 
 draw($tool_content, 3, 'admin');
-
 
 function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone, $lang, $send_mail)
 {
@@ -169,8 +178,22 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
         // $langAsUser;
     }
 
-    $req = db_query('SELECT * FROM user WHERE username = ' . autoquote($uname));
-    if ($req and mysql_num_rows($req) > 0) {
+    $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
+    $stmt->bind_param("s", $uname);
+    $stmt->bind_result($user_id);
+    $stmt->fetch();
+    $stmt->execute();
+    $stmt->close();
+    if ($user_id !== NULL) {
         $GLOBALS['error'] = "$GLOBALS[l_invalidname] ($uname)";
         return false;
     }
@@ -180,19 +203,18 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
     $expires_at = time() + $durationAccount;
     $password_encrypted = md5($password);
 
-    $req = db_query("INSERT INTO user
-                                (nom, prenom, username, password, email, statut, department, registered_at, expires_at, lang, am, phone)
-                        VALUES (" .
-        autoquote($nom) . ', ' .
-        autoquote($prenom) . ', ' .
-        autoquote($uname) . ", '$password_encrypted', " .
-        autoquote($email) .
-        ", $statut, $depid, " .
-        "$registered_at, $expires_at, '$lang', " .
-        autoquote($am) . ', ' .
-        autoquote($phone) . ')');
-    $id = mysql_insert_id();
+    $stmt = $conn->prepare("INSERT INTO user (nom, prenom, username, password, email, 
+                                  statut, department, registered_at, expires_at, 
+                                  lang, am, phone) 
+                                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssssiiiisss", $nom, $prenom, $uname, $password_encrypted, $email,
+        $statut, $depid, $registered_at, $expires_at,
+        $lang, $am, $phone);
+    $stmt->execute();
+    $id = $stmt->insert_id;
+    $stmt->close();
 
+    $conn->close();
     $emailsubject = "$langYourReg $siteName $type_message";
     $emailbody = "
 $langDestination $prenom $nom
@@ -217,15 +239,34 @@ $langEmail : $emailhelpdesk
 function create_username($statut, $depid, $nom, $prenom, $prefix)
 {
     $wildcard = str_pad('', SUFFIX_LEN, '_');
-    $req = db_query("SELECT username FROM user
-                         WHERE username LIKE '$prefix$wildcard'
-                         ORDER BY username DESC LIMIT 1");
-    if ($req and mysql_num_rows($req) > 0) {
+    $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $GLOBALS['mysqlMainDb'] );
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("SELECT username FROM user WHERE username LIKE ? ORDER BY username DESC LIMIT 1");
+    $x = "$prefix$wildcard";
+    $stmt->bind_param("s", $x);
+    $stmt->bind_result($username);
+    $stmt->fetch();
+    $stmt->execute();
+    if ($username !== NULL) {
+        while ($stmt->fetch()) {
+            var_dump($username);
+        }
+        die;
+
         list($last_uname) = mysql_fetch_row($req);
         $lastid = 1 + str_replace($prefix, '', $last_uname);
     } else {
         $lastid = 1;
     }
+
+    $stmt->close();
+
     do {
         $uname = $prefix . sprintf('%0' . SUFFIX_LEN . 'd', $lastid);
         $lastid++;
@@ -233,13 +274,15 @@ function create_username($statut, $depid, $nom, $prenom, $prefix)
     return $uname;
 }
 
-
 function register($uid, $course_code)
 {
     $code = autoquote($course_code);
+    //TODO: Prepare statement here!
     $req = db_query("SELECT code, cours_id FROM cours WHERE code=$code OR fake_code=$code");
     if ($req and mysql_num_rows($req) > 0) {
         list($code, $cid) = mysql_fetch_row($req);
+
+        //TODO: Prepare statement here!
         db_query("INSERT INTO cours_user SET cours_id = $cid, user_id = $uid, statut = 5,
                                                      team = 0, tutor = 0, reg_date = NOW()");
         return true;

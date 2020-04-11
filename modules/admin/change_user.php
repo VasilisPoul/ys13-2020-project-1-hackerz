@@ -41,13 +41,13 @@ if (isset($_POST['username'])) {
 
     // csrf
     if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
-       // header("location:" . $_SERVER['PHP_SELF']);
+        header("location:" . $_SERVER['PHP_SELF']);
         exit();
     }
 
     if ($_SESSION['token'] !== $_POST['token']) {
         header("location:" . $_SERVER['PHP_SELF']);
-       // exit();
+        exit();
     }
     unset($_SESSION['token']);
 
