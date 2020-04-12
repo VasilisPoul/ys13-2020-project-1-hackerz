@@ -58,6 +58,8 @@
 $require_admin = TRUE;
 // Include baseTheme
 include '../../include/baseTheme.php';
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+
 // Define $nameTools
 $nameTools = $langListFaculteActions;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
@@ -157,11 +159,22 @@ elseif ($a == 1) {
             $tool_content .= "<center><p><a href=\"$_SERVER[PHP_SELF]?a=1\">" . $langReturnToAddFaculte . "</a></p></center>";
         } else {
             // OK Create the new faculty
-            mysql_query("INSERT into faculte(code,name,generator,number) VALUES(" . autoquote($codefaculte) . ',' . autoquote($faculte) . ",'100','1000')")
-            or die ($langNoSuccess);
+            $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $mysqlMainDb);
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+            if (!$conn->set_charset("utf8")) {
+                printf("Error loading character set utf8: %s\n", $conn->error);
+                exit();
+            }
+            $stmt = $conn->prepare("INSERT into faculte(code, name, generator, number) VALUES(?,?,'100','1000')");
+            $stmt->bind_param("ss", $codefaculte, $faculte);
+            $stmt->execute() or die ($langNoSuccess);
+            $stmt->close();
             $tool_content .= "<p>" . $langAddSuccess . "</p><br />";
         }
     } else {
+        $form_token = $_SESSION['token'] = md5(mt_rand());
         // Display form for new faculte information
         $tool_content .= "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?a=1\">";
         $tool_content .= "<table width='99%' class='FormData'>
@@ -182,6 +195,7 @@ elseif ($a == 1) {
 		</tr>
 		</tbody>
 		</table>
+		<input type=\"hidden\" name=\"token\" value=\"$form_token\">
 		</form>";
     }
     $tool_content .= "<br /><p align='right'><a href='$_SERVER[PHP_SELF]'>" . $langBack . "</a></p>";
@@ -204,33 +218,63 @@ elseif ($a == 2) {
 elseif ($a == 3) {
     $c = @intval($_REQUEST['c']);
     if (isset($_POST['edit'])) {
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
 
-        //TODO: prepare and purifier
-        // Check for empty fields
+        if ($_SESSION['token'] !== $_POST['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
+        $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $mysqlMainDb);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("SELECT * from faculte WHERE id <> ? AND name=?");
+        $stmt->bind_param("is", $c, $faculte);
+        $stmt->bind_result($x);
+        $stmt->fetch();
+        $stmt->execute();
+        $stmt->close();
+
         $faculte = $_POST['faculte'];
         if (empty($faculte)) {
             $tool_content .= "<p>" . $langEmptyFaculte . "</p><br>";
             $tool_content .= "<p align='right'><a href='$_SERVER[PHP_SELF]?a=3&c=$c'>$langReturnToEditFaculte</a></p>";
         } // Check if faculte name already exists
-        elseif (mysql_num_rows(mysql_query("SELECT * from faculte WHERE id <> $c AND name=" .
-                autoquote($faculte))) > 0) {
+        elseif ($x !== NULL) {
             $tool_content .= "<p>" . $langFaculteExists . "</p><br>";
             $tool_content .= "<p align='right'><a href='$_SERVER[PHP_SELF]?a=3&amp;c=$c'>$langReturnToEditFaculte</a></p>";
         } else {
             // OK Update the faculte
-            mysql_query("UPDATE faculte SET name = " .
-                autoquote($faculte) . " WHERE id=$c")
-            or die ($langNoSuccess);
+            $stmt = $conn->prepare("UPDATE faculte SET name=? WHERE id=?");
+            $stmt->bind_param("si", $purifier->purify($faculte), $c);
+            $stmt->execute() or die ($langNoSuccess);
+
             // For backwards compatibility update cours and cours_facult also
-            db_query("UPDATE cours SET faculte = " .
-                autoquote($faculte) . " WHERE faculteid=$c")
-            or die ($langNoSuccess);
-            db_query("UPDATE cours_faculte SET faculte = " .
-                autoquote($faculte) . " WHERE facid=$c")
-            or die ($langNoSuccess);
+            $stmt = $conn->prepare("UPDATE cours SET faculte=? WHERE faculteid=?");
+            $stmt->bind_param("si", $purifier->purify($faculte), $c);
+            $stmt->execute() or die ($langNoSuccess);
+
+            $stmt = $conn->prepare("UPDATE cours_faculte SET faculte=? WHERE facid=?");
+            $stmt->bind_param("si", $purifier->purify($faculte), $c);
+            $stmt->execute() or die ($langNoSuccess);
+            $stmt->close();
+
             $tool_content .= "<p>$langEditFacSucces</p><br>";
         }
+        $conn->close();
     } else {
+        $form_token = $_SESSION['token'] = md5(mt_rand());
         // Get faculte information
         $c = intval($_GET['c']);
         $sql = "SELECT code, name FROM faculte WHERE id=$c";
@@ -260,6 +304,7 @@ elseif ($a == 3) {
 		</tr>
 		</tbody>
 		</table>
+		<input type=\"hidden\" name=\"token\" value=\"$form_token\">
 		</form>";
     }
     $tool_content .= "<br /><p align='right'><a href='$_SERVER[PHP_SELF]'>" . $langBack . "</a></p>";

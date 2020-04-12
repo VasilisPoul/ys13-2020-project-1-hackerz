@@ -213,7 +213,6 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
     $stmt->execute();
     $id = $stmt->insert_id;
     $stmt->close();
-
     $conn->close();
     $emailsubject = "$langYourReg $siteName $type_message";
     $emailbody = "
