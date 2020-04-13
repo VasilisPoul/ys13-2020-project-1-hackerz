@@ -85,6 +85,18 @@ require_once("dropbox_class.inc.php");
  * - UPLOAD NEW FILE
  */
 if (isset($_POST["submitWork"])) {
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
+    if ($_SESSION['token'] !== $_POST['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['token']);
+
     require("../../include/lib/fileUploadLib.inc.php");
 
     $error = FALSE;

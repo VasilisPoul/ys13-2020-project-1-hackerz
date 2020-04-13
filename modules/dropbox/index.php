@@ -192,7 +192,7 @@ tCont2;
         $tool_content .= '
            <option value="0">' . $dropbox_lang["justUploadInSelect"] . '</option>';
     }
-
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $tool_content .= "
         </select>
       </td>
@@ -203,6 +203,7 @@ tCont2;
     </tr>
     </tbody>
     </table>
+    <input type=\"hidden\" name=\"token\" value=\"$form_token\">
     </form>
     <p align='right'><small>$langMaxFileSize " . ini_get('upload_max_filesize') . "</small></p>";
     //==========================================================================
