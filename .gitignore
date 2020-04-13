@@ -1,4 +1,5 @@
-
+courses/
+config/
 
 # Created by https://www.gitignore.io/api/phpstorm
 # Edit at https://www.gitignore.io/?templates=phpstorm
@@ -94,9 +95,6 @@ fabric.properties
 # End of https://www.gitignore.io/api/phpstorm
 # Δημιουργήθηκε από το https://www.gitignore.io/api/phpstorm # Επεξεργασία στη διεύθυνση https://www.gitignore.io/?templates=phpstorm ### PhpStorm ### # Καλύπτει IDE του JetBrains: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio και WebStorm # Αναφορά: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839 # Ειδικά για τον χρήστη πράγματα .idea / ** / workspace.xml .idea / ** / tasks.xml .idea / ** / use.statistics.xml .idea / ** / λεξικά .idea / ** / ράφι # Δημιουργία αρχείων .idea / ** / contentModel.xml # Ευαίσθητα αρχεία ή αρχεία υψηλής ευκρίνειας .idea / ** / dataSources / .idea / ** / dataSources.ids .idea / ** / dataSources.local.xml .idea / ** / sqlDataSources.xml .idea / ** / dynamic.xml .idea / ** / uiDesigner.xml .idea / ** / dbnavigator.xml # Gradle .idea / ** / gradle.xml .idea / ** / βιβλιοθήκες # Gradle και Maven με αυτόματη εισαγωγή # Όταν χρησιμοποιείτε το Gradle ή το Maven με αυτόματη εισαγωγή, θα πρέπει να αποκλείσετε αρχεία μονάδων, # δεδομένου ότι θα αναδημιουργηθούν και μπορεί να προκαλέσουν προβλήματα. Αποσύνδεση αν χρησιμοποιείτε # αυτόματη εισαγωγή. # .idea / modules.xml # .idea / * .iml # .idea / modules # * .iml # * .ipr # CMake cmake-build - * / # Plugin Mongo Explorer .idea / ** / mongoSettings.xml # Μορφή έργου που βασίζεται σε αρχεία * .ws # IntelliJ έξω/ # mpeltonen / sbt-idea plugin .idea_modules / # Plugin JIRA atlassian-ide-plugin.xml # Διασκεδαστικό plugin Clojure .idea / replstate.xml # Crashlytics plugin (για το Android Studio και IntelliJ) com_crashlytics_export_strings.xml crashlytics.properties crashlytics-build.properties fabric.properties # Βασισμένο στον επεξεργαστή Rest Client .idea / httpRequests # Αρχείο στούντιο 3.1+ σειριακού περιεχομένου cache .idea / caches / build_file_checksums.ser ### Patch PhpStorm ### # Αιτιολογία σχολίου: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-215987721 # * .iml # modules.xml # .idea / misc.xml # * .ipr # Plugin Sonarlint .idea / ** / sonarlint / # Plugin SonarQube .idea / ** / sonarIssues.xml # Plugin plugin πλοήγησης .idea / ** / markdown-navigator.xml .idea / ** / markdown-πλοηγός / # Τέλος https://www.gitignore.io/api/phpstorm
 translated from: English
-
-courses/
 video/
-config/
 .idea/dataSources.xml
 
