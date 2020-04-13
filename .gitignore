@@ -98,3 +98,4 @@ translated from: English
 video/
 .idea/dataSources.xml
 
+!/config/
