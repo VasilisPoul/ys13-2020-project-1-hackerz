@@ -238,7 +238,7 @@ $langEmail : $emailhelpdesk
 function create_username($statut, $depid, $nom, $prenom, $prefix)
 {
     $wildcard = str_pad('', SUFFIX_LEN, '_');
-    $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $GLOBALS['mysqlMainDb'] );
+    $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $GLOBALS['mysqlMainDb']);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
@@ -253,19 +253,12 @@ function create_username($statut, $depid, $nom, $prenom, $prefix)
     $stmt->fetch();
     $stmt->execute();
     if ($username !== NULL) {
-        while ($stmt->fetch()) {
-            var_dump($username);
-        }
-        die;
-
-        list($last_uname) = mysql_fetch_row($req);
-        $lastid = 1 + str_replace($prefix, '', $last_uname);
+        $lastid = 1 + str_replace($prefix, '', $username);
     } else {
         $lastid = 1;
     }
-
     $stmt->close();
-
+    $conn -> close();
     do {
         $uname = $prefix . sprintf('%0' . SUFFIX_LEN . 'd', $lastid);
         $lastid++;
@@ -275,17 +268,26 @@ function create_username($statut, $depid, $nom, $prenom, $prefix)
 
 function register($uid, $course_code)
 {
-    $code = autoquote($course_code);
-    //TODO: Prepare statement here!
-    $req = db_query("SELECT code, cours_id FROM cours WHERE code=$code OR fake_code=$code");
-    if ($req and mysql_num_rows($req) > 0) {
-        list($code, $cid) = mysql_fetch_row($req);
-
-        //TODO: Prepare statement here!
-        db_query("INSERT INTO cours_user SET cours_id = $cid, user_id = $uid, statut = 5,
+    $code = $course_code;
+    $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $GLOBALS['mysqlMainDb']);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("SELECT code, cours_id FROM cours WHERE code=? OR fake_code=?");
+    $stmt->bind_param("ss", $code, $code);
+    $stmt->bind_result($code, $cid);
+    $stmt->fetch();
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+    if ($code !== NULL) {
+        db_query("INSERT INTO cours_user SET cours_id = " . intval($cid) . ", user_id = " . intval($uid) . ", statut = 5,
                                                      team = 0, tutor = 0, reg_date = NOW()");
         return true;
     }
     return false;
 }
-
