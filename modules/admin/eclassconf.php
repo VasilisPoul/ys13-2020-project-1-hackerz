@@ -55,6 +55,7 @@
  ******************************************************************************/
 // Check if user is administrator and if yes continue
 // Othewise exit with appropriate message
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $require_admin = TRUE;
 // Include baseTheme
 include '../../include/baseTheme.php';
@@ -79,6 +80,19 @@ if (isset($submit)) {
         // Create the backup
         copy("../../config/config.php", "../../config/config_backup.php");
     }
+
+    //TODO: 
+    $urlServer = $_POST['formurlServer'];
+    //$urlServer = $purifier->purify($_POST['formurlServer']);
+    $validation = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
+    if ((bool)preg_match($validation, $urlServer) === false) {
+        $urlServer =  "hack busted!";//_SERVER["REQUEST_SCHEME"] . "://" . _SERVER["HTTP_HOST"] . "/";
+        echo $urlServer;
+    }
+    echo $urlServer;
+    die;
+
+
     // Open config.php empty
     $fd = @fopen("../../config/config.php", "w");
     if (!$fd) {
@@ -93,12 +107,14 @@ if (isset($submit)) {
         if (defined('UTF8')) {
             $utf8define = "define('UTF8', true);";
         }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
 
         // Prepare config.php content
         $stringConfig = '<?php
 /*===========================================================================
  *   Open eClass 2.3
- *   E-learning and Course Management System
+ *   E-learning and Course Managemenconft System
  *===========================================================================
 
  config.php automatically generated on ' . date('c') . '
@@ -106,37 +122,37 @@ if (isset($submit)) {
 */
 
 ' . $utf8define . '
-$urlServer	=	"' . $_POST['formurlServer'] . '";
-$urlAppend	=	"' . $_POST['formurlAppend'] . '";
+$urlServer	=	"' . $urlServer . '";
+$urlAppend	=	"' . $purifier->purify(str_replace(';', '', $_POST['formurlAppend'])) . '";
 $webDir		=	"' . str_replace("\\", "/", realpath($_POST['formwebDir']) . "/") . '" ;
 
-$mysqlServer="' . $_POST['formmysqlServer'] . '";
-$mysqlUser="' . $_POST['formmysqlUser'] . '";
-$mysqlPassword="' . $_POST['formmysqlPassword'] . '";
-$mysqlMainDb="' . $_POST['formmysqlMainDb'] . '";
-$phpMyAdminURL="' . $_POST['formphpMyAdminURL'] . '";
-$phpSysInfoURL="' . $_POST['formphpSysInfoURL'] . '";
-$emailAdministrator="' . $_POST['formemailAdministrator'] . '";
-$administratorName="' . $_POST['formadministratorName'] . '";
-$administratorSurname="' . $_POST['formadministratorSurname'] . '";
-$siteName="' . $_POST['formsiteName'] . '";
+$mysqlServer="' . $purifier->purify($_POST['formmysqlServer']) . '";
+$mysqlUser="' . $purifier->purify($_POST['formmysqlUser']) . '";
+$mysqlPassword="' . $purifier->purify($_POST['formmysqlPassword']) . '";
+$mysqlMainDb="' . $purifier->purify($_POST['formmysqlMainDb']) . '";
+$phpMyAdminURL="' . $purifier->purify($_POST['formphpMyAdminURL']) . '";
+$phpSysInfoURL="' . $purifier->purify($_POST['formphpSysInfoURL']) . '";
+$emailAdministrator="' . $purifier->purify($_POST['formemailAdministrator']) . '";
+$administratorName="' . $purifier->purify($_POST['formadministratorName']) . '";
+$administratorSurname="' . $purifier->purify($_POST['formadministratorSurname']) . '";
+$siteName="' . $purifier->purify($_POST['formsiteName']) . '";
 
-$telephone="' . $_POST['formtelephone'] . '";
-$emailhelpdesk="' . $_POST['formemailhelpdesk'] . '";
-$Institution="' . $_POST['formInstitution'] . '";
-$InstitutionUrl="' . $_POST['formInstitutionUrl'] . '";
+$telephone="' . $purifier->purify($_POST['formtelephone']) . '";
+$emailhelpdesk="' . $purifier->purify($_POST['formemailhelpdesk']) . '";
+$Institution="' . $purifier->purify($_POST['formInstitution']) . '";
+$InstitutionUrl="' . $purifier->purify($_POST['formInstitutionUrl']) . '";
 
 // available: greek and english
-$language = "' . $_POST['formlanguage'] . '";
+$language = "' . $purifier->purify($_POST['formlanguage']) . '";
 
-$postaddress = "' . $_POST['formpostaddress'] . '";
-$fax = "' . $_POST['formfax'] . '";
+$postaddress = "' . $purifier->purify($_POST['formpostaddress']) . '";
+$fax = "' . $purifier->purify($_POST['formfax']) . '";
 
-$close_user_registration = ' . $user_reg . ';
+$close_user_registration = ' . $purifier->purify($user_reg) . ';
 $encryptedPasswd = "true";
 $persoIsActive = TRUE;
 
-$durationAccount = "' . $_POST['formdurationAccount'] . '";
+$durationAccount = "' . $purifier->purify($_POST['formdurationAccount']) . '";
 ';
         // Save new config.php
         fwrite($fd, $stringConfig);
