@@ -221,7 +221,7 @@ if (isset($_GET['mailingIndex']))  // examine or send
         $sel = "SELECT u.user_id, u.nom, u.prenom, cu.statut
 				FROM `" . $mysqlMainDb . "`.`user` u
 				LEFT JOIN `" . $mysqlMainDb . "`.`cours_user` cu
-				ON cu.user_id = u.user_id AND cu.cours_id = $cours_id";
+				ON cu.user_id = u.user_id AND cu.cours_id = " . intval($cours_id);
         $sel .= " WHERE u." . $dropbox_cnf["mailingWhere" . $var] . " = '";
 
         function getUser($thisRecip)
@@ -333,7 +333,7 @@ if (isset($_GET['mailingIndex']))  // examine or send
             $sql = "SELECT u.nom, u.prenom
 					FROM `" . $mysqlMainDb . "`.`cours_user` cu
 					LEFT JOIN  `" . $mysqlMainDb . "`.`user` u
-					ON cu.user_id = u.user_id AND cu.cours_id = $cours_id
+					ON cu.user_id = u.user_id AND cu.cours_id = "  . intval($cours_id). "
 					WHERE cu.statut = 5
 					AND u.user_id NOT IN ('" . implode("', '", $students) . "')";
             $result = db_query($sql);

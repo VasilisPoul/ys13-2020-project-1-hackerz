@@ -56,6 +56,8 @@
  * to be ordered
  *
  **/
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+
 class Dropbox_Work
 {
     var $id;
@@ -111,63 +113,100 @@ class Dropbox_Work
         * Check if object exists already. If it does, the old object is used
         * with updated information (authors, descriptio, uploadDate)
         */
+
+        $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
         $this->isOldWork = FALSE;
         if ($GLOBALS['language'] == 'greek') {
-            $sql = "SELECT id, DATE_FORMAT(uploadDate, '%d-%m-%Y / %H:%i')
-				FROM `" . $dropbox_cnf["fileTbl"] . "` 
-				WHERE filename = '" . addslashes($this->filename) . "'";
+            $stmt = $conn->prepare("SELECT id, DATE_FORMAT(uploadDate, '%d-%m-%Y / %H:%i') FROM `" . $dropbox_cnf["fileTbl"] . "` WHERE filename = ?");
         } else {
-            $sql = "SELECT id, DATE_FORMAT(uploadDate, '%Y-%m-d% / %H:%i')
-				FROM `" . $dropbox_cnf["fileTbl"] . "` 
-				WHERE filename = '" . addslashes($this->filename) . "'";
+            $stmt = $conn->prepare("SELECT id, DATE_FORMAT(uploadDate, '%Y-%m-d% / %H:%i') FROM `" . $dropbox_cnf["fileTbl"] . "` WHERE filename = ?");
         }
-        $result = db_query($sql, $currentCourseID);
-        $res = mysql_fetch_array($result);
-        if ($res != FALSE) $this->isOldWork = TRUE;
+        $stmt->bind_param("s", $this->filename);
+        $stmt->bind_result($id, $uploadDate);
+        $stmt->fetch();
+        $stmt->execute();
+        $stmt->close();
+
+        if ($id > 0)
+            $this->isOldWork = TRUE;
 
         /*
         * insert or update the dropbox_file table and set the id property
         */
+
+        $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
         if ($this->isOldWork) {
-            $this->id = $res["id"];
-            $this->uploadDate = $res["uploadDate"];
-            $sql = "UPDATE `" . $dropbox_cnf["fileTbl"] . "`
-					SET filesize = '" . addslashes($this->filesize) . "'
-					, title = '" . addslashes($this->title) . "'
-					, description = '" . addslashes($this->description) . "'
-					, author = '" . addslashes($this->author) . "'
-					, lastUploadDate = '" . addslashes($this->lastUploadDate) . "'
-					WHERE id='" . addslashes($this->id) . "'";
-            $result = db_query($sql);
+            $this->id = $id;
+            $this->uploadDate = $uploadDate;
+            $stmt = $conn->prepare(
+                "UPDATE `" . $dropbox_cnf["fileTbl"] . "`
+					SET filesize = ?
+					, title = ?
+					, description = ?
+					, author = ?
+					, lastUploadDate = ?
+					WHERE id = ?"
+            );
+            $stmt->bind_param("issssi",
+                $this->filesize,
+                $purifier->purify($this->title),
+                $purifier->purify($this->description),
+                $purifier->purify($this->author),
+                $this->lastUploadDate,
+                $this->id
+            );
+            $stmt->execute();
+            $this->id = $stmt->insert_id;
+            $stmt->close();
         } else {
             $this->uploadDate = $this->lastUploadDate;
-            $sql = "INSERT INTO `" . $dropbox_cnf["fileTbl"] . "` 
+            $stmt = $conn->prepare(
+                "INSERT INTO `" . $dropbox_cnf["fileTbl"] . "` 
 				(uploaderId, filename, filesize, title, description, author, uploadDate, lastUploadDate)
-				VALUES ('" . addslashes($this->uploaderId) . "'
-						, '" . addslashes($this->filename) . "'
-						, '" . addslashes($this->filesize) . "'
-						, '" . addslashes($this->title) . "'
-						, '" . addslashes($this->description) . "'
-						, '" . addslashes($this->author) . "'
-						, '" . addslashes($this->uploadDate) . "'
-						, '" . addslashes($this->lastUploadDate) . "'
-						)";
+				VALUES (?,?,?,?,?,?,?,?)"
+            );
+            $stmt->bind_param("isisssss",
+                $this->uploaderId,
+                $this->filename,
+                $this->filesize,
+                $purifier->purify($this->title),
+                $purifier->purify($this->description),
+                $purifier->purify($this->author),
+                $this->uploadDate,
+                $this->lastUploadDate
+            );
+            $stmt->execute();
+            $this->id = $stmt->insert_id;
+            $stmt->close();
 
-            $result = db_query($sql);
-            $this->id = mysql_insert_id(); //get automatically inserted id
         }
-
-
+        $conn->close();
         /*
         * insert entries into person table
         */
         $sql = "INSERT INTO `" . $dropbox_cnf["personTbl"] . "` 
 				(fileId, personId)
-				VALUES ('" . addslashes($this->id) . "'
-						, '" . addslashes($this->uploaderId) . "'
+				VALUES ('".addslashes($this->id)."'
+						, '".addslashes($this->uploaderId)."'
 						)";
-        $result = db_query($sql);    //if work already exists no error is generated
-    }
+        $result = db_query($sql, $currentCourseID);	//if work already exists no error is generated
+	}
 
     function _createExistingWork($id)
     {
@@ -189,13 +228,13 @@ class Dropbox_Work
 			DATE_FORMAT(uploadDate, '%d-%m-%Y / %H:%i') AS uploadDate, 
 			DATE_FORMAT(lastUploadDate, '%d-%m-%Y / %H:%i') AS lastUploadDate
 			FROM `" . $dropbox_cnf["fileTbl"] . "`
-			WHERE id='" . addslashes($id) . "'";
+			WHERE id='" . intval($id) . "'";
         } else {
             $sql = "SELECT uploaderId, filename, filesize, title, description, author,
 			DATE_FORMAT(uploadDate, '%Y-%m-%d / %H:%i') AS uploadDate, 
 			DATE_FORMAT(lastUploadDate, '%Y-%m-%d / %H:%i') AS lastUploadDate
 			FROM `" . $dropbox_cnf["fileTbl"] . "`
-			WHERE id='" . addslashes($id) . "'";
+			WHERE id='" . intval($id) . "'";
         }
         $result = db_query($sql, $currentCourseID);
         $res = mysql_fetch_array($result);;
@@ -296,7 +335,7 @@ class Dropbox_SentWork extends Dropbox_Work
             $sql = "INSERT INTO `" . $dropbox_cnf["personTbl"] . "` (fileId, personId)
 				VALUES ('" . addslashes($this->id) . "', '" . addslashes($rec["id"]) . "')";
             // RH: do not add recipient in person table if mailing zip or just upload
-            if (!$justSubmit) $result = db_query($sql);    //if work already exists no error is generated
+            if (!$justSubmit) $result = db_query($sql, $currentCourseID);    //if work already exists no error is generated
         }
     }
 
@@ -376,7 +415,7 @@ class Dropbox_Person
         $sql = "SELECT r.fileId FROM 
 				`" . $dropbox_cnf["postTbl"] . "` r
 				, `" . $dropbox_cnf["personTbl"] . "` p
-				WHERE r.recipientId = '" . addslashes($this->userId) . "' 
+				WHERE r.recipientId = '" . intval($this->userId) . "' 
 					AND r.recipientId = p.personId
 					AND r.fileId = p.fileId";
         $result = db_query($sql, $currentCourseID);
