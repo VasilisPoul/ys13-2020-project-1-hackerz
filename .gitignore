@@ -96,25 +96,7 @@ fabric.properties
 translated from: English
 
 courses
-courses/TMA100/dropbox/
-courses/TMA102/document/
-courses/TMA102/dropbox/
-courses/TMA102/group/
-courses/TMA102/image/
-courses/TMA102/page/
-courses/TMA102/scormPackages/
-courses/TMA102/temp/
-courses/TMA102/work/
-courses/garbage/TMA103/document/
-courses/garbage/TMA103/dropbox/
-courses/garbage/TMA103/group/
-courses/garbage/TMA103/image/
-courses/garbage/TMA103/page/
-courses/garbage/TMA103/scormPackages/
-courses/garbage/TMA103/temp/
-courses/garbage/TMA103/work/
-courses/mathimg/
 video/
-/config/config.php
+config
 .idea/dataSources.xml
-config/config.php
+
