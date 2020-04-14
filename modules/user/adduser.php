@@ -43,7 +43,7 @@ if ($is_adminOfCourse) {
     if (isset($add)) {
         mysql_select_db($mysqlMainDb);
         $result = db_query("INSERT INTO cours_user (user_id, cours_id, statut, reg_date) " .
-            "VALUES ('" . mysql_escape_string($add) . "', $cours_id, " .
+            "VALUES ('" . intval($add) . "', '" .  intval($cours_id) . "', " .
             "'5', CURDATE())");
 
         $tool_content .= "<p class=\"success_small\">";

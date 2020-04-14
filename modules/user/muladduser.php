@@ -118,7 +118,7 @@ tCont3;
     $query = join(' AND ', $search);
     if (!empty($query)) {
         db_query("CREATE TEMPORARY TABLE lala AS
-			SELECT user_id FROM cours_user WHERE cours_id = $cours_id
+			SELECT user_id FROM cours_user WHERE cours_id = " .intval($cours_id)."
 			");
         $result = db_query("SELECT u.user_id, u.nom, u.prenom, u.username FROM
 			user u LEFT JOIN lala c ON u.user_id = c.user_id WHERE
@@ -175,19 +175,46 @@ draw($tool_content, 2, 'user');
 
 function adduser($user, $cid)
 {
-    $result = db_query("SELECT user_id FROM user WHERE username='" . mysql_escape_string($user) . "'");
-    if (!mysql_num_rows($result))
+
+
+    $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $GLOBALS['mysqlMainDb']);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("SELECT user_id FROM user WHERE username=?");
+    $stmt->bind_param("s", $user);
+    $stmt->execute();
+    $stmt->bind_result($user_id);
+    $err = $stmt->errno;
+    $results = array();
+    $fetch = $stmt->fetch();
+    while($fetch){
+        $results[] = $user_id;
+        $fetch = $stmt->fetch();
+    }
+    $stmt->close();
+    $conn->close();
+    if ($err) {
+        return false;
+    }
+    if (empty($results)){
         return -1;
-
-    list($userid) = mysql_fetch_array($result);
-
-    $result = db_query("SELECT * from cours_user WHERE user_id = $userid AND cours_id = $cid");
+    }
+    list($userid) = $results;
+    $result = db_query("SELECT * from cours_user WHERE user_id = " .intval($userid) . " AND cours_id = ".intval($cid));
     if (mysql_num_rows($result) > 0)
         return -2;
 
     $result = db_query("INSERT INTO cours_user (user_id, cours_id, statut, reg_date)
-			VALUES ($userid, $cid, '5', CURDATE())");
+			VALUES ( " .intval($userid) . " , ".intval($cid) .", '5', CURDATE())");
     return $userid;
+
+
+
 }
 
 // function for checking file
