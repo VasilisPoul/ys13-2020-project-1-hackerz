@@ -80,18 +80,9 @@ if (isset($submit)) {
         // Create the backup
         copy("../../config/config.php", "../../config/config_backup.php");
     }
-
-    //TODO: 
     $urlServer = $_POST['formurlServer'];
-    //$urlServer = $purifier->purify($_POST['formurlServer']);
-    $validation = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
-    if ((bool)preg_match($validation, $urlServer) === false) {
-        $urlServer =  "hack busted!";//_SERVER["REQUEST_SCHEME"] . "://" . _SERVER["HTTP_HOST"] . "/";
-        echo $urlServer;
-    }
-    echo $urlServer;
-    die;
-
+    $regex = "^[^,;\"']+$";
+    $urlServerRegex = "/^(http|https|ftp):\/\/((([1-9][0-9_-]*)\.([0-9][0-9_-]*)\.([0-9][0-9_-]*)\.([0-9][0-9_-]*))|([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+))\/$/i";
 
     // Open config.php empty
     $fd = @fopen("../../config/config.php", "w");
@@ -108,7 +99,35 @@ if (isset($submit)) {
             $utf8define = "define('UTF8', true);";
         }
         $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $formwebDir = str_replace("\\", "/", realpath($_POST['formwebDir']) . "/");
 
+
+
+
+
+        // fields
+        $urlServer = preg_match($urlServerRegex, $_POST['formurlServer']) ? $purifier->purify($_POST['formurlServer']) : $GLOBALS['urlServer'];
+        $urlAppend = preg_match($regex, $_POST['formurlAppend']) ? $purifier->purify($_POST['formurlAppend']) : $GLOBALS['urlAppend'];
+        $webDir = preg_match($regex, $formwebDir) ? $purifier->purify($formwebDir) : $GLOBALS['webDir'];
+        $mysqlServer = preg_match($regex, $_POST['formmysqlServer']) ? $purifier->purify($_POST['formmysqlServer']) : $GLOBALS['mysqlServer'];
+        $mysqlUser = preg_match($regex, $_POST['formmysqlUser']) ? $purifier->purify($_POST['formmysqlUser']) : $GLOBALS['mysqlUser'];
+        $mysqlPassword = preg_match($regex, $_POST['formmysqlPassword']) ? $purifier->purify($_POST['formmysqlPassword']) : $GLOBALS['mysqlPassword'];
+        $mysqlMainDb = preg_match($regex, $_POST['formmysqlMainDb']) ? $purifier->purify($_POST['formmysqlMainDb']) : $GLOBALS['mysqlMainDb'];
+        $phpMyAdminURL = preg_match($regex, $_POST['formphpMyAdminURL']) ? $purifier->purify($_POST['formphpMyAdminURL']) : $GLOBALS['phpMyAdminURL'];
+        $phpSysInfoURL = preg_match($regex, $_POST['formphpSysInfoURL']) ? $purifier->purify($_POST['formphpSysInfoURL']) : $GLOBALS['phpSysInfoURL'];
+        $emailAdministrator = preg_match($regex, $_POST['formemailAdministrator']) ? $purifier->purify($_POST['formemailAdministrator']) : $GLOBALS['emailAdministrator'];
+        $administratorName = preg_match($regex, $_POST['formadministratorName']) ? $purifier->purify($_POST['formadministratorName']) : $GLOBALS['administratorName'];
+        $administratorSurname = preg_match($regex, $_POST['formadministratorSurname']) ? $purifier->purify($_POST['formadministratorSurname']) : $GLOBALS['administratorSurname'];
+        $siteName = preg_match($regex, $_POST['formsiteName']) ? $purifier->purify($_POST['formsiteName']) : $GLOBALS['siteName'];
+        $telephone = preg_match($regex, $_POST['formtelephone']) ? $purifier->purify($_POST['formtelephone']) : $GLOBALS['telephone'];
+        $emailhelpdesk = preg_match($regex, $_POST['formemailhelpdesk']) ? $purifier->purify($_POST['formemailhelpdesk']) : $GLOBALS['emailhelpdesk'];
+        $Institution = preg_match($regex, $_POST['formInstitution']) ? $purifier->purify($_POST['formInstitution']) : $GLOBALS['Institution'];
+        $InstitutionUrl = preg_match($regex, $_POST['formInstitutionUrl']) ? $purifier->purify($_POST['formInstitutionUrl']) : $GLOBALS['InstitutionUrl'];
+        $language = preg_match($regex, $_POST['formlanguage']) ? $purifier->purify($_POST['formlanguage']) : $GLOBALS['language'];
+        $postaddress = preg_match($regex, $_POST['formpostaddress']) ? $purifier->purify($_POST['formpostaddress']) : $GLOBALS['postaddress'];
+        $fax = preg_match($regex, $_POST['formfax']) ? $purifier->purify($_POST['formfax']) : $GLOBALS['fax'];
+        $close_user_registration = preg_match($regex, $user_reg) ? $purifier->purify($user_reg) : $GLOBALS['close_user_registration'];
+        $durationAccount = preg_match($regex, $_POST['formdurationAccount']) ? $purifier->purify($_POST['formdurationAccount']) : $GLOBALS['durationAccount'];
 
         // Prepare config.php content
         $stringConfig = '<?php
@@ -123,39 +142,43 @@ if (isset($submit)) {
 
 ' . $utf8define . '
 $urlServer	=	"' . $urlServer . '";
-$urlAppend	=	"' . $purifier->purify(str_replace(';', '', $_POST['formurlAppend'])) . '";
-$webDir		=	"' . str_replace("\\", "/", realpath($_POST['formwebDir']) . "/") . '" ;
-
-$mysqlServer="' . $purifier->purify($_POST['formmysqlServer']) . '";
-$mysqlUser="' . $purifier->purify($_POST['formmysqlUser']) . '";
-$mysqlPassword="' . $purifier->purify($_POST['formmysqlPassword']) . '";
-$mysqlMainDb="' . $purifier->purify($_POST['formmysqlMainDb']) . '";
-$phpMyAdminURL="' . $purifier->purify($_POST['formphpMyAdminURL']) . '";
-$phpSysInfoURL="' . $purifier->purify($_POST['formphpSysInfoURL']) . '";
-$emailAdministrator="' . $purifier->purify($_POST['formemailAdministrator']) . '";
-$administratorName="' . $purifier->purify($_POST['formadministratorName']) . '";
-$administratorSurname="' . $purifier->purify($_POST['formadministratorSurname']) . '";
-$siteName="' . $purifier->purify($_POST['formsiteName']) . '";
-
-$telephone="' . $purifier->purify($_POST['formtelephone']) . '";
-$emailhelpdesk="' . $purifier->purify($_POST['formemailhelpdesk']) . '";
-$Institution="' . $purifier->purify($_POST['formInstitution']) . '";
-$InstitutionUrl="' . $purifier->purify($_POST['formInstitutionUrl']) . '";
+$urlAppend	=	"' . $urlAppend . '";
+$webDir  =	"' . $webDir . '" ;
+$mysqlServer="' . $mysqlServer . '";
+$mysqlUser="' . $mysqlUser . '";
+$mysqlPassword="' . $mysqlPassword . '";
+$mysqlMainDb="' . $mysqlMainDb . '";
+$phpMyAdminURL="' . $phpMyAdminURL . '";
+$phpSysInfoURL="' . $phpSysInfoURL . '";
+$emailAdministrator="' . $emailAdministrator . '";
+$administratorName="' . $administratorName . '";
+$administratorSurname="' . $administratorSurname . '";
+$siteName="' . $siteName . '";
+$telephone="' . $telephone . '";
+$emailhelpdesk="' . $emailhelpdesk . '";
+$Institution="' . $Institution . '";
+$InstitutionUrl="' . $InstitutionUrl . '";
 
 // available: greek and english
-$language = "' . $purifier->purify($_POST['formlanguage']) . '";
-
-$postaddress = "' . $purifier->purify($_POST['formpostaddress']) . '";
-$fax = "' . $purifier->purify($_POST['formfax']) . '";
-
-$close_user_registration = ' . $purifier->purify($user_reg) . ';
+$language = "' . $language . '";
+$postaddress = "' . $postaddress . '";
+$fax = "' . $fax . '";
+$close_user_registration = ' . $close_user_registration . ';
 $encryptedPasswd = "true";
 $persoIsActive = TRUE;
-
-$durationAccount = "' . $purifier->purify($_POST['formdurationAccount']) . '";
+$durationAccount = "' . $durationAccount . '";
+// end of file
 ';
+
+
+//        echo "<pre>";
+//        echo var_dump($stringConfig);
+//        echo "</pre>";
+//        die;
+
         // Save new config.php
         fwrite($fd, $stringConfig);
+
         // Display result message
         $tool_content .= "<p>" . $langFileUpdatedSuccess . "</p>";
 
