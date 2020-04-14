@@ -35,6 +35,8 @@ $require_prof = true;
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 include '../phpbb/functions.php';
+require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+
 $nameTools = $langOrganisation;
 $navigation[] = array("url" => "../phpbb/index.php", "name" => $langForums);
 
@@ -85,7 +87,7 @@ hContent;
         $nameTools = $langAdd;
         $navigation[] = array("url" => "../forum_admin/forum_admin.php", "name" => $langOrganisation);
         $result = db_query("SELECT forum_id, forum_name, forum_desc, forum_access, forum_moderator, forum_type 
-			FROM forums where cat_id='$cat_id'", $currentCourseID);
+			FROM forums where cat_id=" . intval($cat_id), $currentCourseID);
         if ($result and mysql_num_rows($result) > 0) {
             $tool_content .= "<form action=\"$_SERVER[PHP_SELF]?forumgoadd=yes&ctg=$ctg&cat_id=$cat_id\" method=post>
 		<table width=99% class=\"ForumAdmSum\">
@@ -123,7 +125,7 @@ hContent;
         } else {
             $tool_content .= "\n<p class=\"alert1\">$langNoForumsCat</p>";
         }
-
+        $form_token = $_SESSION['token'] = md5(mt_rand());
         $tool_content .= "
 		<form action=\"$_SERVER[PHP_SELF]?forumgoadd=yes&ctg=$ctg&cat_id=$cat_id\" method=post onsubmit=\"return checkrequired(this,'forum_name');\">
 		<table width=99% class=\"FormData\" align=\"left\">
@@ -151,6 +153,7 @@ hContent;
 		<input type=submit value=$langAdd>
 		</td>
 		</tr></tbody></table>
+		<input type=\"hidden\" name=\"token\" value=\"$form_token\">
 		</form>
 		<div align=\"right\"><a href=\"$_SERVER[PHP_SELF]?forumadmin=yes\">$langBackCat</a></div>";
     } // forum go edit
@@ -158,7 +161,7 @@ hContent;
         $nameTools = $langEditForum;
         $navigation[] = array("url" => "../forum_admin/forum_admin.php", "name" => $langOrganisation);
         $result = db_query("SELECT forum_id, forum_name, forum_desc, forum_access, forum_moderator,
-    		cat_id, forum_type FROM forums WHERE forum_id='$forum_id'", $currentCourseID);
+    		cat_id, forum_type FROM forums WHERE forum_id=" . intval($forum_id), $currentCourseID);
         list($forum_id, $forum_name, $forum_desc, $forum_access, $forum_moderator, $cat_id_1,
             $forum_type) = mysql_fetch_row($result);
         $tool_content .= "
@@ -199,7 +202,7 @@ hContent;
 		</tr></thead></table></form>";
     } // edit forum category
     elseif (isset($forumcatedit)) {
-        $result = db_query("select cat_id, cat_title from catagories where cat_id='$cat_id'", $currentCourseID);
+        $result = db_query("select cat_id, cat_title from catagories where cat_id=" . intval($cat_id), $currentCourseID);
         list($cat_id, $cat_title) = mysql_fetch_row($result);
         $tool_content .= "
   		<form action='$_SERVER[PHP_SELF]?forumcatsave=yes' method=post onsubmit=\"return checkrequired(this,'cat_title');\">
@@ -221,45 +224,142 @@ hContent;
   		</form>";
     } // save forum category
     elseif (isset($forumcatsave)) {
-        db_query("update catagories set cat_title='$cat_title' where cat_id='$cat_id'", $currentCourseID);
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("update catagories set cat_title=? where cat_id=?");
+        $stmt->bind_param("si", $purifier->purify($cat_title),$cat_id );
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
         $tool_content .= "\n<p class=\"success_small\">$langNameCatMod<br /><a href=\"$_SERVER[PHP_SELF]?forumadmin=yes\">$langBack</a></p>";
     } // forum go save
     elseif (isset($forumgosave)) {
         $nameTools = $langDelete;
         $navigation[] = array("url" => "../forum_admin/forum_admin.php", "name" => $langOrganisation);
-        $result = @db_query("SELECT user_id FROM users WHERE username='$forum_moderator'", $currentCourseID);
-        list($forum_moderator) = mysql_fetch_row($result);
-        @db_query("UPDATE users SET user_level='2' WHERE user_id='$forum_moderator'", $currrentCourseID);
-        @db_query("UPDATE forums SET forum_name='$forum_name', forum_desc='$forum_desc',
-            	forum_access='2', forum_moderator='1', cat_id='$cat_id',
-            	forum_type='$forum_type' WHERE forum_id='$forum_id'", $currentCourseID);
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("SELECT user_id FROM users WHERE username=?");
+        $stmt->bind_param("s", $purifier->purify($forum_moderator));
+        $stmt->execute();
+        $stmt->bind_result($user_id);
+        $stmt->fetch();
+        $stmt->close();
+        @db_query("UPDATE users SET user_level='2' WHERE user_id=$user_id" , $currrentCourseID);
+        $stmt = $conn->prepare("UPDATE forums 
+                                      SET forum_name=?, forum_desc=?, forum_access='2', forum_moderator='1', cat_id=?, forum_type=? 
+                                      WHERE forum_id=?");
+        $stmt->bind_param("ssi", $purifier->purify($forum_name), $purifier->purify($forum_desc), $cat_id, $forum_type, $forum_id);
+        $stmt->execute();
+        $stmt->bind_result($user_id);
+        $stmt->fetch();
+        $stmt->close();
+        $conn->close();
         $tool_content .= "\n<p class='success_small'>$langForumDataChanged<br />
 		<a href=\"$_SERVER[PHP_SELF]?forumgo=yes&cat_id=$cat_id&ctg=$ctg\">$langBack</a></p>";
     } // forum add category
     elseif (isset($forumcatadd)) {
-        db_query("INSERT INTO catagories VALUES (NULL, '$catagories', NULL)", $currentCourseID);
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        if ($_SESSION['token'] !== $_POST['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("INSERT INTO catagories VALUES (NULL, ?, NULL)");
+        $stmt->bind_param("s", $purifier->purify($catagories));
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
         $tool_content .= "\n<p class='success_small'>$langCatAdded<br />
 		<a href='$_SERVER[PHP_SELF]?forumadmin=yes'>$langBack</a></p>";
     } // forum go add
     elseif (isset($forumgoadd)) {
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        if ($_SESSION['token'] !== $_POST['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
+
         $nameTools = $langAdd;
         $navigation[] = array("url" => "../forum_admin/forum_admin.php", "name" => $langOrganisation);
-        $result = @db_query("SELECT user_id FROM users WHERE username='$forum_moderator'", $currentCourseID);
-        list($forum_moderator) = mysql_fetch_row($result);
-        db_query("UPDATE users SET user_level='2' WHERE user_id='$forum_moderator'", $currentCourseID);
-        @db_query("INSERT INTO forums (forum_id, forum_name, forum_desc, forum_access, forum_moderator, cat_id, forum_type)
-        	VALUES (NULL, '$forum_name', '$forum_desc', '2', '1', '$cat_id', '$forum_type')", $currentCourseID);
-        $idforum = db_query("SELECT forum_id FROM forums WHERE forum_name='$forum_name'", $currentCourseID);
-        while ($my_forum_id = mysql_fetch_array($idforum)) {
-            $forid = $my_forum_id[0];
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $currentCourseID);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
         }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $result = @db_query("SELECT user_id FROM users WHERE username=" . intval($forum_moderator), $currentCourseID);
+        list($forum_moderator) = mysql_fetch_row($result);
+        db_query("UPDATE users SET user_level='2' WHERE user_id=" . intval($forum_moderator), $currentCourseID);
+        $stmt = $conn->prepare("INSERT INTO forums (forum_id, forum_name, forum_desc, forum_access, forum_moderator, cat_id, forum_type)
+        	VALUES (NULL, ?, ?, '2', '1', ?, ?)");
+        $stmt->bind_param("ssii",
+            $purifier->purify($forum_name),
+            $purifier->purify($forum_desc),
+            $cat_id,
+            $forum_type
+        );
+        $stmt->execute();
+        $stmt->close();
+        $stmt = $conn->prepare("SELECT forum_id FROM forums WHERE forum_name=?");
+        $stmt->bind_param("s",$forum_name);
+        $stmt->execute();
+        $stmt->bind_result($forum_id);
+        $stmt->fetch();
+        while ($stmt->fetch()) {
+            $forid = $forum_id;
+        }
+        $stmt->close();
+        $conn->close();
+
         // --------------------------------
         // notify users
         // --------------------------------
         $subject_notify = "$logo - $langCatNotify";
+
         $sql = db_query("SELECT DISTINCT user_id FROM forum_notify 
-				WHERE (cat_id = $cat_id) 
-				AND notify_sent = 1 AND course_id = $cours_id", $mysqlMainDb);
+				WHERE (cat_id = " . intval($cat_id) . ") 
+				AND notify_sent = 1 AND course_id =" . intval($cours_id), $mysqlMainDb);
         $body_topic_notify = "$langBodyCatNotify $langInCat '$ctg' \n\n$gunet";
         while ($r = mysql_fetch_array($sql)) {
             $emailaddr = uid_to_email($r['user_id']);
@@ -271,33 +371,33 @@ hContent;
 		<a href='$_SERVER[PHP_SELF]?forumgo=yes&cat_id=$cat_id&ctg=$ctg'>$langBack</a></p>";
     } // forum delete category
     elseif (isset($forumcatdel)) {
-        $result = db_query("SELECT forum_id FROM forums WHERE cat_id='$cat_id'", $currentCourseID);
+        $result = db_query("SELECT forum_id FROM forums WHERE cat_id=" . intval($cat_id), $currentCourseID);
         while (list($forum_id) = mysql_fetch_row($result)) {
-            db_query("DELETE from topics where forum_id=$forum_id", $currentCourseID);
+            db_query("DELETE from topics where forum_id=" . intval($forum_id), $currentCourseID);
         }
-        db_query("DELETE FROM forums where cat_id=$cat_id", $currentCourseID);
-        db_query("DELETE FROM catagories where cat_id=$cat_id", $currentCourseID);
+        db_query("DELETE FROM forums where cat_id=" . intval($cat_id), $currentCourseID);
+        db_query("DELETE FROM catagories where cat_id=" . intval($cat_id), $currentCourseID);
         $tool_content .= "\n<p class=\"success_small\">$langCatForumDelete<br />
 		<a href=\"$_SERVER[PHP_SELF]?forumadmin=yes\">$langBack</a></p>";
     } // forum delete
     elseif (isset($forumgodel)) {
         $nameTools = $langDelete;
         $navigation[] = array("url" => "../forum_admin/forum_admin.php", "name" => $langOrganisation);
-        db_query("DELETE FROM topics WHERE forum_id=$forum_id", $currentCourseID);
-        db_query("DELETE FROM forums WHERE forum_id=$forum_id", $currentCourseID);
-        db_query("UPDATE student_group SET forumId=0 WHERE forumId=$forum_id", $currentCourseID);
+        db_query("DELETE FROM topics WHERE forum_id=" . intval($forum_id), $currentCourseID);
+        db_query("DELETE FROM forums WHERE forum_id=" . intval($forum_id), $currentCourseID);
+        db_query("UPDATE student_group SET forumId=0 WHERE forumId=" . intval($forum_id), $currentCourseID);
         $tool_content .= "\n<p class=\"success_small\">$langForumDelete<br />
 			<a href=\"$_SERVER[PHP_SELF]?forumgo=yes&ctg=$ctg&cat_id=$cat_id\">$langBack</a></p>";
     } else {
         if (isset($forumcatnotify)) { // modify forum category notification
             $rows = mysql_num_rows(db_query("SELECT * FROM forum_notify 
-				WHERE user_id = $uid AND cat_id = $cat_id AND course_id = $cours_id"));
+				WHERE user_id = " . intval($uid) . " AND cat_id = " . intval($cat_id) . " AND course_id = " . intval($cours_id)));
             if ($rows > 0) {
-                db_query("UPDATE forum_notify SET notify_sent = '$forumcatnotify' 
-					WHERE user_id = $uid AND cat_id = $cat_id AND course_id = $cours_id");
+                db_query("UPDATE forum_notify SET notify_sent = " . intval($forumcatnotify) . "
+					WHERE user_id = " . intval($uid) . " AND cat_id = " . intval($cat_id) . " AND course_id = " . intval($cours_id));
             } else {
-                db_query("INSERT INTO forum_notify SET user_id = $uid,
-				cat_id = $cat_id, notify_sent = 1, course_id = $cours_id");
+                db_query("INSERT INTO forum_notify SET user_id = " . intval($uid) . ",
+				cat_id = " . intval($cat_id) . ", notify_sent = 1, course_id = " . intval($cours_id));
             }
         }
         $tool_content .= "<form action=\"$_SERVER[PHP_SELF]?forumadmin=yes\" method=post></td><tr><td>";
@@ -311,10 +411,10 @@ hContent;
         $result = db_query("SELECT cat_id, cat_title FROM catagories ORDER BY cat_id", $currentCourseID);
         $i = 1;
         while (list($cat_id, $cat_title) = mysql_fetch_row($result)) {
-            $gets = db_query("SELECT COUNT(*) AS total FROM forums WHERE cat_id=$cat_id", $currentCourseID);
+            $gets = db_query("SELECT COUNT(*) AS total FROM forums WHERE cat_id=" . intval($cat_id), $currentCourseID);
             $numbers = mysql_fetch_array($gets);
             list($forum_cat_action_notify) = mysql_fetch_row(db_query("SELECT notify_sent FROM forum_notify 
-				WHERE user_id = $uid AND cat_id = $cat_id AND course_id = $cours_id", $mysqlMainDb));
+				WHERE user_id = " . intval($uid) . " AND cat_id = " . intval($cat_id). " AND course_id = " . intval($cours_id), $mysqlMainDb));
             if (!isset($forum_cat_action_notify)) {
                 $link_notify = FALSE;
                 $icon = '_off';
@@ -336,6 +436,7 @@ hContent;
 			</td></tr>";
             $i++;
         }
+        $form_token = $_SESSION['token'] = md5(mt_rand());
         $tool_content .= "</tbody></table></form><br/>
 		<form action=\"$_SERVER[PHP_SELF]?forumcatadd=yes\" method=post onsubmit=\"return checkrequired(this,'catagories');\">
 		<table width=99% class=\"FormData\" align=\"left\">
@@ -351,7 +452,9 @@ hContent;
 		<td><input type=hidden name=forumcatadd value=yes><input type=submit value='$langAdd'></td>
 		</tr>
 		</thead>
-		</table></form>
+		</table>
+		<input type=\"hidden\" name=\"token\" value=\"$form_token\">
+		</form>
 		<br/>
 		<p><b><u>$langNote</u>:</b> ($langForCategories)<br/>
 		<em>$langAddForums</em>
