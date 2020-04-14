@@ -37,13 +37,26 @@ $navigation[] = array("url" => "user.php", "name" => $langAdminUsers);
 
 $tool_content = "";
 
+if (isset($_POST['search_nom'])) {
+    // csrf
+    if (!isset($_SESSION['searchuser_formtoken']) || !isset($_POST['searchuser_formtoken'])) {
+        // header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
+    if ($_SESSION['searchuser_formtoken'] !== $_POST['searchuser_formtoken']) {
+        //header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['searchuser_formtoken']);
+}
+
 // IF PROF ONLY
 if ($is_adminOfCourse) {
-
     if (isset($add)) {
         mysql_select_db($mysqlMainDb);
         $result = db_query("INSERT INTO cours_user (user_id, cours_id, statut, reg_date) " .
-            "VALUES ('" . intval($add) . "', '" .  intval($cours_id) . "', " .
+            "VALUES ('" . intval($add) . "', '" . intval($cours_id) . "', " .
             "'5', CURDATE())");
 
         $tool_content .= "<p class=\"success_small\">";
@@ -61,6 +74,10 @@ if ($is_adminOfCourse) {
         if (!isset($search_nom)) $search_nom = "";
         if (!isset($search_prenom)) $search_prenom = "";
         if (!isset($search_uname)) $search_uname = "";
+        $form_token = $_SESSION['searchuser_formtoken'] = md5(mt_rand());
+
+        $test =  $_SESSION['searchuser_formtoken'];
+
         $tool_content .= <<<tCont
 
     <table width="99%" class="FormData">
@@ -88,11 +105,9 @@ if ($is_adminOfCourse) {
 	</tbody>
 	</table>
 	<br />
-
+    <input type="hidden" name="searchuser_formtoken" value="$form_token">
     </form>
-
 tCont;
-
         mysql_select_db($mysqlMainDb);
         $search = array();
         if (!empty($search_nom)) {
