@@ -42,7 +42,6 @@ $helpTopic = 'Work';
 require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/forcedownload.php';
-
 $head_content = "
 <script type='text/javascript'>
 function confirmation (name)
@@ -129,7 +128,6 @@ hContent;
 //-------------------------------------------
 // main program
 //-------------------------------------------
-
 if ($is_adminOfCourse) {
     if (isset($grade_comments)) {
         $nameTools = $m['WorkView'];
@@ -143,24 +141,79 @@ if ($is_adminOfCourse) {
     } elseif (isset($sid)) {
         show_submission($sid);
     } elseif (isset($_POST['new_assign'])) {
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        if ($_SESSION['token'] !== $_POST['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
         $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         add_assignment($purifier->purify($title), $purifier->purify($comments), $purifier->purify($desc), "$WorkEnd", $group_submissions);
         show_assignments();
     } elseif (isset($grades)) {
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        if ($_SESSION['token'] !== $_POST['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
         $nameTools = $m['WorkView'];
         $navigation[] = array("url" => "work.php", "name" => $langWorks);
         submit_grades($grades_id, $grades);
     } elseif (isset($id)) {
         if (isset($choice)) {
             if ($choice == 'disable') {
+                // csrf
+                if (!isset($_SESSION['disable_token']) || !isset($_GET['disable_token'])) {
+                //    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                if ($_SESSION['disable_token'] !== $_GET['disable_token']) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                unset($_SESSION['disable_token']);
                 db_query("UPDATE assignments SET active = '0' WHERE id = " . intval($id));
                 show_assignments($langAssignmentDeactivated);
             } elseif ($choice == 'enable') {
+                // csrf
+                if (!isset($_SESSION['enable_token']) || !isset($_GET['enable_token'])) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                if ($_SESSION['enable_token'] !== $_GET['enable_token']) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                unset($_SESSION['enable_token']);
                 db_query("UPDATE assignments SET active = '1' WHERE id = " . intval($id));
                 show_assignments($langAssignmentActivated);
             } elseif ($choice == 'delete') {
                 die("invalid option");
             } elseif ($choice == "do_delete") {
+                // csrf
+                if (!isset($_SESSION['do_delete_token']) || !isset($_GET['do_delete_token'])) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                if ($_SESSION['do_delete_token'] !== $_GET['do_delete_token']) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                unset($_SESSION['do_delete_token']);
+
                 $nameTools = $m['WorkDelete'];
                 $navigation[] = array("url" => "work.php", "name" => $langWorks);
                 delete_assignment($id);
@@ -169,6 +222,17 @@ if ($is_adminOfCourse) {
                 $navigation[] = array("url" => "work.php", "name" => $langWorks);
                 show_edit_assignment($id);
             } elseif ($choice == 'do_edit') {
+                // csrf
+                if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+
+                if ($_SESSION['token'] !== $_POST['token']) {
+                    header("location:" . $_SERVER['PHP_SELF']);
+                    exit();
+                }
+                unset($_SESSION['token']);
                 $nameTools = $m['WorkView'];
                 $navigation[] = array("url" => "work.php", "name" => $langWorks);
                 edit_assignment($id);
@@ -399,6 +463,7 @@ function new_assignment()
     if ($desc) {
         $tool_content .= $desc;
     }
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $tool_content .= "</textarea></td>
         </tr>
         </table>
@@ -423,6 +488,7 @@ function new_assignment()
     </tr>
     </tbody>
     </table>
+    <input type=\"hidden\" name=\"token\" value=\"$form_token\">
   </form>
   <br/>";
 
@@ -528,6 +594,7 @@ cData;
     } else {
         $tool_content .= " />";
     }
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $tool_content .= $m['group_work'] . "</td>
     </tr>
     <tr>
@@ -536,6 +603,7 @@ cData;
     </tr>
     </tbody>
     </table>
+     <input type=\"hidden\" name=\"token\" value=\"$form_token\">
     </form>";
 
     $tool_content .= "
@@ -646,6 +714,7 @@ function show_submission_form($id)
             "<a href='../group/document.php?userGroupId=$gid'>" .
             "$m[group_documents]</a> $m[select_publish]</p>";
     } else {
+        $form_token = $_SESSION['token'] = md5(mt_rand());
         $tool_content .= <<<cData
 
     <form enctype="multipart/form-data" action="work.php" method="post">
@@ -672,6 +741,7 @@ function show_submission_form($id)
     </tbody>
     </table>
     <br/>
+    <input type=\"hidden\" name=\"login_form_token\" value=\"$form_token\">
     </form>
 cData;
         $tool_content .= "<p align='right'><small>$GLOBALS[langMaxFileSize] " .
@@ -685,13 +755,12 @@ function assignment_details($id, $row, $message = null)
 {
     global $tool_content, $m, $langDaysLeft, $langDays, $langWEndDeadline, $langNEndDeadLine, $langNEndDeadline, $langEndDeadline;
     global $langDelAssign, $is_adminOfCourse, $langZipDownload, $langSaved;
-
-
+    $form_token = $_SESSION['do_delete_token'] = md5(mt_rand());
     if ($is_adminOfCourse) {
         $tool_content .= "
     <div id=\"operations_container\">
       <ul id=\"opslist\">
-        <li><a href=\"work.php?id=$id&amp;choice=do_delete\" onClick=\"return confirmation('" . addslashes($row['title']) . "');\">$langDelAssign</a></li>
+        <li><a href=\"work.php?id=$id&amp;choice=do_delete&do_delete_token=$form_token\" onClick=\"return confirmation('" . addslashes($row['title']) . "');\">$langDelAssign</a></li>
         <li><a href=\"work.php?download=$id\">$langZipDownload</a></li>
       </ul>
     </div>
@@ -974,7 +1043,7 @@ cData;
 
         $tool_content .= "</tbody></table>";
 
-
+        $form_token = $_SESSION['token'] = md5(mt_rand());
         $tool_content .= "
     <br />
     <table class='FormData' width='99%'>
@@ -985,6 +1054,7 @@ cData;
     </tr>
     </tbody>
     </table>
+    <input type=\"hidden\" name=\"token\" value=\"$form_token\">
     </form>
 	";
 
@@ -1141,6 +1211,7 @@ function show_assignments($message = null)
     <tbody>
 cData;
         $index = 0;
+        $form_token = $_SESSION['do_delete_token'] = $_SESSION['enable_token'] =  $_SESSION['disable_token'] = md5(mt_rand());
         while ($row = mysql_fetch_array($result)) {
             // Check if assignement contains unevaluatde (incoming) submissions
             $AssignementId = $row['id'];
@@ -1170,17 +1241,17 @@ cData;
       <td align='right'>
          <a href='work.php?id=$row[id]&amp;choice=edit'><img src='../../template/classic/img/edit.gif' alt='$m[edit]' /></a>";
             $tool_content .= "
-         <a href='work.php?id=$row[id]&amp;choice=do_delete' onClick='return confirmation(\"" . addslashes($row_title) . "\");'><img src='../../template/classic/img/delete.gif' alt='$m[delete]' /></a>";
+         <a href='work.php?id=$row[id]&amp;choice=do_delete&do_delete_token=$form_token' onClick='return confirmation(\"" . addslashes($row_title) . "\");'><img src='../../template/classic/img/delete.gif' alt='$m[delete]' /></a>";
 
             if ($row['active']) {
                 $deactivate_temp = htmlspecialchars($m['deactivate']);
                 $activate_temp = htmlspecialchars($m['activate']);
                 $tool_content .= "
-         <a href='work.php?choice=disable&amp;id=$row[id]'><img src='../../template/classic/img/visible.gif' title='$deactivate_temp' /></a>";
+         <a href='work.php?choice=disable&amp;id=$row[id]&disable_token=$form_token'><img src='../../template/classic/img/visible.gif' title='$deactivate_temp' /></a>";
             } else {
                 $activate_temp = htmlspecialchars($m['activate']);
                 $tool_content .= "
-         <a href='work.php?choice=enable&amp;id=$row[id]'><img src='../../template/classic/img/invisible.gif' title='$activate_temp' /></a>";
+         <a href='work.php?choice=enable&amp;id=$row[id]&enable_token=$form_token'><img src='../../template/classic/img/invisible.gif' title='$activate_temp' /></a>";
             }
             $tool_content .= "
          &nbsp;
@@ -1282,7 +1353,6 @@ function send_file($id)
 function download_assignments($id)
 {
     global $tool_content, $workPath;
-
     $secret = work_secret($id);
     $filename = "$GLOBALS[currentCourseID]_work_$id.zip";
     chdir($workPath);
