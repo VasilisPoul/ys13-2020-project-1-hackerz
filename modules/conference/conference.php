@@ -86,7 +86,7 @@ if ($is_adminOfCourse) {
         </ul>
       </div>";
 }
-
+$form_token = $_SESSION['conference_form_token'] = md5(mt_rand());
 $tool_content .= "
 <form name='chatForm' action='messageList.php' method='get' target='messageList' onSubmit='return prepare_message();'>
   <table width='99%' class='FormData'>
@@ -98,6 +98,7 @@ $tool_content .= "
       <b>$langTypeMessage</b><br />
       <input type='text' name='msg' size='80'style='border: 1px solid #CAC3B5; background: #fbfbfb;'>
       <input type='hidden' name='chatLine'>
+      <input type=\"hidden\" name=\"conference_form_token\" value=\"$form_token\">
       <input type='submit' value=' >> '>
 
     </td>

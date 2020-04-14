@@ -106,6 +106,15 @@ if (isset($_GET['store']) && $is_adminOfCourse) {
 
 // add new line
 if (isset($chatLine) and trim($chatLine) != '') {
+    // csrf
+    if (!isset($_SESSION['conference_form_token']) || !isset($_GET['conference_form_token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    if ($_SESSION['conference_form_token'] !== $_GET['conference_form_token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
     $fchat = fopen($fileChatName, 'a');
     $chatLine = mathfilter($chatLine, 12, '../../courses/mathimg/');
     fwrite($fchat, $timeNow . ' - ' . $nick . ' : ' . stripslashes($chatLine) . "\n");
