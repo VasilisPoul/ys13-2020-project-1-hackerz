@@ -177,7 +177,7 @@ if ($is_adminOfCourse) {
             if ($choice == 'disable') {
                 // csrf
                 if (!isset($_SESSION['disable_token']) || !isset($_GET['disable_token'])) {
-                //    header("location:" . $_SERVER['PHP_SELF']);
+                    //    header("location:" . $_SERVER['PHP_SELF']);
                     exit();
                 }
                 if ($_SESSION['disable_token'] !== $_GET['disable_token']) {
@@ -252,6 +252,18 @@ if ($is_adminOfCourse) {
 } else {
     if (isset($id)) {
         if (isset($work_submit)) {
+            // csrf
+            if (!isset($_SESSION['work_submit_form_token']) || !isset($_POST['work_submit_form_token'])) {
+                header("location:" . $_SERVER['PHP_SELF']);
+                exit();
+            }
+
+            if ($_SESSION['work_submit_form_token'] !== $_POST['work_submit_form_token']) {
+                header("location:" . $_SERVER['PHP_SELF']);
+                exit();
+            }
+            unset($_SESSION['work_submit_form_token']);
+
             $nameTools = $m['SubmissionStatusWorkInfo'];
             $navigation[] = array("url" => "work.php", "name" => $langWorks);
             $navigation[] = array("url" => "work.php?id=$id", "name" => $m['WorkView']);
@@ -714,7 +726,7 @@ function show_submission_form($id)
             "<a href='../group/document.php?userGroupId=$gid'>" .
             "$m[group_documents]</a> $m[select_publish]</p>";
     } else {
-        $form_token = $_SESSION['token'] = md5(mt_rand());
+        $form_token = $_SESSION['work_submit_form_token'] = md5(mt_rand());
         $tool_content .= <<<cData
 
     <form enctype="multipart/form-data" action="work.php" method="post">
@@ -741,7 +753,7 @@ function show_submission_form($id)
     </tbody>
     </table>
     <br/>
-    <input type=\"hidden\" name=\"login_form_token\" value=\"$form_token\">
+    <input type="hidden" name="work_submit_form_token" value="$form_token">
     </form>
 cData;
         $tool_content .= "<p align='right'><small>$GLOBALS[langMaxFileSize] " .
@@ -1211,7 +1223,7 @@ function show_assignments($message = null)
     <tbody>
 cData;
         $index = 0;
-        $form_token = $_SESSION['do_delete_token'] = $_SESSION['enable_token'] =  $_SESSION['disable_token'] = md5(mt_rand());
+        $form_token = $_SESSION['do_delete_token'] = $_SESSION['enable_token'] = $_SESSION['disable_token'] = md5(mt_rand());
         while ($row = mysql_fetch_array($result)) {
             // Check if assignement contains unevaluatde (incoming) submissions
             $AssignementId = $row['id'];
