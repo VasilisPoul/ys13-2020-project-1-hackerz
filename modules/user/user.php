@@ -83,26 +83,82 @@ if ($is_adminOfCourse) {
 
     // Handle user removal / status change
     if (isset($_GET['giveAdmin'])) {
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
         $new_admin_gid = intval($_GET['giveAdmin']);
         db_query("UPDATE cours_user SET statut = 1
                                 WHERE user_id = $new_admin_gid AND cours_id = $cours_id", $mysqlMainDb);
     } elseif (isset($_GET['giveTutor'])) {
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
         $new_tutor_gid = intval($_GET['giveTutor']);
         db_query("UPDATE cours_user SET tutor = 1
                                 WHERE user_id = $new_tutor_gid AND cours_id = $cours_id", $mysqlMainDb);
         db_query("DELETE FROM user_group WHERE user = $new_tutor_gid", $currentCourseID);
     } elseif (isset($_GET['removeAdmin'])) {
+
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
+
         $removed_admin_gid = intval($_GET['removeAdmin']);
         db_query("UPDATE cours_user SET statut = 5
                                 WHERE user_id <> $uid AND
                                       user_id = $removed_admin_gid AND
                                       cours_id = $cours_id", $mysqlMainDb);
     } elseif (isset($_GET['removeTutor'])) {
+        // csrf
+        if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
         $removed_tutor_gid = intval($_GET['removeTutor']);
         db_query("UPDATE cours_user SET tutor = 0
                                 WHERE user_id = $removed_tutor_gid AND
                                       cours_id = $cours_id", $mysqlMainDb);
     } elseif (isset($_GET['unregister'])) {
+        // csrf
+       if (!isset($_SESSION['token']) || !isset($_GET['token'])) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        if ($_SESSION['token'] !== $_GET['token']) {
+            header("location:" . $_SERVER['PHP_SELF']);
+            exit();
+        }
+        unset($_SESSION['token']);
         $unregister_gid = intval($_GET['unregister']);
         $unregister_ok = true;
         // Security: don't remove myself except if there is another prof
@@ -261,6 +317,8 @@ if (isset($status) && ($status[$currentCourseID] == 1 OR $status[$currentCourseI
   </tr>";
 }
 
+$form_token = $_SESSION['token'] = md5(mt_rand());
+
 $result = db_query("SELECT user.user_id, user.nom, user.prenom, user.email, user.am, cours_user.statut,
 		cours_user.tutor, cours_user.reg_date, user_group.team
 		FROM `$mysqlMainDb`.cours_user, `$mysqlMainDb`.user
@@ -307,17 +365,22 @@ while ($myrow = mysql_fetch_array($result)) {
     if (isset($status) && ($status["$currentCourseID"] == '1' OR $status["$currentCourseID"] == '2')) {
         // tutor right
         if ($myrow['tutor'] == '0') {
-            $tool_content .= "<td valign='top' align='center' class='add_user'><a href='$_SERVER[PHP_SELF]?giveTutor=$myrow[user_id]' title='$langGiveTutor'>$langAdd</a></td>";
+            $tool_content .= "<td valign='top' align='center' class='add_user'>
+            <a href='$_SERVER[PHP_SELF]?giveTutor=$myrow[user_id]&token=$form_token' title='$langGiveTutor'>$langAdd</a></td>";
         } else {
-            $tool_content .= "<td class='highlight' align='center'>$langTutor<br /><a href='$_SERVER[PHP_SELF]?removeTutor=$myrow[user_id]' title='$langRemoveRight'>$langRemove</a></td>";
+
+            $tool_content .= "<td class='highlight' align='center'>$langTutor<br />
+            <a href='$_SERVER[PHP_SELF]?removeTutor=$myrow[user_id]&token=$form_token' title='$langRemoveRight'>$langRemove</a></td>";
         }
 
         // admin right
         if ($myrow['user_id'] != $_SESSION["uid"]) {
             if ($myrow['statut'] == '1') {
-                $tool_content .= "<td class='highlight' align='center'>$langAdministrator<br /><a href='$_SERVER[PHP_SELF]?removeAdmin=$myrow[user_id]' title='$langRemoveRight'>$langRemove</a></td>";
+                $tool_content .= "<td class='highlight' align='center'>$langAdministrator<br />
+            <a href='$_SERVER[PHP_SELF]?removeAdmin=$myrow[user_id]&token=$form_token' title='$langRemoveRight'>$langRemove</a></td>";
             } else {
-                $tool_content .= "<td valign='top' align='center' class='add_user'><a href='$_SERVER[PHP_SELF]?giveAdmin=$myrow[user_id]' title='$langGiveAdmin'>$langAdd</a></td>";
+                $tool_content .= "<td valign='top' align='center' class='add_user'>
+                <a href='$_SERVER[PHP_SELF]?giveAdmin=$myrow[user_id]&token=$form_token' title='$langGiveAdmin'>$langAdd</a></td>";
             }
         } else {
             if ($myrow['statut'] == '1') {
@@ -328,7 +391,7 @@ while ($myrow = mysql_fetch_array($result)) {
         }
         $tool_content .= "<td valign='top' align='center'>";
         $alert_uname = $myrow['prenom'] . " " . $myrow['nom'];
-        $tool_content .= "<a href='$_SERVER[PHP_SELF]?unregister=$myrow[user_id]' onClick=\"return confirmation('" . addslashes($alert_uname) . "');\"><img src='../../template/classic/img/delete.gif' title='$langDelete' /></a>";
+        $tool_content .= "<a href='$_SERVER[PHP_SELF]?unregister=$myrow[user_id]&token=$form_token' onClick=\"return confirmation('" . addslashes($alert_uname) . "');\"><img src='../../template/classic/img/delete.gif' title='$langDelete' /></a>";
     }    // admin only
     $tool_content .= "</td></tr>";
     $i++;
