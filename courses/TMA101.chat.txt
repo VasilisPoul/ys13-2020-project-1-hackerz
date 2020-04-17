@@ -1,7 +1,0 @@
-28-03-2020 / 23:40 - Poulopoulos Vasilis : <script? alert("xss")</script>
-28-03-2020 / 23:50 - Poulopoulos Vasilis : dwvsvs
-28-03-2020 / 23:50 - Poulopoulos Vasilis : <script? alert("xss")</script>
-28-03-2020 / 23:50 - Poulopoulos Vasilis : dwqdwq
-28-03-2020 / 23:51 - Poulopoulos Vasilis : <script> alert("xss")</script>
-28-03-2020 / 23:52 - Poulopoulos Vasilis : <p><strong>hey</strong></p> lalala
-29-03-2020 / 00:00 - Poulopoulos Vasilis : ayto einai kakos kodikas <script> alert("xss")</script>

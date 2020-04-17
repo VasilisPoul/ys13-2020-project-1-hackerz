@@ -97,5 +97,4 @@ fabric.properties
 translated from: English
 video/
 .idea/dataSources.xml
-
-!/config/
+!/xdebug-2.2.7.tgz
