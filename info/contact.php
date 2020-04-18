@@ -25,6 +25,7 @@
 * =========================================================================*/
 
 $path2add = 2;
+include '../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../include/baseTheme.php';
 
 $nameTools = $contactpoint;

@@ -41,6 +41,7 @@ $guest_allowed = true;
 //$courseHome = true;
 //$path2add is used in init.php to fix relative paths
 $path2add = 1;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/phpmathpublisher/mathpublisher.php';
 $nameTools = $langIdentity;

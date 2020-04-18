@@ -54,6 +54,7 @@
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 // Include functions needed to send email
 include('../../include/sendMail.inc.php');

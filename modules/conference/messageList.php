@@ -25,12 +25,13 @@
 * =========================================================================*/
 
 $require_current_course = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
-
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <head>
-    <meta http-equiv="refresh" content="30; url=<?= $_SERVER['PHP_SELF'] ?>"/>
+    <meta http-equiv="refresh" content="30; url=<?= $purifier->purify($_SERVER['PHP_SELF']) ?>"/>
     <title>Chat messages</title>
     <style type="text/css">
         span {

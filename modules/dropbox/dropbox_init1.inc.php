@@ -28,6 +28,7 @@ $require_current_course = TRUE;
 $guest_allowed = FALSE;
 $require_help = TRUE;
 $helpTopic = 'Dropbox';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include_once '../../include/baseTheme.php';
 
 $tool_content = "";

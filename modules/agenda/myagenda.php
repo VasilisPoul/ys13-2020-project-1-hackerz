@@ -37,7 +37,7 @@
 
 $require_login = TRUE;
 $ignore_module_ini = true;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/textLib.inc.php';
 

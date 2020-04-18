@@ -27,6 +27,7 @@
 
 $require_help = TRUE;
 $helpTopic = 'Personal Statistics';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include "../auth/auth.inc.php";
 $require_valid_uid = TRUE;

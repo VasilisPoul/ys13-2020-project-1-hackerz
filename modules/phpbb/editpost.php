@@ -59,7 +59,7 @@
 $require_current_course = TRUE;
 $require_login = TRUE;
 $require_help = FALSE;
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 $tool_content = "";
 $lang_editor = langname_to_code($language);

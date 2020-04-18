@@ -116,11 +116,12 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
 // -------------------------------------
 // Displaying Form
 // -------------------------------------
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $tool_content .= "<table width='99%' class='FormData'>
 	<tbody><tr><th>&nbsp;</th><td><b>$langFirstMethod</b></td></tr>
 	<tr><th>&nbsp;</th><td>$langRequest1
 	<br /><br />
-	<form action='" . $_SERVER['PHP_SELF'] . "' method='post' name='sendZip' enctype='multipart/form-data'>
+	<form action='" . $purifier->purify($_SERVER['PHP_SELF']) . "' method='post' name='sendZip' enctype='multipart/form-data'>
 	<input type='file' name='archiveZipped' />
 	<input type='submit' name='send_archive' value='" . $langSend . "' />
 	</form>
@@ -134,7 +135,7 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
 	<th>&nbsp;</th>
 	<td>$langRequest2
 	<br /><br />
-	<form action='" . $_SERVER['PHP_SELF'] . "' method='post'>
+	<form action='" . $purifier->purify($_SERVER['PHP_SELF']) . "' method='post'>
 	<input type='text' name='pathToArchive' />
 	<input type='submit' name='send_path' value='" . $langSend . "' />
 	</form>
@@ -554,13 +555,13 @@ function unpack_zip_show_files($zipfile)
     if ($dirnameCourse[strlen($dirnameCourse) - 1] != '/')
         $dirnameCourse .= '/';
     $handle = opendir($dirnameCourse);
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     while ($entries = readdir($handle)) {
         if ($entries == '.' or $entries == '..' or $entries == 'CVS')
             continue;
         if (is_dir($dirnameCourse . $entries))
             $retString .= "<li>" . $entries . "<br />" . $langLesFiles . "
-			<form action='" . $_SERVER['PHP_SELF'] . "' method='post' name='restoreThis'>
+			<form action='" . $purifier->purify($_SERVER['PHP_SELF']) . "' method='post' name='restoreThis'>
 			<ol>";
         $dirnameArchive = realpath("$destdir/archive/$entries/");
         if ($dirnameArchive[strlen($dirnameArchive) - 1] != '/')

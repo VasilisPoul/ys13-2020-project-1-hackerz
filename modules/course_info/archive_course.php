@@ -32,6 +32,7 @@ if (isset($c) && ($c != "")) {
 
 $require_current_course = TRUE;
 $require_prof = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = $langArchiveCourse;

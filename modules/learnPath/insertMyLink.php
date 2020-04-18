@@ -52,7 +52,7 @@ $TABLEUSERMODULEPROGRESS = "lp_user_module_progress";
 
 $tbl_link = "liens";
 $imgRepositoryWeb = "../../template/classic/img/";
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 require_once("../../include/baseTheme.php");
 $tool_content = "";
 $dialogBox = "";

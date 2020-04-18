@@ -67,7 +67,8 @@ if (isset($_SESSION["dropbox_uniqueid"]) && isset($_GET["dropbox_unid"]) && $dro
     } else {
         $mypath = "http";
     }
-    $mypath = $mypath . "://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/index.php";
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $mypath = $mypath . "://" . $_SERVER['HTTP_HOST'] . dirname($purifier->purify($_SERVER['PHP_SELF'])) . "/index.php";
 
     header("Location: $mypath");
 }

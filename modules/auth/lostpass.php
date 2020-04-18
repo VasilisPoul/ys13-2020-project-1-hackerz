@@ -36,6 +36,7 @@
 
 // Initialise $tool_content
 $tool_content = "";
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include 'auth.inc.php';
 include('../../include/sendMail.inc.php');

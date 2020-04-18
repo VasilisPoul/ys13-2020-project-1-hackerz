@@ -26,7 +26,7 @@
 
 
 $require_current_course = TRUE;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = $langAddPage;

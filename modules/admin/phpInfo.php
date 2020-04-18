@@ -53,6 +53,7 @@
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 $nameTools = $langPHPInfo;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);

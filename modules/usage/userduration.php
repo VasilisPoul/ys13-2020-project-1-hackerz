@@ -43,6 +43,7 @@ $require_help = true;
 $helpTopic = 'Usage';
 $require_login = true;
 $require_prof = true;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include 'duration_query.php';
 

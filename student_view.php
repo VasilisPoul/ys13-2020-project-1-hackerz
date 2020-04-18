@@ -1,6 +1,7 @@
 <?php
 session_start();
 $path2add = 0;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include 'include/baseTheme.php';
 if (isset($_SESSION['statut']) and $_SESSION['statut'] == 1) {
     $_SESSION['saved_statut'] = $_SESSION['statut'];

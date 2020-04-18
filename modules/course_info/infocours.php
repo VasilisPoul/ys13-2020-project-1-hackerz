@@ -184,10 +184,10 @@ if (isset($_POST['submit'])) {
 
 
 
-
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $conn->close();
         $tool_content .= "<p class='success_small'>$langModifDone<br />
-                        <a href='" . $_SERVER['PHP_SELF'] . "'>$langBack</a></p><br />
+                        <a href='" . $purifier->purify($_SERVER['PHP_SELF']) . "'>$langBack</a></p><br />
                         <p><a href='{$urlServer}courses/$currentCourseID/index.php'>$langBackCourse</a></p><br />";
     }
 } else {

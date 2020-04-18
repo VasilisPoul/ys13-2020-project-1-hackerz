@@ -34,7 +34,7 @@
   
 ==============================================================================
 */
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 require_once 'auth.inc.php';

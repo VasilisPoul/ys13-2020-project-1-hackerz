@@ -40,6 +40,7 @@
 define("INDEX_START", 1);
 $guest_allowed = true;
 $path2add = 0;
+include 'modules/htmlpurifier/HTMLPurifier.auto.php';
 include "include/baseTheme.php";
 include "modules/auth/auth.inc.php";
 //$homePage is used by baseTheme.php to parse correctly the breadcrumb

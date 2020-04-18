@@ -48,7 +48,7 @@ $TABLEMODULE = "lp_module";
 $TABLELEARNPATHMODULE = "lp_rel_learnPath_module";
 $TABLEASSET = "lp_asset";
 $TABLEUSERMODULEPROGRESS = "lp_user_module_progress";
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 require_once("../../include/baseTheme.php");
 $tool_content = "";
 

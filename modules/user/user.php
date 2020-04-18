@@ -36,7 +36,7 @@ $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'User';
 $require_prof = true;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $head_content = '

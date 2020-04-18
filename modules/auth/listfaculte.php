@@ -23,7 +23,7 @@
 *                       Panepistimiopolis Ilissia, 15784, Athens, Greece
 *                       eMail: info@openeclass.org
 * =========================================================================*/
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 $nameTools = $langListFac;
 $result = mysql_query("SELECT id, name, code FROM faculte ORDER BY name");

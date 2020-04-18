@@ -23,7 +23,7 @@
 *                       Panepistimiopolis Ilissia, 15784, Athens, Greece
 *                       eMail: info@openeclass.org
 * =========================================================================*/
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 

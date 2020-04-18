@@ -25,6 +25,7 @@
 * =========================================================================*/
 
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 include '../auth/auth.inc.php';
@@ -39,8 +40,8 @@ function confirmation() {
   }
 }
 </script>';
-
-$basetoolurl = $_SERVER['PHP_SELF'];
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+$basetoolurl = $purifier->purify($_SERVER['PHP_SELF']);
 if (isset($_GET['type']) and $_GET['type'] == 'user') {
     $list_statut = 5;
     $nameTools = $langUserOpenRequests;

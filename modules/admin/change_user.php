@@ -31,7 +31,7 @@
          asking for a password
 ==============================================================================
 */
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $require_admin = TRUE;
 include '../../include/baseTheme.php';
 $nameTools = $langChangeUser;

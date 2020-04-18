@@ -71,7 +71,7 @@ $TABLEASSET = "lp_asset";
 $TABLEUSERMODULEPROGRESS = "lp_user_module_progress";
 
 define('CLARO_FILE_PERMISSIONS', 0777);
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 require_once("../../include/baseTheme.php");
 
 /**** The following is added for statistics purposes ***/

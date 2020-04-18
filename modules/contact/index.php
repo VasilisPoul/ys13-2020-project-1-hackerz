@@ -28,6 +28,7 @@ $require_current_course = TRUE;
 
 $require_help = TRUE;
 $helpTopic = 'Contact';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 

@@ -27,7 +27,7 @@
 $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'User';
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = $langAddManyUsers;
@@ -37,9 +37,9 @@ $tool_content = "";
 
 // IF PROF ONLY
 if ($is_adminOfCourse) {
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $tool_content .= "
-    <form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "\" enctype=\"multipart/form-data\">";
+    <form method=\"post\" action=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "\" enctype=\"multipart/form-data\">";
     $tool_content .= <<<tCont2
 
     <table width="99%" class="FormData">
@@ -118,7 +118,7 @@ tCont3;
     $query = join(' AND ', $search);
     if (!empty($query)) {
         db_query("CREATE TEMPORARY TABLE lala AS
-			SELECT user_id FROM cours_user WHERE cours_id = " .intval($cours_id)."
+			SELECT user_id FROM cours_user WHERE cours_id = " . intval($cours_id) . "
 			");
         $result = db_query("SELECT u.user_id, u.nom, u.prenom, u.username FROM
 			user u LEFT JOIN lala c ON u.user_id = c.user_id WHERE
@@ -192,7 +192,7 @@ function adduser($user, $cid)
     $err = $stmt->errno;
     $results = array();
     $fetch = $stmt->fetch();
-    while($fetch){
+    while ($fetch) {
         $results[] = $user_id;
         $fetch = $stmt->fetch();
     }
@@ -201,18 +201,17 @@ function adduser($user, $cid)
     if ($err) {
         return false;
     }
-    if (empty($results)){
+    if (empty($results)) {
         return -1;
     }
     list($userid) = $results;
-    $result = db_query("SELECT * from cours_user WHERE user_id = " .intval($userid) . " AND cours_id = ".intval($cid));
+    $result = db_query("SELECT * from cours_user WHERE user_id = " . intval($userid) . " AND cours_id = " . intval($cid));
     if (mysql_num_rows($result) > 0)
         return -2;
 
     $result = db_query("INSERT INTO cours_user (user_id, cours_id, statut, reg_date)
-			VALUES ( " .intval($userid) . " , ".intval($cid) .", '5', CURDATE())");
+			VALUES ( " . intval($userid) . " , " . intval($cid) . ", '5', CURDATE())");
     return $userid;
-
 
 
 }

@@ -64,6 +64,7 @@ if ($is_adminOfCourse) {
         exit();
     } else {
         $form_token = $_SESSION['token'] = md5(mt_rand());
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $tool_content .= "
 		<table width=\"99%\">
 		<tbody>
@@ -74,7 +75,7 @@ if ($is_adminOfCourse) {
 		</tr>
 		<tr>
 		<th rowspan='2' class='left' width='220'>$langConfirmDel :</th>
-		<td width='52' align='center'><a href=\"" . $_SERVER['PHP_SELF'] . "?delete=yes&token=$form_token\">$langYes</a></td>
+		<td width='52' align='center'><a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?delete=yes&token=$form_token\">$langYes</a></td>
 		<td><small>$langByDel</small></td>
 		</tr>
 		<tr>

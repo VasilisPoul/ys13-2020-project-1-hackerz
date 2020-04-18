@@ -37,7 +37,7 @@ $require_login = true;
 $require_admin = TRUE;
 $helpTopic = 'Profile';
 $require_valid_uid = TRUE;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = $langChangePass;

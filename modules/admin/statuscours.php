@@ -52,6 +52,7 @@
 // Check if user is administrator and if yes continue
 // Othewise exit with appropriate message
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 if (!isset($_GET['c'])) {
@@ -94,7 +95,8 @@ else {
     $visible = $row['visible'];
     $visibleChecked[$visible] = "checked";
     // Constract edit form
-    $tool_content .= "<form action=" . $_SERVER['PHP_SELF'] . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method=\"post\">
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $tool_content .= "<form action=" . $purifier->purify($_SERVER['PHP_SELF']) . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method=\"post\">
 	<table class=\"FormData\" width=\"99%\" align=\"left\">
 	<tbody>
 	<tr><th width=\"220\">&nbsp;</th>

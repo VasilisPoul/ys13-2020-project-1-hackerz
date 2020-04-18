@@ -37,7 +37,7 @@ $require_login = TRUE;
 $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'Conference';
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 if (!isset($MCU))
     $MCU = "";

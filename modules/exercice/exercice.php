@@ -38,7 +38,7 @@ $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'Exercise';
 $guest_allowed = true;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 // support for math symbols
 include('../../include/phpmathpublisher/mathpublisher.php');

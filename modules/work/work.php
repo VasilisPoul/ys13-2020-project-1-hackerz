@@ -39,7 +39,7 @@ $require_current_course = TRUE;
 $require_login = true;
 $require_help = TRUE;
 $helpTopic = 'Work';
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/forcedownload.php';
 $head_content = "

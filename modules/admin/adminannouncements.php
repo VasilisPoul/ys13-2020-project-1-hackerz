@@ -25,9 +25,10 @@
 * =========================================================================*/
 
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include('../../include/lib/textLib.inc.php');
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $nameTools = $langAdminAn;
 $tool_content = $head_content = "";
@@ -220,10 +221,11 @@ if ($displayForm && (@$addAnnouce == 1 || isset($modify))) {
 if ($displayAnnouncementList == true) {
     $result = db_query("SELECT * FROM admin_announcements ORDER BY id DESC", $mysqlMainDb);
     $announcementNumber = mysql_num_rows($result);
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     if (@$addAnnouce != 1) {
         $tool_content .= "<div id='operations_container'>
                 <ul id='opslist'><li>";
-        $tool_content .= "<a href='" . $_SERVER['PHP_SELF'] . "?addAnnouce=1&amp;localize=$localize'>" . $langAdminAddAnn . "</a>";
+        $tool_content .= "<a href='" . $purifier->purify($_SERVER['PHP_SELF']) . "?addAnnouce=1&amp;localize=$localize'>" . $langAdminAddAnn . "</a>";
         $tool_content .= "</li></ul></div>";
     }
     if ($announcementNumber > 0) {

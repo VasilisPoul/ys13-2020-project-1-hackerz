@@ -57,8 +57,8 @@
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 
 // Define $nameTools
 $nameTools = $langListFaculteActions;
@@ -144,7 +144,7 @@ elseif ($a == 1) {
         if (empty($codefaculte) or empty($faculte)) {
             $tool_content .= "<p>" . $langEmptyFaculte . "</p><br />";
             $tool_content .= "<center><p>
-			<a href=\"$_SERVER[PHP_SELF]?a=1\">" . $langReturnToAddFaculte . "</a></p></center>";
+			<a href=\"" . $purifier->purify($_SERVER[PHP_SELF]) ."?a=1\">" . $langReturnToAddFaculte . "</a></p></center>";
         } // Check for greek letters
         elseif (!preg_match("/^[A-Z0-9a-z_-]+$/", $codefaculte)) {
             $tool_content .= "<p>" . $langGreekCode . "</p><br />";
@@ -176,7 +176,7 @@ elseif ($a == 1) {
     } else {
         $form_token = $_SESSION['token'] = md5(mt_rand());
         // Display form for new faculte information
-        $tool_content .= "<form method=\"post\" action=\"" . $_SERVER['PHP_SELF'] . "?a=1\">";
+        $tool_content .= "<form method=\"post\" action=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?a=1\">";
         $tool_content .= "<table width='99%' class='FormData'>
 		<tbody><tr>
 		<th width=\"220\">&nbsp;</th>
@@ -274,6 +274,7 @@ elseif ($a == 3) {
         }
         $conn->close();
     } else {
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $form_token = $_SESSION['token'] = md5(mt_rand());
         // Get faculte information
         $c = intval($_GET['c']);
@@ -281,7 +282,8 @@ elseif ($a == 3) {
         $result = mysql_query($sql);
         $myrow = mysql_fetch_array($result);
         // Display form for edit faculte information
-        $tool_content .= "<form method='post' action='$_SERVER[PHP_SELF]?a=3'>";
+
+        $tool_content .= "<form method='post' action=' ". $purifier->purify($_SERVER[PHP_SELF]) ."'?a=3'>";
         $tool_content .= "<table width='99%' class='FormData'>
 		<tbody>
 		<tr>

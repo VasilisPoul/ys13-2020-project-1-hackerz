@@ -39,6 +39,7 @@
  *
  */
 include ('init.php');
+
 if ($is_adminOfCourse and isset($currentCourseID)) {
 	if (isset($_GET['hide']) and $_GET['hide'] == 0) {
 		db_query("UPDATE accueil SET visible = 0 WHERE id='$eclass_module_id'", $currentCourseID);
@@ -490,7 +491,8 @@ function print_a($TheArray) {
  *
  */
 function lang_selections() {
-	$html = '<form name="langform" action="' . $_SERVER ['PHP_SELF'] . '" method="get" >';
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+	$html = '<form name="langform" action="' . $purifier->purify($_SERVER['PHP_SELF']) . '" method="get" >';
 	$html .= lang_select_options('localize', 'onChange="document.langform.submit();"');
 	$html .= '</form>';
 	return $html;

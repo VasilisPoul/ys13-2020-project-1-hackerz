@@ -56,6 +56,7 @@
 $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'For';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 

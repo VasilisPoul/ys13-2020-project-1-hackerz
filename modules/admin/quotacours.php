@@ -56,6 +56,7 @@
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 if (!isset($_GET['c'])) {
     die();
@@ -105,9 +106,11 @@ else {
     $vq = $q['video_quota'] / 1000000;
     $gq = $q['group_quota'] / 1000000;
     $drq = $q['dropbox_quota'] / 1000000;
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
     // Constract the edit form
     $tool_content .= "
-<form action=" . $_SERVER['PHP_SELF'] . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method=\"post\">
+<form action=" . $purifier->purify($_SERVER['PHP_SELF']) . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method=\"post\">
   <table class=\"FormData\" width=\"99%\" align=\"left\">
   <tbody>
   <tr>

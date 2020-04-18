@@ -42,6 +42,7 @@
  */
 
 // BASETHEME, OTHER INCLUDES AND NAMETOOLS
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include('../../include/sendMail.inc.php');
 $nameTools = $langContactAdmin;

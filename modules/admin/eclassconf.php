@@ -58,7 +58,9 @@
 require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 $nameTools = $langEclassConf;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 // Initialise $tool_content
@@ -98,7 +100,7 @@ if (isset($submit)) {
         if (defined('UTF8')) {
             $utf8define = "define('UTF8', true);";
         }
-        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
         $formwebDir = str_replace("\\", "/", realpath($_POST['formwebDir']) . "/");
 
         // fields
@@ -184,8 +186,11 @@ else {
         @include("../../config/config_backup.php");
     }
     // Constract the form
+
+
+
     $tool_content .= "
-    <form action=\"" . $_SERVER['PHP_SELF'] . "\" method=\"post\">";
+    <form action=\"" .$purifier->purify($_SERVER['PHP_SELF']) . "\" method=\"post\">";
     $tool_content .= "
 
   <table class=\"FormData\" width=\"99%\" align=\"left\">

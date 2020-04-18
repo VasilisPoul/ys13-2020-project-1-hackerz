@@ -53,7 +53,7 @@ $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'Video';
 $guest_allowed = true;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 /**** The following is added for statistics purposes ***/

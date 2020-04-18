@@ -43,6 +43,7 @@
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 // Define $nameTools
 $nameTools = $langPlatformGenStats;

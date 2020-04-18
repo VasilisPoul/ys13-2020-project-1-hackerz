@@ -10,9 +10,10 @@
 define('SUFFIX_LEN', 4);
 
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+
 $nameTools = $langMultiRegUser;
 $navigation[] = array("url" => "index.php", "name" => $langAdmin);
 $tool_content = "";

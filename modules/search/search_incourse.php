@@ -40,6 +40,7 @@
 $require_current_course = TRUE;
 
 $guest_allowed = true;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = $langSearch;

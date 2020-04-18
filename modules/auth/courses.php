@@ -25,6 +25,7 @@
 * =========================================================================*/
 
 $require_login = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 $nameTools = $langChoiceLesson;
 $navigation[] = array("url" => "courses.php", "name" => $langChoiceDepartment);

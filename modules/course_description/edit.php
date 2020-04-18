@@ -176,13 +176,14 @@ if ($is_adminOfCourse) {
         reset($titreBloc);
         while (list($numBloc,) = each($titreBloc)) {
             if (isset($blocState[$numBloc]) && $blocState[$numBloc] == "used") {
+                $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
                 $tool_content .= "<table width='99%' class='CourseDescr'>
     					<thead><tr><td>
         				<table width='100%' class='FormData'>
         				<thead><tr>
           				<th class='left' style='border: 1px solid #CAC3B5;'>" . $titreBloc[$numBloc] . ":</th>
           				<td width='50' class='right'>
-					<a href='" . $_SERVER['PHP_SELF'] . "?numBloc=" . $numBloc . "' >
+					<a href='" . $purifier->purify($_SERVER['PHP_SELF']) . "?numBloc=" . $numBloc . "' >
 					<img src='../../template/classic/img/edit.gif' border='0' title='$langModify' /></a>&nbsp;&nbsp;";
                 $tool_content .= "<a href='$_SERVER[PHP_SELF]?delete=yes&amp;numBloc=$numBloc' onClick='return confirmation();'><img src='../../images/delete.gif' border='0' title='$langDelete' /></a>&nbsp;</td></tr></thead></table>
       					</td></tr><tr>

@@ -47,6 +47,7 @@
 
 // BASETHEME, OTHER INCLUDES AND NAMETOOLS
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include 'admin.inc.php';
 $nameTools = $langVersion;

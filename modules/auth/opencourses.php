@@ -33,7 +33,7 @@
  * @abstract This component shows a list of courses
  *
  */
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 $nameTools = $langListCourses;
 $navigation[] = array("url" => "listfaculte.php", "name" => $langListFac);

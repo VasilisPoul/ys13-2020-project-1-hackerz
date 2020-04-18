@@ -29,7 +29,7 @@
 $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'User';
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = $langAddUser;

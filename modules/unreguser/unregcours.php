@@ -25,8 +25,9 @@
 * =========================================================================*/
 
 $require_login = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 include '../../include/baseTheme.php';
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 
 $nameTools = $langUnregCours;
 $local_style = 'h3 { font-size: 10pt;} li { font-size: 10pt;} ';
@@ -36,7 +37,7 @@ if (isset($_GET['cid']))
     $_SESSION['cid_tmp'] = $cid;
 if (!isset($_GET['cid']))
     $cid = $_SESSION['cid_tmp'];
-    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
     $cid = $purifier->purify($cid);
 if (!isset($doit) or $doit != "yes") {
 

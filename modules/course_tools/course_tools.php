@@ -426,11 +426,12 @@ if ($is_adminOfCourse) {
     }
 
     //output tool content
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $tool_content .= "
 	<div id=\"operations_container\">
 	  <ul id=\"opslist\">
-	    <li><a href=\"" . $_SERVER['PHP_SELF'] . "?action=1\">" . $langUploadPage . "</a></li>
-	    <li><a href=\"" . $_SERVER['PHP_SELF'] . "?action=2\">" . $langAddExtLink . "</a></li>
+	    <li><a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?action=1\">" . $langUploadPage . "</a></li>
+	    <li><a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?action=2\">" . $langAddExtLink . "</a></li>
 	  </ul>
 	</div>";
 
@@ -494,8 +495,9 @@ tForm;
             $tool_content .= "<th class=\"left\" width='1'>
 			<img src=\"../../template/classic/img/external_link_on.gif\" border=\"0\" title='$langTitle'></th>
     			<td class=\"left\">" . $externalLinks[$i]['text'] . "</td>\n";
+            $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
             $tool_content .= "<td align='center'>
-    			<a href=\"" . $_SERVER['PHP_SELF'] . "?delete=" . $externalLinks[$i]['id'] . "\" onClick=\"return confirmation('" . addslashes($externalLinks[$i]['text']) . "');\">
+    			<a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?delete=" . $externalLinks[$i]['id'] . "\" onClick=\"return confirmation('" . addslashes($externalLinks[$i]['text']) . "');\">
     			<img src=\"../../template/classic/img/delete.gif\" border=\"0\" title='$langDelete'></a>
 			</td></tr>";
         }    // for loop

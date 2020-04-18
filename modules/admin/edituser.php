@@ -41,6 +41,7 @@ This script allows the admin to :
 
 // BASETHEME, OTHER INCLUDES AND NAMETOOLS
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include 'admin.inc.php';
 include '../auth/auth.inc.php';

@@ -1,4 +1,4 @@
- <?php
+<?php
 /*========================================================================
 *   Open eClass 2.3
 *   E-learning and Course Management System
@@ -44,11 +44,11 @@ include('../../include/action.php');
 $action = new action();
 $action->record('MODULE_ID_DROPBOX');
 /**************************************/
-
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 $tool_content .= "
 <div id=\"operations_container\">
   <ul id=\"opslist\">
-    <li><a href=\"" . $_SERVER['PHP_SELF'] . "?upload=1\">" . $dropbox_lang['uploadFile'] . "</a></li>
+    <li><a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?upload=1\">" . $dropbox_lang['uploadFile'] . "</a></li>
   </ul>
 </div>";
 

@@ -38,6 +38,7 @@ $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'User';
 $tool_content = "";
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 if (!isset($prenom))
     $prenom = "";

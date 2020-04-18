@@ -32,10 +32,10 @@ $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'For';
 $require_prof = true;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/sendMail.inc.php';
 include '../phpbb/functions.php';
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 
 $nameTools = $langOrganisation;
 $navigation[] = array("url" => "../phpbb/index.php", "name" => $langForums);

@@ -47,7 +47,7 @@
 */
 
 $require_current_course = TRUE;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 require_once("../../include/baseTheme.php");
 
 $head_content = "";

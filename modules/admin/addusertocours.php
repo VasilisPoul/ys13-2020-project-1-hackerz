@@ -27,6 +27,7 @@
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 if (!isset($_GET['c'])) {
     die();
@@ -139,8 +140,8 @@ function reverseAll(cbList) {
 }
 
 </script>';
-
-    $tool_content .= "<form action=" . $_SERVER['PHP_SELF'] . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method='post'>";
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $tool_content .= "<form action=" . $purifier->purify($_SERVER['PHP_SELF']) . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method='post'>";
     $tool_content .= "<table class='FormData' width='99%' align='left'><tbody>
                           <tr><th colspan='3'>" . $langFormUserManage . "</th></tr>
                           <tr><th align=left>" . $langListNotRegisteredUsers . "<br />

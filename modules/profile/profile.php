@@ -27,7 +27,7 @@
 $require_help = TRUE;
 $require_login = true;
 $helpTopic = 'Profile';
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include "../auth/auth.inc.php";
 $require_valid_uid = TRUE;

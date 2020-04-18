@@ -39,7 +39,7 @@ search.php
 //
 //  x. sthn kentrikh selida mathimatos (exei ginei log-in kai o xrhsths eigaxthhke se mathima)
 //*/
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 if (isset($_POST['search_terms'])) {
     $search_terms_title = $search_terms_keywords = $search_terms_instructor = $search_terms_coursecode = $_POST['search_terms'];

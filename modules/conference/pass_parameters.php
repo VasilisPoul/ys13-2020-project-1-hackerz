@@ -34,6 +34,7 @@
  */
 header("Content-type: text/html; charset=UTF-8");
 $require_current_course = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 
 $nameTools = "conference";

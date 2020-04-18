@@ -38,7 +38,7 @@ $require_current_course = TRUE;
 $require_help = TRUE;
 $helpTopic = 'Agenda';
 $guest_allowed = true;
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include '../../include/lib/textLib.inc.php';
 include '../../include/action.php';
@@ -275,7 +275,8 @@ function confirmation (name)
 
     if (isset($_GET['addEvent']) or isset($_GET['edit'])) {
         $nameTools = $langAddEvent;
-        $navigation[] = array("url" => $_SERVER['PHP_SELF'], "name" => $langAgenda);
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $navigation[] = array("url" => $purifier->purify($_SERVER['PHP_SELF']), "name" => $langAgenda);
         $tool_content .= "
 <form method='post' action='$_SERVER[PHP_SELF]' onsubmit='return checkrequired(this, \"titre\");'>
     <input type='hidden' name='id' value='$id' />

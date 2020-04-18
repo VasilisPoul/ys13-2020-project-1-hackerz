@@ -38,7 +38,7 @@
 
  ==============================================================================
  */
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include 'auth.inc.php';
 

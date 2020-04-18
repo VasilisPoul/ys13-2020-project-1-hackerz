@@ -33,7 +33,7 @@ Defines standard functions and validates variables
 */
 
 define('ECLASS_VERSION', '2.3');
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 // Show query string and then do MySQL query
 function db_query2($sql, $db = FALSE)
 {
@@ -804,11 +804,11 @@ function format_bytesize($kbytes, $dec_places = 2)
 function make_clickable_path($dbTable, $path)
 {
     global $langRoot, $userGroupId;
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     if (isset($userGroupId)) {
-        $base = $_SERVER['PHP_SELF'] . '?userGroupId=' . $userGroupId . '&amp;';
+        $base = $purifier->purify($_SERVER['PHP_SELF']) . '?userGroupId=' . $userGroupId . '&amp;';
     } else {
-        $base = $_SERVER['PHP_SELF'] . '?';
+        $base = $purifier->purify($_SERVER['PHP_SELF']) . '?';
     }
 
     $cur = '';

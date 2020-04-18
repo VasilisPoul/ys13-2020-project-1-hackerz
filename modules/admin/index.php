@@ -33,6 +33,7 @@
 // Othewise exit with appropriate message
 $require_admin = true;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 // Define $nameTools
 $nameTools = $langAdmin;

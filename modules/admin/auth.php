@@ -41,6 +41,7 @@
 */
 
 $require_admin = TRUE;
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 include_once '../auth/auth.inc.php';
 $nameTools = $langUserAuthentication;

@@ -57,6 +57,7 @@ $searchurl = "";
 // Othewise exit with appropriate message
 $require_admin = TRUE;
 // Include baseTheme
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 include '../../include/baseTheme.php';
 if (!isset($_GET['c'])) {
     die();
@@ -97,8 +98,9 @@ else {
     // Get course information
     $row = mysql_fetch_array(mysql_query("SELECT * FROM cours WHERE code='" . mysql_real_escape_string($_GET['c']) . "'"));
     // Constract the edit form
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $tool_content .= "
-  <form action=" . $_SERVER['PHP_SELF'] . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method=\"post\">
+  <form action=" . $purifier->purify($_SERVER['PHP_SELF']) . "?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . " method=\"post\">
   <table class=\"FormData\" width=\"99%\" align=\"left\">
   <tbody>
   <tr>

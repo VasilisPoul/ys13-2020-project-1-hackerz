@@ -64,7 +64,7 @@ $TABLEQUIZTEST = "exercices";
 $dbTable = $TABLEASSET; // for old functions of document tool
 
 $imgRepositoryWeb = "../../template/classic/img/";
-
+include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 require_once("../../include/baseTheme.php");
 $tool_content = "";
 $head_content = "";

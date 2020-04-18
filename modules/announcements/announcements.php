@@ -289,10 +289,13 @@ hContent;
     /*----------------------------------------
 	DISPLAY ACTIONS TOOL BAR
 	--------------------------------------*/
+
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+
     $tool_content .= "
       <div id='operations_container'>
         <ul id='opslist'>
-          <li><a href='" . $_SERVER['PHP_SELF'] . "?addAnnouce=1'>" . $langAddAnn . "</a></li>";
+          <li><a href='" . $purifier->purify($_SERVER['PHP_SELF']) . "?addAnnouce=1'>" . $langAddAnn . "</a></li>";
 
     if ($announcementNumber > 1 || isset($_POST['submitAnnouncement'])) {
         $tool_content .= "
@@ -369,7 +372,7 @@ hContent;
 	DISPLAY ANNOUNCEMENT LIST
 	--------------------------------------*/
     if ($displayAnnouncementList == true) {
-        $result = db_query("SELECT * FROM annonces WHERE cours_id = ". intval($cours_id) ." ORDER BY ordre DESC", $mysqlMainDb);
+        $result = db_query("SELECT * FROM annonces WHERE cours_id = " . intval($cours_id) . " ORDER BY ordre DESC", $mysqlMainDb);
         $iterator = 1;
         $bottomAnnouncement = $announcementNumber = mysql_num_rows($result);
 
@@ -461,7 +464,7 @@ hContent;
 // student view
 else {
     $result = db_query("SELECT * FROM annonces WHERE cours_id = $cours_id
-		ORDER BY ordre DESC", $mysqlMainDb) OR die("DB problem");
+		ORDER BY ordre DESC", $mysqlMainDb) or die("DB problem");
     if (mysql_num_rows($result) > 0) {
         $tool_content .= "<table width='99%' align='left' class='announcements'>
 		<thead>
