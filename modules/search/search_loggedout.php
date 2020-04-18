@@ -36,6 +36,7 @@ $require_current_course = FALSE;
 
 $nameTools = $langSearch;
 $tool_content = "";
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
 
 //elegxos ean *yparxoun* oroi anazhthshs
 if (empty($search_terms_title) && empty($search_terms_keywords) && empty($search_terms_instructor) && empty($search_terms_coursecode)) {
@@ -43,7 +44,7 @@ if (empty($search_terms_title) && empty($search_terms_keywords) && empty($search
      * emfanish formas anahzthshs ean oi oroi anazhthshs einai kenoi
      ***********************************************************************************************/
     $tool_content .= "
-    <form method=\"post\" action=\"$_SERVER[PHP_SELF]\">
+    <form method=\"post\" action=\"  " . $purifier->purify($_SERVER[PHP_SELF]) . "\">
 		<table width=\"99%\">
         <tbody>
 		<tr>

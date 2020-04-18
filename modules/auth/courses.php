@@ -127,8 +127,9 @@ if (isset($_POST["submit"])) {
                 } else {
                     $tool_content .= "\n        <tr class='odd'>";
                 }
+                $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
                 $tool_content .= "\n<td>&nbsp;<img src='../../images/arrow_blue.gif' />&nbsp;
-					<a href='$_SERVER[PHP_SELF]?fc=$fac[id]'>" . htmlspecialchars($fac['name']) . "</a> <small><font color='#a33033'>($fac[code])</font></small>";
+					<a href='" . $purifier->purify($_SERVER[PHP_SELF]) . "?fc=$fac[id]'>" . htmlspecialchars($fac['name']) . "</a> <small><font color='#a33033'>($fac[code])</font></small>";
                 $n = db_query("SELECT COUNT(*) FROM cours_faculte WHERE facid='$fac[id]'");
                 $r = mysql_fetch_array($n);
                 $tool_content .= "&nbsp;<small><font color=#a5a5a5>($r[0]  " . ($r[0] == 1 ? $langAvCours : $langAvCourses) . ")</font><small></td></tr>";
@@ -143,7 +144,8 @@ if (isset($_POST["submit"])) {
         $numofcourses = getdepnumcourses($fc);
         // display all the facultes collapsed
         $tool_content .= collapsed_facultes_horiz($fc);
-        $tool_content .= "\n    <form action='$_SERVER[PHP_SELF]' method='post'>";
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $tool_content .= "\n    <form action=' " . $purifier->purify($_SERVER[PHP_SELF]) . " ' method='post'>";
         if ($numofcourses > 0) {
             $tool_content .= expanded_faculte($fac, $fc, $uid);
             $tool_content .= "
@@ -411,9 +413,8 @@ function collapsed_facultes_horiz($fc)
 {
 
     global $langListFac, $langSelectFac;
-
-    $retString = "\n   <form name='depform' action='$_SERVER[PHP_SELF]' method='get'>\n";
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $retString = "\n   <form name='depform' action='" . $purifier->purify($_SERVER[PHP_SELF]) . "' method='get'>\n";
     $retString .= "\n  <div id='operations_container'>\n    <ul id='opslist'>";
     $retString .= "\n    <li>$langSelectFac:&nbsp;";
     $retString .= dep_selection($fc);
