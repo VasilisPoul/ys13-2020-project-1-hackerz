@@ -75,30 +75,56 @@ $searchurl = "";
 if (isset($search) && ($search == "yes")) {
     $searchurl = "&search=yes";
 }
+
 // Delete course
 if (isset($_GET['delete']) && isset($_GET['c'])) {
-    db_query("DROP DATABASE `" . mysql_real_escape_string($_GET['c']) . "`");
-    mysql_select_db($mysqlMainDb);
-    $code = quote($_GET['c']);
-    //todo
-    db_query("DELETE FROM cours_faculte WHERE code = $code");
-    //todo
-    db_query("DELETE FROM cours_user WHERE cours_id =
-                        (SELECT cours_id FROM cours WHERE code = $code)");
-    //todo
-    db_query("DELETE FROM annonces WHERE cours_id =
-                        (SELECT cours_id FROM cours WHERE code = $code)");
-    //todo
-    db_query("DELETE FROM cours WHERE code = $code");
+    global $mysqlMainDb, $mysqlServer, $mysqlUser, $mysqlPassword;
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("DROP DATABASE `?`");
+    $stmt->bind_param("s", $_GET['c']);
+    $stmt->execute();
+    $conn->close();
+
+    $code = $_GET['c'];
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $stmt = $conn->prepare("DELETE FROM cours_faculte WHERE code = ?");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+
+    $stmt = $conn->prepare("DELETE FROM cours_user WHERE cours_id = (SELECT cours_id FROM cours WHERE code = ?)");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+
+    $stmt = $conn->prepare("DELETE FROM annonces WHERE cours_id = (SELECT cours_id FROM cours WHERE code = ?)");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+
+    $stmt = $conn->prepare("DELETE FROM cours WHERE code = ?");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+
+    $conn->close();
 
     @mkdir("../../courses/garbage");
     rename("../../courses/" . $_GET['c'], "../../courses/garbage/" . $_GET['c']);
     $tool_content .= "<p>" . $langCourseDelSuccess . "</p>";
 } // Display confirmatiom message for course deletion
 else {
-    //todo
     $row = mysql_fetch_array(mysql_query("SELECT * FROM cours WHERE code='" . mysql_real_escape_string($_GET['c']) . "'"));
-
     $tool_content .= "<table><caption>" . $langCourseDelConfirm . "</caption><tbody>";
     $tool_content .= "  <tr>
     <td><br />" . $langCourseDelConfirm2 . " <em>" . htmlspecialchars($_GET['c']) . "</em>;<br /><br /><i>" . $langNoticeDel . "</i><br /><br /></td>
