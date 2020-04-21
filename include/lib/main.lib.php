@@ -1246,14 +1246,19 @@ function course_code_to_title($code)
 // Find the course id of a course from its code
 function course_code_to_id($code)
 {
-    global $mysqlMainDb;
-    $r = db_query("SELECT cours_id FROM cours WHERE code='$code'", $mysqlMainDb);
-    if ($r and mysql_num_rows($r) > 0) {
-        $row = mysql_fetch_row($r);
-        return $row[0];
-    } else {
-        return false;
+    global $mysqlMainDb, $mysqlServer, $mysqlUser, $mysqlPassword;
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
     }
+    $stmt = $conn->prepare("SELECT cours_id FROM cours WHERE code=?");
+    $stmt->bind_param("s", $code);
+    $stmt->execute();
+    $stmt->bind_result($cours_id);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+    return $cours_id > 0 ? $cours_id : false;
 }
 
 function csv_escape($string, $force = false)

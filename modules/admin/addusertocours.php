@@ -62,13 +62,13 @@ if (isset($_POST['submit'])) {
         $reglist = "AND user_id NOT IN ($reglist)";
     }
     $sql = db_query("DELETE FROM cours_user
-                         WHERE cours_id = $cid AND statut <> 10 $reglist");
+                         WHERE cours_id =  " . intval($cid) . " AND statut <> 10 $reglist");
 
     function regusers($cid, $users, $statut)
     {
         foreach ($users as $uid) {
             db_query("INSERT IGNORE INTO cours_user (cours_id, user_id, statut, reg_date)
-                                  VALUES ($cid, $uid, $statut, CURDATE())");
+                                  VALUES ( " . intval($cid) . ",  " . intval($uid) . ",  " . intval($statut) . ", CURDATE())");
         }
         $reglist = implode(', ', $users);
         if ($reglist) {
@@ -150,7 +150,7 @@ function reverseAll(cbList) {
     // Registered users not registered in the selected course
     $sqll = "SELECT DISTINCT u.user_id , u.nom, u.prenom FROM user u
 		LEFT JOIN cours_user cu ON u.user_id = cu.user_id 
-                     AND cu.cours_id = $cid
+                     AND cu.cours_id =  " . intval($cid) . "
 		WHERE cu.user_id IS NULL ORDER BY nom";
 
     $resultAll = db_query($sqll);
@@ -189,7 +189,7 @@ function reverseAll(cbList) {
     // Students registered in the selected course
     $resultStud = db_query("SELECT DISTINCT u.user_id , u.nom, u.prenom
 				FROM user u, cours_user cu
-				WHERE cu.cours_id = $cid
+				WHERE cu.cours_id = " . intval($cid) . "
 				AND cu.user_id=u.user_id
 				AND cu.statut=5 ORDER BY nom");
 
@@ -206,7 +206,7 @@ function reverseAll(cbList) {
     // Professors registered in the selected course
     $resultProf = db_query("SELECT DISTINCT u.user_id , u.nom, u.prenom
 				FROM user u, cours_user cu
-				WHERE cu.cours_id = $cid
+				WHERE cu.cours_id = " . intval($cid) . "
 				AND cu.user_id = u.user_id
 				AND cu.statut = 1
 				ORDER BY nom, prenom");

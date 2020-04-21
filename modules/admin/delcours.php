@@ -80,17 +80,23 @@ if (isset($_GET['delete']) && isset($_GET['c'])) {
     db_query("DROP DATABASE `" . mysql_real_escape_string($_GET['c']) . "`");
     mysql_select_db($mysqlMainDb);
     $code = quote($_GET['c']);
+    //todo
     db_query("DELETE FROM cours_faculte WHERE code = $code");
+    //todo
     db_query("DELETE FROM cours_user WHERE cours_id =
                         (SELECT cours_id FROM cours WHERE code = $code)");
+    //todo
     db_query("DELETE FROM annonces WHERE cours_id =
                         (SELECT cours_id FROM cours WHERE code = $code)");
+    //todo
     db_query("DELETE FROM cours WHERE code = $code");
+
     @mkdir("../../courses/garbage");
     rename("../../courses/" . $_GET['c'], "../../courses/garbage/" . $_GET['c']);
     $tool_content .= "<p>" . $langCourseDelSuccess . "</p>";
 } // Display confirmatiom message for course deletion
 else {
+    //todo
     $row = mysql_fetch_array(mysql_query("SELECT * FROM cours WHERE code='" . mysql_real_escape_string($_GET['c']) . "'"));
 
     $tool_content .= "<table><caption>" . $langCourseDelConfirm . "</caption><tbody>";
