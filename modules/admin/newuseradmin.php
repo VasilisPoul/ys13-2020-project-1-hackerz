@@ -56,12 +56,24 @@ if ($submit) {
     if (!isset($native_language_names[$proflanguage])) {
         $proflanguage = langname_to_code($language);
     }
-
     // check if user name exists
-    $username_check = mysql_query("SELECT username FROM `$mysqlMainDb`.user 
-			WHERE username=" . autoquote($uname));
-    $user_exist = (mysql_num_rows($username_check) > 0);
-
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $stmt = $conn->prepare("SELECT username FROM user WHERE username= ?");
+    $stmt->bind_param("s", $uname);
+    $stmt->execute();
+    $stmt->bind_result($username);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+    $user_exist = $username !== null;
     // check if there are empty fields
     if (!$all_set) {
         $tool_content .= "<p class='caution_small'>$langEmptyFields</p>
@@ -76,19 +88,34 @@ if ($submit) {
         $registered_at = time();
         $expires_at = time() + $durationAccount;
         $password_encrypted = md5($password);
-        $inscr_user = db_query("INSERT INTO `$mysqlMainDb`.user
-				(nom, prenom, username, password, email, statut, department, am, registered_at, expires_at,lang)
-				VALUES (" .
-            autoquote($nom_form) . ', ' .
-            autoquote($prenom_form) . ', ' .
-            autoquote($uname) . ", '$password_encrypted', " .
-            autoquote($email_form) .
-            ", $pstatut, $depid, " . autoquote($comment) . ", $registered_at, $expires_at, '$proflanguage')");
+
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("INSERT INTO user
+                (nom, prenom, username, password, email, statut, department, am, registered_at, expires_at,lang)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $nom_form = $purifier->purify($nom_form);
+        $prenom_form = $purifier->purify($prenom_form);
+        $uname = $purifier->purify($uname);
+        $password_encrypted = $purifier->purify($password_encrypted);
+        $email_form = $purifier->purify($email_form);
+        $comment = $purifier->purify($comment);
+        $proflanguage = $purifier->purify($proflanguage);
+        $stmt->bind_param("sssssiisiis", $nom_form, $prenom_form, $uname, $password_encrypted, $email_form, $pstatut, $depid, $comment, $registered_at, $expires_at, $proflanguage);
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
 
         // close request
         $rid = intval($_POST['rid']);
-        db_query("UPDATE prof_request set status = 2, date_closed = NOW() WHERE rid = '$rid'");
-
+        db_query("UPDATE prof_request set status = 2, date_closed = NOW() WHERE rid = " . intval($rid));
         if ($pstatut == 1) {
             $message = $profsuccess;
             $reqtype = '';
@@ -126,7 +153,7 @@ $langEmail : $emailhelpdesk
     $lang = false;
     if (isset($id)) { // if we come from prof request
         $res = mysql_fetch_array(db_query("SELECT profname, profsurname, profuname, profemail, proftmima, comment, lang, statut 
-			FROM prof_request WHERE rid='$id'"));
+			FROM prof_request WHERE rid=" . intval($id)));
         $ps = $res['profsurname'];
         $pn = $res['profname'];
         $pu = $res['profuname'];

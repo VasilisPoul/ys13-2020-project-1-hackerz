@@ -85,8 +85,9 @@ if ($is_adminOfCourse) {
 // if not submit
 
     else {
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $tool_content .= "<p>$langExplanation</p>
-		<form method=\"POST\" action=\"$_SERVER[PHP_SELF]?submit=yes\" enctype=\"multipart/form-data\">
+		<form method=\"POST\" action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?submit=yes\" enctype=\"multipart/form-data\">
 		<table><thead><tr><th>$langSendPage :</th>
 		<td><input type=\"file\" name=\"file\" size=\"35\" accept=\"text/html\"></td>
 		</tr><tr><th>$langPgTitle :</th>

@@ -87,7 +87,7 @@ if (isset($_GET['delete']) && isset($_GET['c'])) {
         printf("Error loading character set utf8: %s\n", $conn->error);
         exit();
     }
-    $stmt = $conn->prepare("DROP DATABASE `?`");
+    $stmt = $conn->prepare("DROP DATABASE ?");
     $stmt->bind_param("s", $_GET['c']);
     $stmt->execute();
     $conn->close();

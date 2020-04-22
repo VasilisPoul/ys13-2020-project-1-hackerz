@@ -343,14 +343,15 @@ if ($sql) {
         {
             $startList = 0;
         }
-
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         // Numerating the items in the list to show: starts at 1 and not 0
         $i = $startList + 1;
         if ($countUser >= $endList) { // Do not show navigation buttons if less than 30 users
+
             $tool_content .= "<table class=\"FormData\" width=\"99%\" align=\"left\">
   			<thead><tr>
     			<td class=\"left\" width=\"20%\">
-      			<form method=post action=\"$_SERVER[PHP_SELF]?numbList=begin\">
+      			<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?numbList=begin\">
       			" . keep_var() . "
         		<input type=submit value=\"$langBegin<<\" name=\"numbering\">
       			</form>
@@ -359,13 +360,13 @@ if ($sql) {
             if ($startList != 0) // if beginning of list or complete listing, do not show "previous" button
             {
                 if (isset($_REQUEST['ord'])) {
-                    $tool_content .= "<form method=post action=\"$_SERVER[PHP_SELF]?startList=$startList&numbList=less&ord=$_REQUEST[ord]\">
+                    $tool_content .= "<form method=post action=\"  " . $purifier->purify($_SERVER[PHP_SELF]) . " ?startList=$startList&numbList=less&ord=$_REQUEST[ord]\">
 	       				" . keep_var() . "
 					<input type=submit value=\"$langPreced50<\" name=\"numbering\">
 					</form>";
                 } else {
                     $tool_content .= "
-      					<form method=post action=\"$_SERVER[PHP_SELF]?startList=$startList&numbList=less\">
+      					<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?startList=$startList&numbList=less\">
       					" . keep_var() . "
         				<input type=submit value=\"$langPreced50<\" name=\"numbering\">
       					</form>";
@@ -373,30 +374,30 @@ if ($sql) {
             }
             if (isset($_REQUEST['ord'])) {
                 $tool_content .= "</td><td class=\"center\" width=\"20%\">
-      				<form method=post action=\"$_SERVER[PHP_SELF]?startList=$startList&numbList=all&ord=$_REQUEST[ord]\">
+      				<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?startList=$startList&numbList=all&ord=$_REQUEST[ord]\">
       				" . keep_var() . "
         			<input type=submit value=\"$langAll\" name=numbering>
       				</form>
     				</td><td class=\"center\" width=\"20%\">";
             } else {
                 $tool_content .= "</td><td class=\"center\" width=\"20%\">
-      				<form method=post action=\"$_SERVER[PHP_SELF]?startList=$startList&numbList=all\">
+      				<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?startList=$startList&numbList=all\">
       				" . keep_var() . "
         			<input type=submit value=\"$langAll\" name=numbering>
       				</form></td>
     				<td class=\"center\" width=\"20%\">";
             }
-            if (!((($countUser - $startList) <= $endList) OR ($endList == $countUser))) // if end of list or complete listing, do not show "next" button
+            if (!((($countUser - $startList) <= $endList) or ($endList == $countUser))) // if end of list or complete listing, do not show "next" button
             {
                 if (isset($_REQUEST['ord'])) {
                     $tool_content .= "
-      					<form method=post action=\"$_SERVER[PHP_SELF]?startList=$startList&numbList=more&ord=$_REQUEST[ord]\">
+      					<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?startList=$startList&numbList=more&ord=$_REQUEST[ord]\">
       					" . keep_var() . "
         				<input type=submit value=\"$langFollow50>\" name=numbering>
       					</form>";
                 } else {
                     $tool_content .= "
-      					<form method=post action=\"$_SERVER[PHP_SELF]?startList=$startList&numbList=more\">
+      					<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?startList=$startList&numbList=more\">
       					" . keep_var() . "
         				<input type=submit value=\"$langFollow50>\" name=numbering>
       					</form>";
@@ -404,14 +405,14 @@ if ($sql) {
             }
             if (isset($_REQUEST['ord'])) {
                 $tool_content .= "</td><td class=\"right\" width=\"20%\">
-	  			<form method=post action=\"$_SERVER[PHP_SELF]?numbList=final&ord=$_REQUEST[ord]\">
+	  			<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?numbList=final&ord=$_REQUEST[ord]\">
 	  			" . keep_var() . "
         			<input type=submit value=\"$langEnd>>\" name=numbering>
 	  			</form>
 				</td></tr></thead></table>";
             } else {
                 $tool_content .= "</td><td class=\"right\" width=\"20%\">
-      				<form method=post action=\"$_SERVER[PHP_SELF]?numbList=final\">
+      				<form method=post action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?numbList=final\">
       				" . keep_var() . "
         			<input type=submit value=\"$langEnd>>\" name=numbering>
        				</form>

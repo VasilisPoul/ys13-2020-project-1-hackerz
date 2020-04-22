@@ -42,9 +42,9 @@ $auth = get_auth_id();
 
 // display form
 if (!isset($submit)) {
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     @$tool_content .= "
-<form action=\"$_SERVER[PHP_SELF]\" method=\"post\">
+<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "\" method=\"post\">
 <table width=\"99%\" style=\"border: 1px solid #edecdf;\">
 <thead>
 <tr>
@@ -143,21 +143,29 @@ if (!isset($submit)) {
                     break;
             }
         }
-
-        db_query('INSERT INTO prof_request SET
-                                profname = ' . autoquote($prenom_form) . ',
-                                profsurname = ' . autoquote($nom_form) . ',
-                                profuname = ' . autoquote($uname) . ',
-                                profemail = ' . autoquote($email_form) . ',
-                                proftmima = ' . autoquote($department) . ',
-                                profcomm = ' . autoquote($userphone) . ',
-                                status = 1,
-                                statut = 1,
-                                date_open = NOW(),
-                                comment = ' . autoquote($usercomment) . ',
-                                lang = ' . autoquote($proflang),
-            $mysqlMainDb);
-
+        $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $stmt = $conn->prepare("INSERT INTO prof_request SET profname = ?,  profsurname = ?,   profuname = ?, profemail = ?,  proftmima = ?,  profcomm = ?,
+                                status = 1,  statut = 1,  date_open = NOW(),   comment = ?, lang = ?");
+        $prenom_form = $purifier->purify($prenom_form);
+        $nom_form = $purifier->purify($nom_form);
+        $uname = $purifier->purify($uname);
+        $email_form = $purifier->purify($email_form);
+        $department = $purifier->purify($department);
+        $userphone = $purifier->purify($userphone);
+        $usercomment = $purifier->purify($usercomment);
+        $proflang = $purifier->purify($proflang);
+        $stmt->bind_param("ssssssss", $prenom_form, $nom_form, $uname, $email_form, $department, $userphone, $usercomment, $proflang);
+        $stmt->execute();
+        $stmt->close();
+        $conn->close();
         //----------------------------- Email Message --------------------------
         $MailMessage = $mailbody1 . $mailbody2 . "$prenom_form $nom_form\n\n" . $mailbody3 .
             $mailbody4 . $mailbody5 . "$mailbody6\n\n" . "$langFaculty: " .

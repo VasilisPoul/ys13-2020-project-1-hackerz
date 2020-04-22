@@ -66,6 +66,9 @@ function claro_disp_wiki_editor($wikiId, $title, $versionId
     global $langPreview, $langCancel, $langSave, $langWikiMainPage;
 
     // create script
+
+
+
     $script = (is_null($script)) ? $_SERVER['PHP_SELF'] : $script;
     $script = add_request_variable_to_url($script, "title", rawurlencode($title));
 

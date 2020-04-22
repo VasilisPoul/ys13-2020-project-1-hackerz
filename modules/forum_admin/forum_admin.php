@@ -89,7 +89,8 @@ hContent;
         $result = db_query("SELECT forum_id, forum_name, forum_desc, forum_access, forum_moderator, forum_type 
 			FROM forums where cat_id=" . intval($cat_id), $currentCourseID);
         if ($result and mysql_num_rows($result) > 0) {
-            $tool_content .= "<form action=\"$_SERVER[PHP_SELF]?forumgoadd=yes&ctg=$ctg&cat_id=$cat_id\" method=post>
+            $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+            $tool_content .= "<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?forumgoadd=yes&ctg=$ctg&cat_id=$cat_id\" method=post>
 		<table width=99% class=\"ForumAdmSum\">
 		<tbody>
 		<tr class=\"odd\">
@@ -126,8 +127,9 @@ hContent;
             $tool_content .= "\n<p class=\"alert1\">$langNoForumsCat</p>";
         }
         $form_token = $_SESSION['token'] = md5(mt_rand());
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $tool_content .= "
-		<form action=\"$_SERVER[PHP_SELF]?forumgoadd=yes&ctg=$ctg&cat_id=$cat_id\" method=post onsubmit=\"return checkrequired(this,'forum_name');\">
+		<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?forumgoadd=yes&ctg=$ctg&cat_id=$cat_id\" method=post onsubmit=\"return checkrequired(this,'forum_name');\">
 		<table width=99% class=\"FormData\" align=\"left\">
 		<tbody>
 		<tr>
@@ -158,6 +160,7 @@ hContent;
 		<div align=\"right\"><a href=\"$_SERVER[PHP_SELF]?forumadmin=yes\">$langBackCat</a></div>";
     } // forum go edit
     elseif (isset($forumgoedit)) {
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $nameTools = $langEditForum;
         $navigation[] = array("url" => "../forum_admin/forum_admin.php", "name" => $langOrganisation);
         $result = db_query("SELECT forum_id, forum_name, forum_desc, forum_access, forum_moderator,
@@ -165,7 +168,7 @@ hContent;
         list($forum_id, $forum_name, $forum_desc, $forum_access, $forum_moderator, $cat_id_1,
             $forum_type) = mysql_fetch_row($result);
         $tool_content .= "
-		<form action=\"$_SERVER[PHP_SELF]?forumgosave=yes&ctg=$ctg&cat_id=" . @$cat_id . "\" method=post onsubmit=\"return checkrequired(this,'forum_name');\">
+		<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?forumgosave=yes&ctg=$ctg&cat_id=" . @$cat_id . "\" method=post onsubmit=\"return checkrequired(this,'forum_name');\">
 		<input type=hidden name=forum_id value=$forum_id>
 		<table width=99% class='FormData'>
 		<tbody>
@@ -400,7 +403,8 @@ hContent;
 				cat_id = " . intval($cat_id) . ", notify_sent = 1, course_id = " . intval($cours_id));
             }
         }
-        $tool_content .= "<form action=\"$_SERVER[PHP_SELF]?forumadmin=yes\" method=post></td><tr><td>";
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $tool_content .= "<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?forumadmin=yes\" method=post></td><tr><td>";
         $tool_content .= "<table width=99% class=\"ForumCategory\">
     		<tbody>
     		<tr><th width='2%'>$langID</th>
@@ -436,9 +440,10 @@ hContent;
 			</td></tr>";
             $i++;
         }
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
         $form_token = $_SESSION['token'] = md5(mt_rand());
         $tool_content .= "</tbody></table></form><br/>
-		<form action=\"$_SERVER[PHP_SELF]?forumcatadd=yes\" method=post onsubmit=\"return checkrequired(this,'catagories');\">
+		<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?forumcatadd=yes\" method=post onsubmit=\"return checkrequired(this,'catagories');\">
 		<table width=99% class=\"FormData\" align=\"left\">
 		<tbody><tr>
 		<th width='220'>&nbsp;</th>
