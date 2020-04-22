@@ -92,15 +92,42 @@ if ($submit) {
     $registered_at = time();
     $expires_at = time() + $durationAccount;
 
-    $sql = db_query("INSERT INTO `$mysqlMainDb`.user
+
+    // Create connection
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    // Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    /* change character set to utf8 */
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    // prepare and bind
+    $stmt = $conn->prepare("INSERT INTO user
 			(nom, prenom, username, password, email, statut, department,
 			am, registered_at, expires_at,lang)
-			VALUES (" .
-        autoquote($ps) . ', ' .
-        autoquote($pn) . ', ' .
-        autoquote($pu) . ", '$password', " .
-        autoquote($pe) .
-        ", 1, $department, " . autoquote($comment) . ", $registered_at, $expires_at, '$lang')");
+			VALUES ( ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("",$ps, $pn, $pu, $password, $pe, $department, $comment,  $registered_at, $expires_at, $lang);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
+
+
+
+
+
+
+//    $sql = db_query("INSERT INTO `$mysqlMainDb`.user
+//			(nom, prenom, username, password, email, statut, department,
+//			am, registered_at, expires_at,lang)
+//			VALUES (" .
+//        autoquote($ps) . ', ' .
+//        autoquote($pn) . ', ' .
+//        autoquote($pu) . ", '$password', " .
+//        autoquote($pe) .
+//        ", 1, $department, " . autoquote($comment) . ", $registered_at, $expires_at, '$lang')");
 
     //  Update table prof_request
     $rid = intval($_POST['rid']);
