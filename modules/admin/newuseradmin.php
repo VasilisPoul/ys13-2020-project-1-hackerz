@@ -56,12 +56,24 @@ if ($submit) {
     if (!isset($native_language_names[$proflanguage])) {
         $proflanguage = langname_to_code($language);
     }
-
     // check if user name exists
-    $username_check = mysql_query("SELECT username FROM `$mysqlMainDb`.user 
-			WHERE username=" . autoquote($uname));
-    $user_exist = (mysql_num_rows($username_check) > 0);
-
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $stmt = $conn->prepare("SELECT username FROM user WHERE username= ?");
+    $stmt->bind_param("s", $uname);
+    $stmt->execute();
+    $stmt->bind_result($username);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+    $user_exist = $username !== null;
     // check if there are empty fields
     if (!$all_set) {
         $tool_content .= "<p class='caution_small'>$langEmptyFields</p>
