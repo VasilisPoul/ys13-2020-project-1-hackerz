@@ -18,10 +18,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 //
 // $Id: system_footer.php,v 1.1.1.1 2006/01/10 15:02:11 adia Exp $
+include '../../../htmlpurifier/HTMLPurifier.auto.php';
 
 echo "<center>";
-
-$update_form = "<form method=\"POST\" action=\"$PHP_SELF\">\n"
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+$update_form = "<form method=\"POST\" action=\"" . $purifier->purify(PHP_SELF) . "\">\n"
     . "\t" . $text['template'] . ":&nbsp;\n"
     . "\t<select name=\"template\">\n";
 

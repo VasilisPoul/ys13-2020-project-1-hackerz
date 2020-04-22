@@ -138,5 +138,4 @@ if (PHPGROUPWARE == 1) {
 } else {
     require('./includes/system_footer.php');
 }
-
 ?>

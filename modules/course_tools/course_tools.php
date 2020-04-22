@@ -316,8 +316,8 @@ if ($is_adminOfCourse && @$action == 1) {//upload html file
     $nameTools = $langUploadPage;
     $navigation[] = array("url" => "course_tools.php", "name" => $langToolManagement);
     $helpTopic = 'Import';
-
-    $tool_content .= "<form method=\"POST\" action=\"$_SERVER[PHP_SELF]?submit=yes&action=1\" enctype=\"multipart/form-data\">
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $tool_content .= "<form method=\"POST\" action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?submit=yes&action=1\" enctype=\"multipart/form-data\">
 	<p>$langExplanation_0</p>
 	<p>$langExplanation_3</p>
 	<br />
@@ -355,8 +355,8 @@ if ($is_adminOfCourse && @$action == 2) {//add external link
     $nameTools = $langAddExtLink;
     $navigation[] = array("url" => "course_tools.php", "name" => $langToolManagement);
     $helpTopic = 'Module';
-
-    $tool_content .= "<form method=\"post\" action=\"$_SERVER[PHP_SELF]?submit=yes&action=2\">
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $tool_content .= "<form method=\"post\" action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?submit=yes&action=2\">
 	<br>
 	<table width=\"99%\" align='left' class='FormData'>
 	<tbody>

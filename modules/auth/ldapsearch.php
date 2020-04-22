@@ -99,9 +99,10 @@ if (!empty($is_submit)) {
         $is_valid = auth_user_login($auth, $ldap_email, $ldap_passwd);
 
         if ($is_valid) {  // Successfully connected
+            $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
             $tool_content .= "<table width=\"99%\" align='left' class='FormData'><thead>
 			<tr><td>
-			<form action=\"$_SERVER[PHP_SELF]\" method=\"post\">" .
+			<form action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "\" method=\"post\">" .
                 (isset($GLOBALS['auth_user_info']) ?
                     ('<input type="hidden" name="prenom_form" value="' . $GLOBALS['auth_user_info']['firstname'] .
                         '" /><input type="hidden" name="nom_form" value="' . $GLOBALS['auth_user_info']['lastname'] .

@@ -451,7 +451,8 @@ if ($is_adminOfCourse) {       // teacher only
         //$fileName gia thn provolh tou onomatos arxeiou
         $fileName = my_basename($comment);
         if (empty($oldFilename)) $oldFilename = $fileName;
-        $dialogBox .= "	<form method=\"post\" action=\"$_SERVER[PHP_SELF]?edit_metadata\">
+        $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+        $dialogBox .= "	<form method=\"post\" action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "?edit_metadata\">
         		<input type='hidden' name='commentPath' value='$comment' />
         		<input type='hidden' size='80' name='file_filename' value='$oldFilename' />
         		<table  class='FormData' width=\"99%\">

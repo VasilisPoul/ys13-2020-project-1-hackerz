@@ -66,20 +66,31 @@ if (isset($_POST['submit']) and !$all_set) {
 }
 
 if ($all_set) {
-
     // register user request
-    db_query("INSERT INTO prof_request
-                        (profname, profsurname, profuname, profemail,
-                         proftmima, profcomm, status, date_open,
-                         comment, lang, statut)
-                  VALUES (" .
-        autoquote($name) . ', ' .
-        autoquote($surname) . ', ' .
-        autoquote($username) . ', ' .
-        autoquote($usermail) . ', ' .
-        intval($department) . ', ' .
-        autoquote($userphone) . ', 1, NOW(), ' .
-        autoquote($usercomment) . ", '$lang', 5)");
+    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+    if (!$conn->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $conn->error);
+        exit();
+    }
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $stmt = $conn->prepare("INSERT INTO prof_request
+                (profname, profsurname, profuname, profemail, proftmima, profcomm, status, date_open, comment, lang, statut)
+             VALUES (?,?,?,?,?,?,1,NOW(),?, ?, 5)");
+    $name = $purifier->purify($name);
+    $surname = $purifier->purify($surname);
+    $username = $purifier->purify($username);
+    $usermail = $purifier->purify($usermail);
+    $department = $purifier->purify($department);
+    $userphone = $purifier->purify($userphone);
+    $usercomment = $purifier->purify($usercomment);
+    $lang = $purifier->purify($lang);
+    $stmt->bind_param("ssssssss", $name, $surname, $username, $usermail, $department, $userphone, $usercomment, $lang);
+    $stmt->execute();
+    $stmt->close();
+    $conn->close();
 
     //----------------------------- Email Message --------------------------
     $department = find_faculty_by_id($department);

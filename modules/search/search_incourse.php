@@ -75,9 +75,9 @@ if (empty($or_search_terms) && empty($not_search_terms)) {
     /**********************************************************************************************
      * emfanish formas anahzthshs ean oi oroi anazhthshs einai kenoi
      ***********************************************************************************************/
-
+    $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
     $tool_content .= "
-    <form method=\"post\" action=\"$_SERVER[PHP_SELF]\">
+    <form method=\"post\" action=\"" . $purifier->purify($_SERVER[PHP_SELF]) . "\">
 	<table width=\"99%\">
     <tbody>
 	<tr>
