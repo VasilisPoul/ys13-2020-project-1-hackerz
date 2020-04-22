@@ -106,32 +106,17 @@ if ($submit) {
     }
     // prepare and bind
     $stmt = $conn->prepare("INSERT INTO user
-			(nom, prenom, username, password, email, statut, department,
-			am, registered_at, expires_at,lang)
+			(nom, prenom, username, password, email, statut, department,am, registered_at, expires_at,lang)
 			VALUES ( ?, ?, ?, ?, ?, 1, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("",$ps, $pn, $pu, $password, $pe, $department, $comment,  $registered_at, $expires_at, $lang);
+    $stmt->bind_param("sssssisiis",$ps, $pn, $pu, $password, $pe, $department, $comment,  $registered_at, $expires_at, $lang);
     $stmt->execute();
     $stmt->close();
     $conn->close();
 
 
-
-
-
-
-//    $sql = db_query("INSERT INTO `$mysqlMainDb`.user
-//			(nom, prenom, username, password, email, statut, department,
-//			am, registered_at, expires_at,lang)
-//			VALUES (" .
-//        autoquote($ps) . ', ' .
-//        autoquote($pn) . ', ' .
-//        autoquote($pu) . ", '$password', " .
-//        autoquote($pe) .
-//        ", 1, $department, " . autoquote($comment) . ", $registered_at, $expires_at, '$lang')");
-
     //  Update table prof_request
     $rid = intval($_POST['rid']);
-    db_query("UPDATE prof_request set status = '2',date_closed = NOW() WHERE rid = '$rid'");
+    db_query("UPDATE prof_request set status = '2',date_closed = NOW() WHERE rid = " . intval($rid));
     $emailbody = "$langDestination $pu $ps\n" .
         "$langYouAreReg $siteName $langSettings $pu\n" .
         "$langPass: $password\n$langAddress $siteName: " .
