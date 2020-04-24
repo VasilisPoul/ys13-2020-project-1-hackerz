@@ -419,6 +419,18 @@ if (isset($_GET['mailingIndex']))  // examine or send
  */
 if (isset($_GET['deleteReceived']) || isset($_GET['deleteSent'])) {
 
+    // csrf
+    if (!isset($_SESSION['delete_token']) || !isset($_GET['delete_token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
+    if ($_SESSION['delete_token'] !== $_GET['delete_token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['delete_token']);
+
     if (isset($_GET['mailing']))  // RH
     {
         checkUserOwnsThisMailing($_GET['mailing'], $uid);

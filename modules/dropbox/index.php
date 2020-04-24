@@ -235,10 +235,12 @@ if (!isset($_GET['mailing']))  // RH: Mailing detail: no received files
     // check if there are received documents. If yes then display the icon deleteall
     $dr_unid = urlencode($dropbox_unid);
     if ($numberDisplayed > 0) {
+
+        $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
         $dr_lang_all = addslashes($dropbox_lang["all"]);
         $tool_content .= "
       <th width='3' style='border: 1px solid #edecdf'>
-        <a href='dropbox_submit.php?deleteReceived=all&amp;dropbox_unid=$dr_unid' onClick=\"return confirmationall('" . $dropbox_lang['all'] . "');\"><img src='../../images/delete.gif' title='$langDelete' /></a></th>";
+        <a href='dropbox_submit.php?deleteReceived=all&amp;dropbox_unid=$dr_unid&delete_token=$delete_token' onClick=\"return confirmationall('" . $dropbox_lang['all'] . "');\"><img src='../../images/delete.gif' title='$langDelete' /></a></th>";
     }
 
     $tool_content .= "</tr>
@@ -297,9 +299,9 @@ tCont9;
         $tool_content .= "
         </td>
         <td><div class=\"cellpos\">";
-
+        $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
         $tool_content .= "
-        <a href=\"dropbox_submit.php?deleteReceived=" . urlencode($w->id) . "&amp;dropbox_unid=" . urlencode($dropbox_unid) . "\" onClick='return confirmation(\"$w->title\");'>
+        <a href=\"dropbox_submit.php?deleteReceived=" . urlencode($w->id) . "&amp;dropbox_unid=" . urlencode($dropbox_unid) . "&delete_token=$delete_token\" onClick='return confirmation(\"$w->title\");'>
         <img src=\"../../template/classic/img/delete-small.png\" title=\"$langDelete\" /></a>";
 
         $tool_content .= "</div></td></tr>";
@@ -335,9 +337,10 @@ $tool_content .= strtoupper($dropbox_lang["sentTitle"]);
 $tool_content .= "</u></th>";
 // if the user has sent files then display the icon deleteall
 if ($numSent > 0) {
+    $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
     $tool_content .= "
         <th width='3' style='border: 1px solid #edecdf'>
-            <a href='dropbox_submit.php?deleteSent=all&amp;dropbox_unid=" . urlencode($dropbox_unid) . $mailingInUrl . "'
+            <a href='dropbox_submit.php?deleteSent=all&amp;dropbox_unid=" . urlencode($dropbox_unid) . $mailingInUrl . "&delete_token=$delete_token'
 	onClick='return confirmationall('" . addslashes($dropbox_lang["all"]) . "');'>
             <img src='../../images/delete.gif' title='$langDelete' /></a>
         </th>";
@@ -462,9 +465,9 @@ tCont12;
 
 		<td><div class=\"cellpos\">";
     //<!--	Users cannot delete their own sent files -->
-
+    $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
     $tool_content .= "
-	<a href=\"dropbox_submit.php?deleteSent=" . urlencode($w->id) . "&amp;dropbox_unid=" . urlencode($dropbox_unid) . $mailingInUrl . "\"
+	<a href=\"dropbox_submit.php?deleteSent=" . urlencode($w->id) . "&amp;dropbox_unid=" . urlencode($dropbox_unid) . $mailingInUrl . "&delete_token=$delete_token\"
 		onClick='return confirmation(\"$w->title\");'>
 		<img src=\"../../template/classic/img/delete-small.png\" title=\"$langDelete\" /></a>";
     $tool_content .= "</div></td></tr>";
