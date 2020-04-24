@@ -216,12 +216,13 @@ tCont2;
  * FILES LIST
  * ========================================
  */
-
+$delete_token = $_SESSION['delete_token'] = md5(mt_rand());
 /*
  * --------------------------------------
  * RECEIVED FILES LIST:  TABLE HEADER
  * --------------------------------------
  */
+
 if (!isset($_GET['mailing']))  // RH: Mailing detail: no received files
 {
     $numberDisplayed = count($dropbox_person->receivedWork);
@@ -236,7 +237,7 @@ if (!isset($_GET['mailing']))  // RH: Mailing detail: no received files
     $dr_unid = urlencode($dropbox_unid);
     if ($numberDisplayed > 0) {
 
-        $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
+
         $dr_lang_all = addslashes($dropbox_lang["all"]);
         $tool_content .= "
       <th width='3' style='border: 1px solid #edecdf'>
@@ -299,7 +300,7 @@ tCont9;
         $tool_content .= "
         </td>
         <td><div class=\"cellpos\">";
-        $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
+
         $tool_content .= "
         <a href=\"dropbox_submit.php?deleteReceived=" . urlencode($w->id) . "&amp;dropbox_unid=" . urlencode($dropbox_unid) . "&delete_token=$delete_token\" onClick='return confirmation(\"$w->title\");'>
         <img src=\"../../template/classic/img/delete-small.png\" title=\"$langDelete\" /></a>";
@@ -337,7 +338,7 @@ $tool_content .= strtoupper($dropbox_lang["sentTitle"]);
 $tool_content .= "</u></th>";
 // if the user has sent files then display the icon deleteall
 if ($numSent > 0) {
-    $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
+
     $tool_content .= "
         <th width='3' style='border: 1px solid #edecdf'>
             <a href='dropbox_submit.php?deleteSent=all&amp;dropbox_unid=" . urlencode($dropbox_unid) . $mailingInUrl . "&delete_token=$delete_token'
@@ -465,7 +466,7 @@ tCont12;
 
 		<td><div class=\"cellpos\">";
     //<!--	Users cannot delete their own sent files -->
-    $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
+
     $tool_content .= "
 	<a href=\"dropbox_submit.php?deleteSent=" . urlencode($w->id) . "&amp;dropbox_unid=" . urlencode($dropbox_unid) . $mailingInUrl . "&delete_token=$delete_token\"
 		onClick='return confirmation(\"$w->title\");'>
