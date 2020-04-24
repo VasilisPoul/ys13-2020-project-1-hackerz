@@ -51,7 +51,9 @@ function check_password_editable($password)
         return true; // is editable
     }
 }
-
+$purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+$email = $purifier->purify($email);
+$userName = $purifier->purify($userName);
 if (isset($_REQUEST['do']) && $_REQUEST['do'] == "go") {
     $userUID = (int)$_REQUEST['u'];
     $hash = $_REQUEST['h'];
@@ -128,6 +130,7 @@ if (isset($_REQUEST['do']) && $_REQUEST['do'] == "go") {
 
 } elseif (!isset($_REQUEST['do'])) {
     /***** If valid e-mail address was entered, find user and send email *****/
+
     $res = db_query("SELECT user_id, nom, prenom, username, password, statut FROM user
 			WHERE email = '" . mysql_escape_string($email) . "'
 			AND BINARY username = '" . mysql_escape_string($userName) . "'", $mysqlMainDb);

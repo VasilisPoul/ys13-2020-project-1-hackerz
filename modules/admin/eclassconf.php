@@ -55,7 +55,6 @@
  ******************************************************************************/
 // Check if user is administrator and if yes continue
 // Othewise exit with appropriate message
-require_once '../../modules/htmlpurifier/HTMLPurifier.auto.php';
 $require_admin = TRUE;
 // Include baseTheme
 include '../../modules/htmlpurifier/HTMLPurifier.auto.php';
