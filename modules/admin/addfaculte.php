@@ -126,8 +126,9 @@ if (!isset($a)) {
         $tool_content .= "\n    <td>" . htmlspecialchars($logs[1]) . "</td>";
         $tool_content .= "\n    <td align='center'>" . htmlspecialchars($logs[0]) . "</td>";
         // Give administrator a link to delete or edit a faculty
+        $delete_token = $_SESSION['delete_token'] = md5(mt_rand());
         $tool_content .= "\n    <td width='15%' align='center' nowrap>
-		<a href='$_SERVER[PHP_SELF]?a=2&c=" . $logs['id'] . "'>
+		<a href='$_SERVER[PHP_SELF]?a=2&c=" . $logs['id'] . "&delete_token=$delete_token'>
 		<img src='../../images/delete.gif' border='0' title='$langDelete'></img></a>&nbsp;&nbsp;
 		<a href='$_SERVER[PHP_SELF]?a=3&c=" . $logs['id'] . "'>
 		<img src='../../template/classic/img/edit.gif' border='0' title='$langEdit'></img></a></td>
@@ -201,6 +202,16 @@ elseif ($a == 1) {
     $tool_content .= "<br /><p align='right'><a href='$_SERVER[PHP_SELF]'>" . $langBack . "</a></p>";
 } // Delete faculty
 elseif ($a == 2) {
+    if (!isset($_SESSION['delete_token']) || !isset($_GET['delete_token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    if ($_SESSION['delete_token'] !== $_GET['delete_token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['delete_token']);
+
     $c = intval($_GET['c']);
     $s = mysql_query("SELECT * from cours WHERE faculteid=$c");
     // Check for existing courses of a faculty
