@@ -59,6 +59,20 @@ if (isset($_POST['selectCourse']) and is_array($_POST['selectCourse'])) {
 }
 
 if (isset($_POST["submit"])) {
+
+    // csrf
+    if (!isset($_SESSION['course_reg_form_token']) || !isset($_POST['course_reg_form_token'])) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    if ($_SESSION['course_reg_form_token'] !== $_POST['course_reg_form_token']) {
+        header("location:" . $_SERVER['PHP_SELF'] . "?msg=1");
+        exit();
+    }
+
+    unset($_SESSION['course_reg_form_token']);
+
     foreach ($changeCourse as $key => $value) {
         $cid = intval($value);
         if (!in_array($cid, $selectCourse)) {
@@ -140,6 +154,7 @@ if (isset($_POST["submit"])) {
         }
         $tool_content .= "<br /><br />\n";
     } else {
+        $form_token = $_SESSION['course_reg_form_token'] = md5(mt_rand());
         // department exists
         $numofcourses = getdepnumcourses($fc);
         // display all the facultes collapsed
@@ -157,6 +172,7 @@ if (isset($_POST["submit"])) {
     </tr>
     </tbody>
     </table>
+    <input type=\"hidden\" name=\"course_reg_form_token\" value=\"$form_token\">
     </form>";
         } else {
             if ($fac) {
