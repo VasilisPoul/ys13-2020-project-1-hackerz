@@ -60,7 +60,11 @@ if (!$db) {
 // unset system that records visitor only once by course for statistics
 include('include/action.php');
 if (isset($dbname)) {
-    mysql_select_db($dbname);
+    if ($delete_cource === true) {
+        mysql_select_db($mysqlMainDb);
+    } else {
+        mysql_select_db($dbname);
+    }
     $action = new action();
     $action->record('MODULE_ID_UNITS', 'exit');
 }
@@ -215,7 +219,7 @@ $nameTools = $langWelcomeToEclass;
 //----------------------------------------------------------------
 // if login succesful display courses lists
 // --------------------------------------------------------------
-if (isset($uid) AND !isset($logout)) {
+if (isset($uid) and !isset($logout)) {
     $nameTools = $langWelcomeToPortfolio;
     $require_help = true;
     $helpTopic = "Portfolio";
@@ -250,7 +254,7 @@ if (isset($uid) AND !isset($logout)) {
 // -------------------------------------------------------------------------------------
 // display login  page
 // -------------------------------------------------------------------------------------
-elseif ((isset($logout) && isset($uid)) OR (1 == 1)) {
+elseif ((isset($logout) && isset($uid)) or (1 == 1)) {
     if (isset($logout) && isset($uid)) {
 
         // Create connection

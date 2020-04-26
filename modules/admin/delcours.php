@@ -79,6 +79,16 @@ if (isset($search) && ($search == "yes")) {
 // Delete course
 if (isset($_GET['delete']) && isset($_GET['c'])) {
     global $mysqlMainDb, $mysqlServer, $mysqlUser, $mysqlPassword;
+    // csrf
+    if (!isset($_SESSION['delete_course_token']) || !isset($_GET['delete_course_token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    if ($_SESSION['delete_course_token'] !== $_GET['delete_course_token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['delete_course_token']);
     db_query("DROP DATABASE `" . mysql_real_escape_string($_GET['c']) . "`");
     $code = $_GET['c'];
     $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
@@ -110,6 +120,10 @@ if (isset($_GET['delete']) && isset($_GET['c'])) {
     @mkdir("../../courses/garbage");
     rename("../../courses/" . $_GET['c'], "../../courses/garbage/" . $_GET['c']);
     $tool_content .= "<p>" . $langCourseDelSuccess . "</p>";
+
+    $delete_cource = true;
+    session_register("delete_cource");
+
 } // Display confirmatiom message for course deletion
 else {
     $row = mysql_fetch_array(mysql_query("SELECT * FROM cours WHERE code='" . mysql_real_escape_string($_GET['c']) . "'"));
@@ -118,8 +132,13 @@ else {
     <td><br />" . $langCourseDelConfirm2 . " <em>" . htmlspecialchars($_GET['c']) . "</em>;<br /><br /><i>" . $langNoticeDel . "</i><br /><br /></td>
   </tr>";
     $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $delete_course_token = $_SESSION['delete_course_token'] = md5(mt_rand());
     $tool_content .= "  <tr>
-    <td><ul><li><a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?c=" . htmlspecialchars($_GET['c']) . "&amp;delete=yes" . $searchurl . "\"><b>$langYes</b></a><br />&nbsp;</li>
+    <td><ul><li>
+    <a href=\"" . $purifier->purify($_SERVER['PHP_SELF']) . "?c=" . htmlspecialchars($_GET['c']) . "&amp;delete=yes&delete_course_token=$delete_course_token" . $searchurl . "\">
+    <b>$langYes</b>
+    </a>
+    <br />&nbsp;</li>
   <li><a href=\"listcours.php?c=" . htmlspecialchars($_GET['c']) . "" . $searchurl . "\"><b>$langNo</b></a></li></ul></td>
   </tr>";
     $tool_content .= "</tbody></table><br />";
