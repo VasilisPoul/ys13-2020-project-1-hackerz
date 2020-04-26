@@ -79,19 +79,7 @@ if (isset($search) && ($search == "yes")) {
 // Delete course
 if (isset($_GET['delete']) && isset($_GET['c'])) {
     global $mysqlMainDb, $mysqlServer, $mysqlUser, $mysqlPassword;
-    $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-    if (!$conn->set_charset("utf8")) {
-        printf("Error loading character set utf8: %s\n", $conn->error);
-        exit();
-    }
-    $stmt = $conn->prepare("DROP DATABASE ?");
-    $stmt->bind_param("s", $_GET['c']);
-    $stmt->execute();
-    $conn->close();
-
+    db_query("DROP DATABASE `" . mysql_real_escape_string($_GET['c']) . "`");
     $code = $_GET['c'];
     $conn = new mysqli($mysqlServer, $mysqlUser, $mysqlPassword, $mysqlMainDb);
     if ($conn->connect_error) {
