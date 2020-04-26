@@ -45,7 +45,17 @@ $version = 1;
 $encoding = 'ISO-8859-7';
 
 if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
 
+    if ($_SESSION['token'] !== $_POST['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['token']);
     $tool_content .= "<table width='99%'><caption>" . $langFileSent . "</caption><tbody>
 	<tr><td width='3%'>$langFileSentName</td><td>" . $_FILES['archiveZipped']['name'] . "</td></tr>
 	<tr><td width='3%'>$langFileSentSize</td><td>" . $_FILES['archiveZipped']['size'] . "</td></tr>
@@ -56,6 +66,18 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
     $tool_content .= "<tr><td>" . unpack_zip_show_files($archiveZipped) . "</td></tr>";
     $tool_content .= "<tbody></table><br />";
 } elseif (isset($_POST['send_path']) and isset($_POST['pathToArchive'])) {
+
+    // csrf
+    if (!isset($_SESSION['token']) || !isset($_POST['token'])) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
+    if ($_SESSION['token'] !== $_POST['token']) {
+        header("location:" . $_SERVER['PHP_SELF']);
+        exit();
+    }
+    unset($_SESSION['token']);
 
     $pathToArchive = $_POST['pathToArchive'];
     if (file_exists($pathToArchive)) {
@@ -117,13 +139,16 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
 // Displaying Form
 // -------------------------------------
     $purifier = new HTMLPurifier(HTMLPurifier_Config::createDefault());
+    $form_token = $_SESSION['token'] = md5(mt_rand());
     $tool_content .= "<table width='99%' class='FormData'>
 	<tbody><tr><th>&nbsp;</th><td><b>$langFirstMethod</b></td></tr>
 	<tr><th>&nbsp;</th><td>$langRequest1
 	<br /><br />
+	
 	<form action='" . $purifier->purify($_SERVER['PHP_SELF']) . "' method='post' name='sendZip' enctype='multipart/form-data'>
 	<input type='file' name='archiveZipped' />
 	<input type='submit' name='send_archive' value='" . $langSend . "' />
+	<input type=\"hidden\" name=\"token\" value=\"$form_token\">
 	</form>
 	</td>
 	</tr>
@@ -138,6 +163,7 @@ if (isset($send_archive) and $_FILES['archiveZipped']['size'] > 0) {
 	<form action='" . $purifier->purify($_SERVER['PHP_SELF']) . "' method='post'>
 	<input type='text' name='pathToArchive' />
 	<input type='submit' name='send_path' value='" . $langSend . "' />
+	<input type=\"hidden\" name=\"token\" value=\"$form_token\">
 	</form>
 	</td></tr>
 	</tbody></table><br />";
