@@ -101,9 +101,21 @@ if (isset($_SESSION['shib_uname'])) { // authenticate via shibboleth
 
     if (!empty($submit)) {
         unset($uid);
-        $sqlLogin = "SELECT user_id, nom, username, password, prenom, statut, email, perso, lang
-			FROM user WHERE username='" . $uname . "'";
-        $result = mysql_query($sqlLogin);
+
+        $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $GLOBALS['mysqlMainDb']);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+        if (!$conn->set_charset("utf8")) {
+            printf("Error loading character set utf8: %s\n", $conn->error);
+            exit();
+        }
+        $stmt = $conn->prepare("SELECT user_id, nom, username, password, prenom, statut, email, perso, lang
+			FROM user WHERE username=?");
+        $stmt->bind_param("s", $uname);
+        $stmt->bind_result($user_id, $nom, $username, $password, $prenom, $statut, $email, $perso, $lang);
+        $stmt->execute();
+
         $check_passwords = array("pop3", "imap", "ldap", "db");
         $warning = "";
         $auth_allow = 0;
@@ -115,10 +127,10 @@ if (isset($_SESSION['shib_uname'])) { // authenticate via shibboleth
             // Disallow login with empty password
             $auth_allow = 4;
         } else {
-            while ($myrow = mysql_fetch_array($result)) {
+            while ($stmt->fetch()) {
                 $exists = 1;
                 if (!empty($auth)) {
-                    if (!in_array($myrow["password"], $check_passwords)) {
+                    if (!in_array($password, $check_passwords)) {
                         // eclass login
                         include "include/login.php";
                     } else {
@@ -130,6 +142,9 @@ if (isset($_SESSION['shib_uname'])) { // authenticate via shibboleth
                 }
             }
         }
+        $stmt->close();
+        $conn -> close();
+
         if (empty($exists) and !$auth_allow) {
             $auth_allow = 4;
         }

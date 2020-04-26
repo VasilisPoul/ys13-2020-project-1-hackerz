@@ -253,8 +253,8 @@ elseif ($a == 3) {
         $stmt = $conn->prepare("SELECT * from faculte WHERE id <> ? AND name=?");
         $stmt->bind_param("is", $c, $faculte);
         $stmt->bind_result($x);
-        $stmt->fetch();
         $stmt->execute();
+        $stmt->fetch();
         $stmt->close();
 
         $faculte = $_POST['faculte'];

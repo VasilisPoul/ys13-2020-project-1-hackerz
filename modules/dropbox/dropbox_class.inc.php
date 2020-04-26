@@ -132,8 +132,8 @@ class Dropbox_Work
         }
         $stmt->bind_param("s", $this->filename);
         $stmt->bind_result($id, $uploadDate);
-        $stmt->fetch();
         $stmt->execute();
+        $stmt->fetch();
         $stmt->close();
 
         if ($id > 0)

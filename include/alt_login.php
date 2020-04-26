@@ -29,7 +29,7 @@ if (!defined('INDEX_START')) {
 }
 
 // authenticate user via alternate defined methods 
-switch($myrow["password"])
+switch($password)
 {
 	case 'eclass': $auth = 1; break;
 	case 'pop3': $auth = 2; break;
@@ -39,7 +39,7 @@ switch($myrow["password"])
 	default: break;
 }
 $auth_method_settings = get_auth_settings($auth);
-if($myrow['password'] == $auth_method_settings['auth_name']) {
+if($password == $auth_method_settings['auth_name']) {
 	switch($auth) {
 		case '2': $pop3host = str_replace("pop3host=","",$auth_method_settings['auth_settings']);
 		break;
@@ -67,8 +67,8 @@ if($myrow['password'] == $auth_method_settings['auth_name']) {
 	}
 	$is_valid = auth_user_login($auth,$uname,$pass);
 	if($is_valid) {
-		$is_active = check_activity($myrow["user_id"]);
-		if($myrow["user_id"] == 1) // always the admin is active
+		$is_active = check_activity($user_id);
+		if($user_id] == 1) // always the admin is active
 		{
 			$is_active = 1;
 		}
@@ -79,19 +79,15 @@ if($myrow['password'] == $auth_method_settings['auth_name']) {
 		else
 		{
 			$auth_allow = 3;
-			$user = $myrow["user_id"];
+			$user = $user_id];
 		}
 	} else {
 		$auth_allow = 2;
 	}
 	if ($auth_allow == 1) {
-		$uid = $myrow["user_id"];
-		$nom = $myrow["nom"];
-		$prenom = $myrow["prenom"];
-		$statut = $myrow["statut"];
-		$email = $myrow["email"];
-		$userPerso = $myrow["perso"];
-		$language = $_SESSION['langswitch'] = langcode_to_name($myrow["lang"]);
+		$uid = $user_id;
+		$userPerso = $perso;
+		$language = $_SESSION['langswitch'] = langcode_to_name($lang);
 	}
 	elseif($auth_allow == 2)
 	{

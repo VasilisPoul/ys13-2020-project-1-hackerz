@@ -178,7 +178,6 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
         $type_message = '';
         // $langAsUser;
     }
-
     $conn = new mysqli($GLOBALS['mysqlServer'], $GLOBALS['mysqlUser'], $GLOBALS['mysqlPassword'], $mysqlMainDb);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
@@ -187,12 +186,11 @@ function create_user($statut, $uname, $nom, $prenom, $email, $depid, $am, $phone
         printf("Error loading character set utf8: %s\n", $conn->error);
         exit();
     }
-
     $stmt = $conn->prepare("SELECT * FROM user WHERE username = ?");
     $stmt->bind_param("s", $uname);
     $stmt->bind_result($user_id);
-    $stmt->fetch();
     $stmt->execute();
+    $stmt->fetch();
     $stmt->close();
     if ($user_id !== NULL) {
         $GLOBALS['error'] = "$GLOBALS[l_invalidname] ($uname)";
@@ -251,8 +249,8 @@ function create_username($statut, $depid, $nom, $prenom, $prefix)
     $x = "$prefix$wildcard";
     $stmt->bind_param("s", $x);
     $stmt->bind_result($username);
-    $stmt->fetch();
     $stmt->execute();
+    $stmt->fetch();
     if ($username !== NULL) {
         $lastid = 1 + str_replace($prefix, '', $username);
     } else {
@@ -281,8 +279,8 @@ function register($uid, $course_code)
     $stmt = $conn->prepare("SELECT code, cours_id FROM cours WHERE code=? OR fake_code=?");
     $stmt->bind_param("ss", $code, $code);
     $stmt->bind_result($code, $cid);
-    $stmt->fetch();
     $stmt->execute();
+    $stmt->fetch();
     $stmt->close();
     $conn->close();
     if ($code !== NULL) {
