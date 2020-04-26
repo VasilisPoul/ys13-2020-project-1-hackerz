@@ -1,1 +1,3 @@
-Deny from All
+<Files "agenda.php">
+     Deny from All
+</Files>

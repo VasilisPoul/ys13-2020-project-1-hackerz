@@ -52,7 +52,7 @@ if (isset($uid)) {
 		cours.intitule i, cours.titulaires t
 	                        FROM cours, cours_user
 	                        WHERE cours.cours_id = cours_user.cours_id
-	                        AND cours_user.user_id = '$uid'");
+	                        AND cours_user.user_id = " . intval($uid));
     @$year = $_GET['year'];
     @$month = $_GET['month'];
     if (($year == NULL) && ($month == NULL)) {
@@ -86,8 +86,7 @@ function get_agendaitems($query, $month, $year)
 
     // get agenda-items for every course
     while ($mycours = mysql_fetch_array($query)) {
-        $result = db_query("SELECT * FROM agenda WHERE month(day)='$month' AND year(day)='$year'", "$mycours[k]");
-
+        $result = db_query("SELECT * FROM agenda WHERE month(day)= " . intval($month) . " AND year(day)=" . intval($year), "$mycours[k]");
         while ($item = mysql_fetch_array($result)) {
             $agendadate = explode("-", $item['day']);
             $agendaday = intval($agendadate[2]);
